@@ -8,9 +8,6 @@
 
 主题使用的是[免费模板](http://all-free-download.com/free-website-templates/notebook_2495.html)。
 
-**效果截图**
-
-![img](./doc/demo.png)
 
 ### 开始使用
 
