@@ -1,0 +1,20 @@
+{
+  "name": "fis3-pure-php",
+  "version": "0.0.1",
+  "description": "fis 3.0 DEMO",
+  "scripts" : {
+    "test" : "",
+    "release" : "fis3 release dist -d D:\\phpStudy\\WWW",
+    "dev" : "fis3 release -w -d D:\\phpStudy\\WWW"
+  },
+  "dependencies": {
+    "fis3-hook-module": "*"
+  },
+  "keywords": [
+    "fis3"
+  ],
+  "author": {
+    "name": "fis"
+  },
+  "license": "BSD"
+}

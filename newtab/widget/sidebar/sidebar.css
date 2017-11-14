@@ -1,0 +1,129 @@
+
+/** 底部操作栏 */
+
+#siderbar {
+	position: fixed;
+	top: 0px;
+	right: -215px;
+	width: 192px;
+	height: 100%;
+	background-color: #363A3F;
+	z-index: 999;
+	padding: 20px 2px 20px 20px;
+	transition: right 0.5s;
+}
+
+#siderbar h4{
+	font-size: 14px;
+	margin-bottom: 10px;
+}
+#siderbar span{
+	display: inline-block;
+	max-width: 120px;
+	color: #999;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+#siderbar i {
+	position: absolute;
+	cursor: pointer;
+	font-style: normal;
+	z-index: 1;
+}
+#siderbar .tips {
+	background:transparent url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) -208px -64px no-repeat;
+	width: 20px;
+	height: 20px;
+	top: 37px;
+}
+#siderbar .tips > p {
+	display: none;
+	position: absolute;
+	z-index: 9;
+	width: 155px;
+	background: #fff;
+	border: 1px solid rgba(0,0,0,0.15);
+	box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.20);
+	padding: 8px;
+	top: 20px;
+	right: -20px;
+	font-weight: 100;
+	word-break: break-all;
+	width: 180px;
+}
+#siderbar .tips:hover p{
+	display: block;
+}
+
+#siderbar .close {
+    color: #666;
+    font-size: 26px;
+    font-weight: normal;
+    right: 18px;
+    top: 4px;
+}
+
+#siderbar .close:hover{
+	color: #fff;
+}
+.siderbar-upload {position: relative; cursor: pointer;height: 40px;line-height: 40px;width: 175px;margin-bottom: 10px;background-color: #575a60;}
+.siderbar-upload a{display: block; text-align: center;font-size: 30px;line-height: 35px;color: #9a9ca0;}
+.siderbar-upload a:hover{color: #fff;}
+.siderbar-main { 
+	overflow: auto;
+}
+.siderbar-main li {
+	margin-bottom: 10px;
+}
+.siderbar-main a {
+	display: block;
+	height: 70px;
+	width: 175px;
+	position: relative;
+}
+
+.siderbar-main img{
+	width: 175px;
+	height: 70px;
+}
+.operate-button {
+	position: absolute;
+	display: none;
+	width: 50px;
+	height: 50px;
+	background: center no-repeat transparent;
+	left: 50%;
+	margin-left: -25px;
+	top: 50%;
+	margin-top: -25px;
+	background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830);
+}
+.operate-button.pause {background-position: -95px -85px;}
+.operate-button.start {background-position: -48px -85px;}
+
+.operate-button.loading {
+	background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/loading.png);
+	animation:turn 2s linear infinite;
+}
+@keyframes turn{
+	0%{
+		transform: rotateZ(0deg);
+	}
+	100%{
+		transform: rotateZ(360deg);
+	}
+}
+.siderbar-main li.selected .operate-button { 
+	display: block; 
+}
+.siderbar-main li.selected > a::after {
+	content: "";
+	bottom: 0;
+	right: 0;
+	z-index: 2;
+	width: 20px;
+    height: 20px;
+	position: absolute;
+    background: #fff url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) no-repeat -5px -65px;
+}

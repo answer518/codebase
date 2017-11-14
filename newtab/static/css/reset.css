@@ -1,0 +1,15 @@
+/** newtab reset **/
+body, div, p, ul, ol, li { padding: 0;margin: 0;}
+
+body {
+	font: 12px/1.2  Helvetica, "Segoe UI", Tahoma, Geneva, Verdana;
+    color: #333;
+	padding-left: calc(100vw - 100%);
+}
+::-webkit-scrollbar-thumb {background: #c0c0c0;border-radius: 8px;}
+::-webkit-scrollbar-thumb:hover{background-color: #999;}
+::-webkit-scrollbar {width: 6px;height: 6px;}
+ul, ol, li {list-style: none;}
+button {border: 0;outline: 0;cursor: pointer; font-family: "Segoe UI",Tahoma,Geneva,Verdana,"Microsoft YaHei";}
+strong {cursor: default;}
+a{text-decoration: none;color: #333;outline: none;}
