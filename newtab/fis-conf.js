@@ -38,8 +38,24 @@ fis.media('dev').match('*', {
     optimizer: null
 });
 
+fis.media('dist').match('::package', {
+  packager: fis.plugin('map', { // 可以控制文件的顺序
+    '/static/pkg/lib.js': [
+      '/static/js/jquery-1.2.6.js',
+      '/static/js/jquery.easing.1.3.js',
+      '/static/js/coda-slider.js',
+      '/static/js/mod.js'
+    ],
+    '/static/pkg/main.js' : [
+      '/widget/**/*.js'
+    ]
+  })
+})
+
+
 /**
  * 页面所有资源打成一个文件
+ * 缺点：不能提取公共资源以提升性能
  * @type {[type]}
  */
 // fis.match('::package', {
@@ -48,9 +64,20 @@ fis.media('dev').match('*', {
 //     })
 // });
 
-// fis.match(/static\/js\/lib\/.+\.js/, {
-//     packTo: '/static/common.js'
-// });
+/**
+ * 页面所有资源打成一个文件
+ * 缺点：默认按文件名顺序打包，不够灵活
+ * @type {[type]}
+ */
+// fis.match('*.js', {
+//   useHash: false,
+//   optimizer: fis.plugin('uglify-js', {
+//     // option of uglify-js
+//   }),
+//   packTo: '/static/pkg/main.js'
+// }).match('/static/js/**.js', { // 公共资源打一个包
+//   packTo: '/static/pkg/lib.js'
+// })
 
 
 // 编译环境压缩和合并
