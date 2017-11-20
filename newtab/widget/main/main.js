@@ -3,12 +3,13 @@
  * @author guotingjie
  *
  */
-var Dao = require('widget/main/dao'),
-    api = require('static/js/api'),
-    Global = require('widget/main/global'),
+var api = require('static/js/api'),
+    Language = require('static/js/language'),
     Tools = require('static/js/tools'),
-    helper = require('widget/main/helper'),
-    Language = require('static/js/language');
+    Dao = require('widget/main/dao'),
+    Global = require('widget/main/global'),
+    Poup = require('widget/main/poup.js'),
+    helper = require('widget/main/helper');
 
 var $group_dialog,
     $grid_container,
@@ -129,7 +130,7 @@ Grid.prototype = (function() {
         //             if (item === true && childNode.className.indexOf('loading') !== -1) {
         //                 var url = self.thumburls[i];
         //                 childNode.className = 'thumbnail';
-        //                 childNode.style.cssText = 'background-image : url(' + newWin.getThumbsUrl(url, 0) + ')';
+        //                 childNode.style.cssText = 'background-image : url(' + Poup.getThumbsUrl(url, 0) + ')';
         //             }
         //         });
         //     });
@@ -184,7 +185,7 @@ Grid.prototype = (function() {
     }
 
     function reload() {
-        this.node.find('.thumb').css({ 'background-image': 'url(' + newWin.getThumbsUrl(this.url, 0) + ')' });
+        this.node.find('.thumb').css({ 'background-image': 'url(' + Poup.getThumbsUrl(this.url, 0) + ')' });
         this.node.removeClass('loading');
     }
 
@@ -308,7 +309,7 @@ Grid.prototype = (function() {
         $group_list.find('.grid-list-container').removeClass('show');
         current_group.container.addClass('show');
         group_operate = $group_dialog.Dialog({
-            init: function() {
+            start_fn_before: function() {
                 var urlList = [],
                     nodeList = [];
                 current_group.children.forEach(function(item, i) {
@@ -319,15 +320,15 @@ Grid.prototype = (function() {
                     nodeList.push(item);
                 });
 
-                Tools.isThumbExists(urlList, function(result) {
-                    result.forEach(function(res, i) {
-                        if (res === true) {
-                            nodeList[i].reload();
-                        }
-                    });
-                });
+                // Tools.isThumbExists(urlList, function(result) {
+                //     result.forEach(function(res, i) {
+                //         if (res === true) {
+                //             nodeList[i].reload();
+                //         }
+                //     });
+                // });
             },
-            close: function() {
+            remove_fn_later: function() {
                 // 编辑状态
                 $group_dialog.attr('edit', false);
                 if (current_group) current_group = null;
@@ -360,7 +361,7 @@ Grid.prototype = (function() {
                 current_group = _current_group;
             }
         }
-        newWin.showDialog({
+        Poup.showDialog({
             'index': _this.index,
             'uiinde': _this.topuiindex || _this.uiindex,
             'title': _this.title,
@@ -766,7 +767,7 @@ Grid.prototype = (function() {
                 grid_add = _this;
             }
             grid_node.on('click', '.add', function(event) {
-                newWin.showDialog({ index: _this.index, uiindex: _this.topuiindex || _this.uiindex }, false);
+                Poup.showDialog({ index: _this.index, uiindex: _this.topuiindex || _this.uiindex }, false);
             });
         } else {
             // 实体格子

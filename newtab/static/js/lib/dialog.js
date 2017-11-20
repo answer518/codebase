@@ -6,19 +6,10 @@ $.fn.Dialog = function(options) {
     //初始默认参数
     var Settings = {
         modal: true, //是否需要遮罩层
-        top: null, //弹出的绝对位置，默认居中
-        left: null, //弹出的绝对位置，默认居中
         title: "提示信息", //标题信息
         closeTitle: false, //是否不需要标题，默认显示
-        myclass: "myWrap", //自定义弹出层样式
-        maxHeight: null, //自定义最大高，默认适应弹出内容（ie6不支持）
-        maxWidth: null, //自定义最大宽，默认适应弹出内容（ie6不支持）
-        minHeight: 100, //自定义最小高，默认适应弹出内容
-        minWidth: 150, //自定义最小宽，默认适应弹出内容
-        center: true, //内容是否居中
         close_btn: true, //是否启用右上的关闭按钮关闭,默认启用
         autoOpen: true, //自动弹出窗口
-        PopupDivId: "myWrap",
         ajaxUrl: null,
         close_fn_before: function() {},
         close_fn_later: function() {},
