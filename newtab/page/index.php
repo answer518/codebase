@@ -19,6 +19,7 @@
 
     <!-- 加载同步的js -->
     <?php import('static/js/lib/jquery-2.2.4.min.js'); ?>
+    <?php import('static/js/lib/dialog.js'); ?>
     <?php import('static/js/lib/template.js'); ?>
     <?php import('static/res/i18n/data_zh-cn.js'); ?>
 </head>

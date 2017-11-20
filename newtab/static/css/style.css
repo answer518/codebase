@@ -275,7 +275,7 @@ i.sprite.sprite-circle {
 	opacity: 0.4;
 	position: fixed;
 	transition: opacity 0.3s;
-    z-index: 11;
+    z-index: 1;
 }
 .face-out {opacity: 0.6;}
 

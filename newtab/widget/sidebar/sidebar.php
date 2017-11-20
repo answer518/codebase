@@ -1,18 +1,35 @@
 <div id="siderbar" class="siderbar">
-    <h4>
-        <i class="close">×</i>
-    </h4>
-    <div class="siderbar-warp">
-        <div class="siderbar-header">
-            <span title="选择背景">选择背景</span>
-            <i class="tips">
-                <p>建议上传大于当前屏幕分辨率的JPG、PNG或GIF格式的图片。</p>
-            </i>
+    <ul>
+        <li class="no">
+            <span id="qr-Code">&nbsp;</span>
+            <div class="download">
+                <div class="title">下载傲游5移动版</div>
+                <p><img src="//pc-newtab.maxthonimg.com/static/img/qcode-china.png" alt="" /></p>
+                <div class="dev">iOS&Android</div>
+                <ins></ins>
+            </div>
+        </li>
+        <li>
+            <span id="config-button"></span>
+        </li>
+    </ul>
+
+    <div id="config-layer">
+        <h4>
+            <i class="close">×</i>
+        </h4>
+        <div class="c-layer-main">
+            <div class="c-layer-title">
+                <span title="设置背景">设置背景</span>
+                <i class="tips">
+                    <p><%= this.getLang('SelectBackgroundNotice') %></p>
+                </i>
+            </div>
+            <div class="a-upload">
+                <a href="javascript:void(0);" class="upload" id="upload">+</a>
+            </div>
+            <ul class="skin-img-list"></ul>
         </div>
-        <div class="siderbar-upload">
-            <a href="javascript:void(0);" class="upload" id="upload">+</a>
-        </div>
-        <ul class="siderbar-main"></ul>
     </div>
 </div>
 <?php import('widget/sidebar/sidebar.js'); ?>

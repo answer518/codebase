@@ -12,8 +12,8 @@ var $wallpapers = $('#wallpapers'),
     option;
 
 function initOption() {
-    $siderbar = $('#siderbar'), $config_button = $('#config-button'),
-    $siderbarMain = $siderbar.find('.siderbar-main');
+    $siderbar = $('#config-layer'), $config_button = $('#config-button'),
+    $siderbarMain = $siderbar.find('.skin-img-list');
 
     background = [
         { 'pic': 'light.jpg', 'type': 'picture', 'brightness': 'dark', 'data_code': 'defaultlight' },

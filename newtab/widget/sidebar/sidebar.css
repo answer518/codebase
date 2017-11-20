@@ -1,7 +1,78 @@
 
 /** 底部操作栏 */
 
-#siderbar {
+.siderbar {
+	position: fixed;
+	width: 100px;
+	bottom: 20px;
+	right:  0px;
+	height: 80px;
+	z-index: 2;
+}
+.siderbar > ul > li {
+	height: 40px;
+	width: 50px;
+	position: relative;
+	left: 40px;
+}
+.siderbar > ul > li.no {
+	visibility: hidden;
+}
+.siderbar li span {
+	position: absolute;
+	top: 2px;
+	right: 10px;
+	width: 34px;
+	height: 34px;
+	border-radius: 100px;
+	cursor: pointer;
+	background:#fff url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) no-repeat;
+}
+.siderbar li:hover span{
+	background-color: #f8f8f8;
+}
+.siderbar .download {
+	display: none;
+	position: absolute;
+	right: 54px;
+	width: 126px;
+	background: #fff;
+	height: 160px;
+	bottom: 8px;
+	text-align: center;
+	color: #666;
+	box-shadow: 0 2px 4px 0 rgba(0,0,0,.15);
+}
+.siderbar li:hover .download{
+	display: block;
+}
+.siderbar ins{
+	position: absolute;
+	right: -5px;
+	bottom: 10px;
+	width:0;
+	height:0;
+	border-top:6px solid transparent;
+	border-bottom: 6px solid transparent;
+	border-left: 6px solid #fff;
+}
+.siderbar .title{
+	margin: 8px 0 6px 0;
+}
+.siderbar .dev{
+	margin: 4px 0 0 0;
+	font-size: 12px;
+}
+
+#config-button {
+	bottom: 0px;
+	background-position: -156px 3px;
+}
+#qr-Code {
+	background-position: -234px 3px;
+}
+
+#config-layer {
 	position: fixed;
 	top: 0px;
 	right: -215px;
@@ -13,11 +84,11 @@
 	transition: right 0.5s;
 }
 
-#siderbar h4{
+#config-layer h4 {
 	font-size: 14px;
 	margin-bottom: 10px;
 }
-#siderbar span{
+#config-layer span{
 	display: inline-block;
 	max-width: 120px;
 	color: #999;
@@ -25,19 +96,19 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
-#siderbar i {
+#config-layer i {
 	position: absolute;
 	cursor: pointer;
 	font-style: normal;
 	z-index: 1;
 }
-#siderbar .tips {
+#config-layer .tips {
 	background:transparent url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) -208px -64px no-repeat;
 	width: 20px;
 	height: 20px;
 	top: 37px;
 }
-#siderbar .tips > p {
+#config-layer .tips > p {
 	display: none;
 	position: absolute;
 	z-index: 9;
@@ -52,11 +123,11 @@
 	word-break: break-all;
 	width: 180px;
 }
-#siderbar .tips:hover p{
+#config-layer .tips:hover p{
 	display: block;
 }
 
-#siderbar .close {
+#config-layer .close {
     color: #666;
     font-size: 26px;
     font-weight: normal;
@@ -64,26 +135,22 @@
     top: 4px;
 }
 
-#siderbar .close:hover{
+#config-layer .close:hover{
 	color: #fff;
 }
-.siderbar-upload {position: relative; cursor: pointer;height: 40px;line-height: 40px;width: 175px;margin-bottom: 10px;background-color: #575a60;}
-.siderbar-upload a{display: block; text-align: center;font-size: 30px;line-height: 35px;color: #9a9ca0;}
-.siderbar-upload a:hover{color: #fff;}
-.siderbar-main { 
-	overflow: auto;
-}
-.siderbar-main li {
-	margin-bottom: 10px;
-}
-.siderbar-main a {
+.a-upload {position: relative; cursor: pointer;height: 40px;line-height: 40px;width: 175px;margin-bottom: 10px;background-color: #575a60;}
+.a-upload a{display: block; text-align: center;font-size: 30px;line-height: 35px;color: #9a9ca0;}
+.a-upload a:hover{color: #fff;}
+.skin-img-list { overflow: auto;}
+.skin-img-item {margin-bottom: 10px; }
+.skin-img-item a {
 	display: block;
 	height: 70px;
 	width: 175px;
 	position: relative;
 }
 
-.siderbar-main img{
+.skin-img-item img{
 	width: 175px;
 	height: 70px;
 }
@@ -101,11 +168,7 @@
 }
 .operate-button.pause {background-position: -95px -85px;}
 .operate-button.start {background-position: -48px -85px;}
-
-.operate-button.loading {
-	background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/loading.png);
-	animation:turn 2s linear infinite;
-}
+.operate-button.loading {background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/loading.png);animation:turn 2s linear infinite;;}
 @keyframes turn{
 	0%{
 		transform: rotateZ(0deg);
@@ -114,10 +177,10 @@
 		transform: rotateZ(360deg);
 	}
 }
-.siderbar-main li.selected .operate-button { 
+.skin-img-item.selected .operate-button { 
 	display: block; 
 }
-.siderbar-main li.selected > a::after {
+.skin-img-item.selected > a::after {
 	content: "";
 	bottom: 0;
 	right: 0;

@@ -57,7 +57,7 @@ define('static/js/index', function(require, exports, module) {
 
     function pageinit(tpl) {
         
-        Controller.getGridDataList({}, function() {
+        Controller.getGridList({}, function() {
         	console.log('page render...');
         });
     }
