@@ -38,19 +38,36 @@ fis.media('dev').match('*', {
     optimizer: null
 });
 
+// 编译环境压缩和合并
+fis.media('dist').match('*.js', {
+  useHash: true,
+  useSprite: true,
+  optimizer: fis.plugin('uglify-js', {
+    // option of uglify-js
+  })
+});
+
+/**
+ * 更精确的打包机制
+ */
 fis.media('dist').match('::package', {
   packager: fis.plugin('map', { // 可以控制文件的顺序
     '/static/pkg/lib.js': [
-      '/static/js/jquery-1.2.6.js',
-      '/static/js/jquery.easing.1.3.js',
-      '/static/js/coda-slider.js',
-      '/static/js/mod.js'
+      '/static/js/lib/jquery-2.2.4.min.js',
+      '/static/js/lib/dialog.js',
+      '/static/js/lib/template.js',
+      '/static/js/lib/mod.js',
+      '/static/js/api.js',
+      '/static/js/language.js',
+      '/static/js/strUtils.js',
+      '/static/js/tools.js'
     ],
     '/static/pkg/main.js' : [
-      '/widget/**/*.js'
+      '/widget/**/*.js',
+      '/static/js/index.js'
     ]
   })
-})
+});
 
 
 /**
@@ -69,7 +86,7 @@ fis.media('dist').match('::package', {
  * 缺点：默认按文件名顺序打包，不够灵活
  * @type {[type]}
  */
-// fis.match('*.js', {
+// fis.media('dist').match('*.js', {
 //   useHash: false,
 //   optimizer: fis.plugin('uglify-js', {
 //     // option of uglify-js
@@ -78,10 +95,3 @@ fis.media('dist').match('::package', {
 // }).match('/static/js/**.js', { // 公共资源打一个包
 //   packTo: '/static/pkg/lib.js'
 // })
-
-
-// 编译环境压缩和合并
-// fis.media('dist').match('*.{js,png,css}', {
-//     useSprite: true,
-//     useHash: true
-// });
