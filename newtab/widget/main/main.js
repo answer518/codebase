@@ -3,12 +3,13 @@
  * @author guotingjie
  *
  */
-var api = require('static/js/api'),
+var Api = require('static/js/api'),
     Language = require('static/js/language'),
     Tools = require('static/js/tools'),
+    Menu = require('static/js/menu'),
+    Poup = require('static/js/poup.js'),
     Dao = require('widget/main/dao'),
     Global = require('widget/main/global'),
-    Poup = require('widget/main/poup.js'),
     helper = require('widget/main/helper');
 
 var $group_dialog,
@@ -24,7 +25,6 @@ var $group_dialog,
     animation_time = 300;
 
 var top_container_width, drag_node, current_group, group_node, group_title, group_operate, grid_add;
-
 
 function clearDragNode() {
     if (drag_node[0]) {
@@ -121,20 +121,6 @@ Grid.prototype = (function() {
         }
 
         if (self.thumburls.length === 0) return;
-        // 截图代码调整成异步执行
-        // setTimeout(function() {
-        //     Tools.isThumbExists(self.thumburls, function(result) {
-        //         var childNodes = self.list_node.childNodes;
-        //         result.forEach(function(item, i) {
-        //             var childNode = childNodes[i];
-        //             if (item === true && childNode.className.indexOf('loading') !== -1) {
-        //                 var url = self.thumburls[i];
-        //                 childNode.className = 'thumbnail';
-        //                 childNode.style.cssText = 'background-image : url(' + Poup.getThumbsUrl(url, 0) + ')';
-        //             }
-        //         });
-        //     });
-        // }, 10);
     }
 
     function getGridPosition(index) {
@@ -191,21 +177,9 @@ Grid.prototype = (function() {
 
     function showMenu(obj, l, t) {
         var menuList = [],
-            version = maxthon.max_version;
+            version = Api.max_version;
         if (obj.children) {
             var list = obj.children;
-            // 笔记专版
-            if (version === '1.5.50.3200' || version.cmpVersions('5.0.2.700') >= 0) {
-                menuList = [
-                    { 'id': 'open-all-tab', 'label': Language.getLang('NewTabOpenAll') },
-                    { 'id': 'delete-tab', 'label': Language.getLang('Delete') },
-                    { type: true },
-                    { 'id': 'open-all-newwin-tab', 'label': Language.getLang('NewWindowOpenAll') },
-                    { 'id': 'open-all-invisible-tab', 'label': Language.getLang('NewInvisibleOpenAll') }
-                ];
-            } else {
-                menuList = [{ id: 'delete-tab', label: Language.getLang('Delete') }];
-            }
             Menu.showPopupMenu(l, t, menuList, function(data) {
                 var urls = [];
                 list.forEach(function(item, i) {
@@ -213,16 +187,16 @@ Grid.prototype = (function() {
                 });
                 switch (data) {
                     case 'open-all-tab': //打开新标签
-                        maxthon.useApi('openUrl', { 'urls': urls, 'mode': 'BackgroundTab' });
+                        Api.useApi('openUrl', { 'urls': urls, 'mode': 'BackgroundTab' });
                         break;
                     case 'delete-tab':
                         showDelete(obj);
                         break;
                     case 'open-all-newwin-tab':
-                        maxthon.useApi('openUrl', { 'urls': urls, 'mode': 'NewWindow' });
+                        Api.useApi('openUrl', { 'urls': urls, 'mode': 'NewWindow' });
                         break;
                     case 'open-all-invisible-tab':
-                        maxthon.useApi('openUrl', { 'urls': urls, 'mode': 'NewPrivateWindow' });
+                        Api.useApi('openUrl', { 'urls': urls, 'mode': 'NewPrivateWindow' });
                         break;
                 }
             });
@@ -232,19 +206,11 @@ Grid.prototype = (function() {
                 { 'id': 'edit-tab', 'label': Language.getLang('Edit') },
                 { 'id': 'delete-tab', 'label': Language.getLang('Delete') }
             ];
-            // 笔记专版
-            if (version === '1.5.50.3200' || version.cmpVersions('5.0.2.700') >= 0) {
-                menuList.push.apply(menuList, [
-                    { 'type': true },
-                    { 'id': 'open-newwin-tab', 'label': Language.getLang('NewWindowOpen') },
-                    { 'id': 'open-invisible-tab', 'label': Language.getLang('NewInvisibleOpen') }
-                ]);
-            }
-
+           
             Menu.showPopupMenu(l, t, menuList, function(data) {
                 switch (data) {
                     case 'open-tab':
-                        maxthon.useApi('newTabBackground', { 'url': obj.url });
+                        Api.useApi('newTabBackground', { 'url': obj.url });
                         break;
                     case 'edit-tab':
                         showEdit(obj);
@@ -253,11 +219,11 @@ Grid.prototype = (function() {
                         showDelete(obj);
                         break;
                     case 'open-newwin-tab':
-                        maxthon.useApi('openUrl', { 'url': obj.url, 'mode': 'NewWindow' });
+                        Api.useApi('openUrl', { 'url': obj.url, 'mode': 'NewWindow' });
                         current_group && hideGroup();
                         break;
                     case 'open-invisible-tab':
-                        maxthon.useApi('openUrl', { 'url': obj.url, 'mode': 'NewPrivateWindow' });
+                        Api.useApi('openUrl', { 'url': obj.url, 'mode': 'NewPrivateWindow' });
                         current_group && hideGroup();
                         break;
                 }
@@ -278,7 +244,7 @@ Grid.prototype = (function() {
         }
 
         if (obj.url && obj.url.slice(0, obj.url.length) === ('mx://note/?id')) {
-            maxthon.useApi('note.openNoteInPopWindow', {
+            Api.useApi('note.openNoteInPopWindow', {
                 'pid': obj.url.getQueryString('pid'),
                 'id': obj.url.getQueryString('id')
             }, function(data) {
@@ -294,7 +260,7 @@ Grid.prototype = (function() {
         }
 
         setTimeout(function() {
-            maxthon.useApi('newTabUpground', { 'url': obj.url });
+            Api.useApi('newTabUpground', { 'url': obj.url });
         }, 10);
         // 关闭文件夹弹框
         current_group && hideGroup();
@@ -791,7 +757,7 @@ Grid.prototype = (function() {
                         }
                         return false;
                     }
-                    if (maxthon.max_version.cmpVersions('5.0.1.1600') > 0) {
+                    if (Api.max_version.cmpVersions('5.0.1.1600') > 0) {
                         gridClick(_this);
                         return false;
                     }
@@ -968,7 +934,7 @@ function initData(data) {
         data_list.push({ 'title': 'Add', 'type': 'button' });
         data_list.push.apply(data_list, autoComplete(top_data_list));
         // 保证数据与页面结构一致
-        // maxthon.setSyncValue(MY_SITE, data_list);
+        // Api.setSyncValue(MY_SITE, data_list);
     }
 
     Global.data_list = data_list;

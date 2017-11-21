@@ -1,0 +1,58 @@
+/** 右键菜单 */
+
+.pop-menu {
+    position: absolute;
+    z-index: 999;
+    top: -9999px;
+    left: -9999px;
+}
+
+.pop-menu ul {
+    border: 1px solid #bbb;
+    background: #FFFFFF;
+    padding: 2px 0px 2px 0px;
+    box-shadow: 1px 1px 6px rgba(0, 0, 0, .2);
+    overflow: hidden;
+    min-width: 150px;
+}
+
+.pop-menu ul li {
+    float: left;
+    clear: both;
+    width: 100%;
+    cursor: pointer;
+    z-index: 103;
+}
+
+.pop-menu .menu-item-icon {
+    width: 22px;
+    height: 22px;
+    float: left;
+    padding: 3px 0px 2px 0px;
+}
+
+.pop-menu .menu-item-title {
+    display: inline-block;
+    padding: 3px 20px 2px 2px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 12px;
+}
+
+.pop-menu .menu-item-disabled {
+    color: #D3D3D3;
+}
+
+.pop-menu .menu-item-separator {
+    height: 1px;
+    border: 1px dotted #C7C7C7;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    width: 100%;
+    margin: 2px 0 2px 0;
+}
+
+.pop-menu .menu-item:hover {
+    background-color: #e5f3fe;
+}

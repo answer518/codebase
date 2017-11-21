@@ -1,0 +1,373 @@
+/**
+ *  快速拨号前台页面
+ *  @author  guotingjie@maxthon.net
+ */
+
+.grid {
+    position: absolute;
+    transition: all 0.3s;
+}
+
+.grid::before {
+    content: "";
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+}
+
+.top.grid {
+    width: 7%;
+    margin: 0 2%;
+}
+
+.top.grid:hover {
+    transform: scale(1.08);
+    transition: .3s transform;
+}
+
+.top.grid > a {
+    display: block;
+    text-align: center;
+    height: 0;
+    padding-bottom: 97%;
+    width: 97%;
+    border-radius: 10px;
+    margin: 0 auto;
+    background-size: cover;
+    box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.top.grid .empty {
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.top.grid .add {
+    overflow: hidden;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.top.grid i.sprite.sprite-circle {
+    background-position: 3px -188px;
+}
+
+.top.grid .color-block {
+    font-size: 40px;
+    overflow: hidden;
+    padding: 50% 0;
+    width: 100%;
+    height: 0;
+    line-height: 4%;
+    max-width: 100px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+
+.top.grid::before {
+    border-radius: 10px;
+}
+
+
+/**
+ * 我的站点
+ */
+
+.main.grid {
+    box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.1);
+    margin: 0 0.8% 1% 0.8%;
+    width: 15%;
+    height: 0px;
+    padding-bottom: 10%;
+    overflow: hidden;
+    border-radius: 3px;
+}
+
+.main.grid > a {
+    display: block;
+    height: 0;
+    width: 100%;
+    text-align: center;
+    border: none;
+    overflow: hidden;
+    padding-bottom: 70%;
+    position: absolute;
+}
+
+.main.grid > a > img {
+    width: 100%;
+    height: auto;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .15);
+}
+
+.main.grid .add {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    margin: -30px 0 0 -30px;
+    z-index: 2;
+    text-indent: -999px;
+    overflow: hidden;
+}
+
+.main.grid.remove {
+    transform: scale(0);
+}
+
+.main.grid:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, .3);
+}
+
+.main.grid.small {
+    padding-bottom: 0px;
+}
+
+.grid.notran {
+    transition: all 0s;
+}
+
+.main.grid.add::before {
+    background-color: rgba(255, 255, 255, 0.8);
+    position: absolute;
+}
+
+.current::before {
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: all 0.3s;
+    position: absolute;
+}
+
+.main.combo::before {
+    background-color: rgba(0, 0, 0, 0.4);
+    transition: all 0.3s;
+    position: absolute;
+    border: 6px solid rgba(0, 0, 0, 0.4);
+}
+
+.main.swap::before {
+    background: rgba(0, 0, 0, 0.4) url(//pc-newtab.maxthonimg.com/static/img/swap_icon.gif) no-repeat 6px 6px;
+    transition: all 0.3s;
+    position: absolute;
+}
+
+
+/** 截图loading */
+
+.grid.loading::before {
+    background: #fff url(//pc-newtab.maxthonimg.com/static/img/loading.gif) no-repeat center center;
+    position: absolute;
+}
+
+.grid.loading > a {
+    visibility: hidden;
+}
+
+.thumbnail-container {
+    height: 0;
+    background-image: linear-gradient(-180deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.70) 100%);
+    border: 1px solid rgba(0, 0, 0, 0.30);
+    cursor: pointer;
+    padding-bottom: 67%;
+    overflow: hidden;
+}
+
+.thumbnail-container .loading {
+    background: #fff url(//pc-newtab.maxthonimg.com/static/img/loading.gif) no-repeat center center;
+    background-size: 30% 45%;
+}
+
+.thumbnail {
+    width: 40%;
+    height: 0;
+    margin: 4.5% 0 0 6.5%;
+    background-size: 100%;
+    overflow: hidden;
+    padding-bottom: 26%;
+    float: left;
+    position: relative;
+}
+
+.thumbnail>span {
+    position: absolute;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    left: 50%;
+    top: 50%;
+    margin-left: -45%;
+    margin-top: -15px;
+    width: 90%;
+    overflow: hidden;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.thumb {
+    width: 93.6%;
+    margin: 3.2% 3.2%;
+    padding-bottom: 60%;
+    height: 0px;
+    background-size: cover;
+}
+
+.main.grid.loading > a > img {
+    visibility: hidden;
+}
+
+.grid .function {
+    text-align: left;
+    overflow: hidden;
+    color: #fff;
+    background-color: #000;
+    font-size: 12px;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    height: 0px;
+    line-height: 24px;
+}
+
+.main.grid:hover .function,
+.group .function {
+    display: block;
+    opacity: 0.7;
+    cursor: pointer;
+    height: 24px;
+    transition: height 0.3s;
+}
+
+.grid .function .title {
+    float: left;
+    margin-left: 10px;
+    font-weight: normal;
+    width: 46%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+
+.grid .function button {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    text-indent: -99px;
+    background-size: 20px;
+    top: 2px;
+    overflow: hidden;
+}
+
+.grid .function button.delete {
+    right: 5px;
+    background: url(//pc-newtab.maxthonimg.com/static/img/icon/delete.png) no-repeat #000;
+    background-size: 20px;
+}
+
+.grid .function button.delete:hover {
+    background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/delete_hover.png);
+}
+
+.grid .function button.edit {
+    right: 27px;
+    background: url(//pc-newtab.maxthonimg.com/static/img/icon/edit.png) no-repeat #000;
+    background-size: 20px;
+}
+
+.grid .function button.edit:hover {
+    background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/edit_hover.png);
+}
+
+.grid .function button.refresh {
+    right: 51px;
+    background: url(//pc-newtab.maxthonimg.com/static/img/icon/refresh.png) no-repeat #000;
+    background-size: 20px;
+}
+
+.grid .function button.refresh:hover {
+    background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/refresh_hover.png);
+}
+
+.group .function button {
+    display: none;
+}
+
+.group:hover .function button {
+    display: block;
+}
+
+.main.grid .color-block {
+    font-size: 20px;
+    width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -15px;
+    margin-left: -30%;
+    height: 30px;
+    line-height: 20px;
+}
+
+.color-block-1 {
+    background-color: #00BD9C;
+    color: #fff;
+}
+
+.color-block-2 {
+    background-color: #1FCE6D;
+    color: #fff;
+}
+
+.color-block-3 {
+    background-color: #E87E04;
+    color: #fff;
+}
+
+.color-block-4 {
+    background-color: #E94B35;
+    color: #fff;
+}
+
+.color-block-5 {
+    background-color: #2C97DE;
+    color: #fff;
+}
+
+.color-block-6 {
+    background-color: #ffffff;
+    color: #545454;
+}
+
+.color-block-7 {
+    background-color: #33495F;
+    color: #fff;
+}
+
+.color-block-8 {
+    background-color: #94A5A6;
+    color: #fff;
+}
+
+.color-block-9 {
+    background-color: #9C56B8;
+    color: #fff;
+}
+
+.main.grid.loading .grid .function,
+.main.grid.loading .color-block,
+.main.grid.loading .my-site-mask {
+    visibility: hidden;
+}
+
+#group_list .grid-list-container {
+    display: none;
+}
+
+#group_list .grid-list-container.show {
+    display: block;
+}

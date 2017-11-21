@@ -7,3 +7,4 @@
 		<div id="group_list" class="group-list"></div>
 	</div>
 </div>
+<?php import('widget/group/group.css'); ?>

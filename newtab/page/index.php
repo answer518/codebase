@@ -15,7 +15,9 @@
 
     <!-- 加载css -->
     <?php import('static/css/reset.css'); ?>
-    <?php import('static/css/style.css'); ?>
+    <?php import('static/css/common.css'); ?>
+    <?php import('static/css/layout.css'); ?>
+    <?php import('static/css/main.css'); ?>
 
     <!-- 加载同步的js -->
     <?php import('static/js/lib/jquery-2.2.4.min.js'); ?>
@@ -70,6 +72,5 @@
   <!-- js输出位置，放在底部加快页面解析 -->
   <?php placeholder('js'); ?>
   
-
 </body>
 </html>

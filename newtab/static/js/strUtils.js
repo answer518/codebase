@@ -4,7 +4,6 @@
  * @ctime 2016-6-8
  */
 'use strict';
-// 我的站点
 define('static/js/strUtils', function(require, exports, module) {
 
     /**

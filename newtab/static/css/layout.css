@@ -1,0 +1,116 @@
+#wrapper {
+    width: 85%;
+    max-width: 1200px;
+    min-width: 900px;
+    margin: 165px auto 100px;
+}
+
+#top {
+    width: 104%;
+    margin-left: -1.5%;
+    position: relative;
+    z-index: 1;
+    height: 120px;
+}
+
+#main {
+    position: relative;
+    z-index: 1;
+}
+
+#main .nav-header {
+    margin-left: -0.8%;
+}
+
+.nav-header-menu {
+    float: left;
+    position: relative;
+    left: 50%;
+}
+
+.nav-header-menu li {
+    float: left;
+    position: relative;
+    left: -50%;
+    text-align: center;
+    height: 40px;
+    line-height: 40px;
+    padding: 0px 20px;
+    font-size: 15px;
+}
+
+.nav-header-menu li > a {
+    display: block;
+    height: 100%;
+    color: #000;
+    opacity: 0.5;
+}
+
+.nav-header-menu li.active > a {
+    color: #333;
+    /* 解决点击出现外边框的问题 */
+    outline: medium;
+    border-bottom: 1px solid #333;
+    height: 39px;
+    opacity: 1;
+}
+
+.nav-body {
+    position: relative;
+    left: 1px;
+    top: 20px;
+    margin-left: -0.8%;
+}
+
+
+/** 背景透明时的样式 */
+
+.light .nav-header-menu li>a {
+    color: #fff;
+    opacity: 0.5
+}
+
+.light .nav-header-menu li.active > a {
+    border-bottom-color: #fff;
+    opacity: 1;
+}
+
+.light .thumbnail-container {
+    background-color: rgba(255, 255, 255, .3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-image: none;
+}
+
+#wallpapers {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    min-width: 1000px;
+    z-index: -10;
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: #e2ebf8;
+}
+
+#wallpapers video {
+    display: none;
+    min-width: 100%;
+    min-height: 100%;
+}
+
+
+/* 阻止滚动事件加模糊效果 */
+
+.mask {
+    overflow-y: hidden;
+    padding-right: 17px;
+}
+
+.mask #top,
+.mask #main,
+.mask footer {
+    -webkit-filter: blur(8.2px);
+}
