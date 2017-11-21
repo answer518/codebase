@@ -308,7 +308,6 @@ Grid.prototype = (function() {
         var _this = obj;
         if (!_this.children) {
             onRemoveGrid(_this.index);
-            datacode.removeGrid(obj);
             return;
         }
         Tools.showDeleteFolder(_this);
@@ -757,25 +756,10 @@ Grid.prototype = (function() {
                         }
                         return false;
                     }
-                    if (Api.max_version.cmpVersions('5.0.1.1600') > 0) {
-                        gridClick(_this);
-                        return false;
-                    }
+
                     return true;
                 });
 
-                if (_this.image && _this.image.slice(0, _this.image.length) === ('mx://thumbs')) {
-                    grid_node.addClass('loading');
-                    Tools.isThumbExists([_this.url], function(result) {
-                        result.forEach(function(item, i) {
-                            if (item === true) {
-                                _this.node.removeClass('loading');
-                            } else {
-                                Tools.reflushThumb(_this.url);
-                            }
-                        });
-                    });
-                }
             } else { // 文件夹
                 _this.group = _this.title;
 

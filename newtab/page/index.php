@@ -23,7 +23,6 @@
     <?php import('static/js/lib/jquery-2.2.4.min.js'); ?>
     <?php import('static/js/lib/dialog.js'); ?>
     <?php import('static/js/lib/template.js'); ?>
-    <?php import('static/res/i18n/data_zh-cn.js'); ?>
 </head>
 <body>
 
@@ -44,7 +43,7 @@
   <!-- 加载组件及对应依赖的js和css -->
   <div id="wallpapers">
     <!-- poster 一个初始化的画面, 解决黑屏的问题  -->
-    <video id="media" preload="true" loop="loop" poster="https://pc-newtab.maxthonimg.com/static/img/bg/sunny.jpg" src="https://pc-newtab.maxthonimg.com/static/img/bg/video/sunny.mp4"></video>
+    <video id="media" preload="true" loop="loop" style="display: none;"></video>
   </div>
   <!-- 收集style片段以便在顶部输出,style标签可选 -->
   <?php styleStart() ?>
@@ -55,18 +54,12 @@
   </style>
   <?php styleEnd() ?> 
   
-  <script type="text/javascript">
-        var staticServer = 'https://pc-newtab.maxthonimg.com/static', cdnServer = staticServer + '/v1.1';
-  </script>
   <!-- 收集script片段并分析其依赖。
     如果不想改变内嵌js的位置可以不用php包裹，但注意此时可能modjs还没加载 -->
   <?php scriptStart(); ?>
-    <script type="text/javascript">
-      
-      require('static/js/index.js', function() {
-
-      });
-    </script>
+      <script type="text/javascript">
+        require('static/js/index.js', function() {});
+      </script>
   <?php scriptEnd(); ?>
 
   <!-- js输出位置，放在底部加快页面解析 -->
