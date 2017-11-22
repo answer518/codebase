@@ -31,6 +31,7 @@
 
   <!-- 顶通结束 -->
   <div id="wrapper">
+    <?php widget("widget/search/search.php"); ?>
     <?php widget("widget/main/main.php"); ?>
   </div>
 
@@ -58,7 +59,9 @@
     如果不想改变内嵌js的位置可以不用php包裹，但注意此时可能modjs还没加载 -->
   <?php scriptStart(); ?>
       <script type="text/javascript">
-        require('static/js/index.js', function() {});
+        require('widget/search/search'); // auto run 
+        require('widget/sidebar/sidebar')
+        require('static/js/index.js');
       </script>
   <?php scriptEnd(); ?>
 

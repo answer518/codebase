@@ -9,7 +9,6 @@ define('static/js/index', function(require, exports, module) {
     var Api = require('static/js/api.js');
     var Language = require('static/js/language');
     var Controller = require('widget/main/main');
-    require('widget/sidebar/sidebar')(); // auto run 
     
     var __PRELOAD__ = {};
 

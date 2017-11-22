@@ -13,7 +13,7 @@ var $wallpapers = $('#wallpapers'),
 
 function initOption() {
     $siderbar = $('#config-layer'), $config_button = $('#config-button'),
-    $siderbarMain = $siderbar.find('.skin-img-list');
+        $siderbarMain = $siderbar.find('.skin-img-list');
 
     background = [
         { 'pic': 'light.jpg', 'type': 'picture', 'brightness': 'dark', 'data_code': 'defaultlight' },
@@ -269,6 +269,5 @@ function colors(img) {
     });
 }
 
-module.exports = function init() {
-	initOption();
-}
+// 启动模块
+initOption();
