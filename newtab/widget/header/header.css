@@ -109,3 +109,7 @@
 .profile-continer li:hover {
 	background-color: rgba(0,0,0,0.06);
 }
+
+.profile-continer li > a {
+	display: block;
+}

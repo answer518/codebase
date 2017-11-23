@@ -57,6 +57,7 @@ fis.media('dist').match('::package', {
       '/static/js/lib/dialog.js',
       '/static/js/lib/template.js',
       '/static/js/lib/mod.js',
+      '/static/js/mock.js',
       '/static/js/api.js',
       '/static/js/language.js',
       '/static/js/strUtils.js',

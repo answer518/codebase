@@ -34,7 +34,7 @@
     opacity: 0.4;
     position: fixed;
     transition: opacity 0.3s;
-    z-index: 999;
+    z-index: 9;
 }
 
 .face-out {

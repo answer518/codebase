@@ -10,6 +10,7 @@ define('static/js/api', function(require, exports, module) {
     var SYNC_KEY_QA = 'qa_layout';
     var SYNC_KEY_QA_WIDGET = 'qa_widget';
     var MAP_LIST = {};
+    var mock = require('static/js/mock');
 
     /**
      * API使用
@@ -23,11 +24,11 @@ define('static/js/api', function(require, exports, module) {
                 if (cb && data.status && data.status === true) {
                     cb(data.result);
                 } else {
-                    cb && cb({});
+                    cb && cb(mock[name] || {});
                 }
             });
         } catch (e) {
-            cb({});
+            cb && cb(mock[name] || {});
         }
     }
 

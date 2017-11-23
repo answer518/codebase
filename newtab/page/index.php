@@ -27,7 +27,7 @@
 <body>
 
   <!-- 引入皮肤组件 -->
-  <?php widget("widget/skin/skin.php"); ?>
+  <?php //widget("widget/skin/skin.php"); ?>
   <!-- 引入个人信息组件 -->
   <?php widget("widget/header/header.php"); ?>
   <!-- 顶通结束 -->
@@ -60,8 +60,9 @@
     如果不想改变内嵌js的位置可以不用php包裹，但注意此时可能modjs还没加载 -->
   <?php scriptStart(); ?>
       <script type="text/javascript">
+        require('widget/header/header');
         require('widget/search/search'); // auto run 
-        require('widget/sidebar/sidebar')
+        require('widget/sidebar/sidebar');
         require('static/js/index.js');
       </script>
   <?php scriptEnd(); ?>
