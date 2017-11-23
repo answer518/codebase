@@ -1,17 +1,45 @@
 // window.Api.Maxthon.useApi('account.getCurrentAccount', {}, function(data) {
 // 	console.log(data);
 // });
-
+var Api = require('static/js/api.js');
 var $profile = $('.profile');
 
-var Api = require('static/js/api.js');
+// 用户注销事件
+$profile.on('click', '.logout', function() {
+    Api.useApi('account.logout', {}, function(data) {
+        if (data === true) {
+            logout();
+        }
+    });
+});
+
+// 获取当前用户
 Api.useApi('account.getCurrentAccount', {}, function(data) {
+	login(data);
+});
+
+/**
+ * 登录状态监听
+ * @param  {[type]} data) {}          [description]
+ * @return {[type]}       [description]
+ */
+// Api.useApi('account.profileChanged', {}, function(data) {
+// 	login(data);
+// });
+
+
+// Api.useApi('common.UIStatus', {}, function(data) {});
+
+/**
+ * 用户登录
+ * @return {[type]} [description]
+ */
+function login(data) {
     data.progress = data.vipLevel * 10;
     var lang = navigator.language.toLocaleLowerCase();
 
     data.securityUrl = `https://pc-uc.uu.me/i/security.html?uid=${data.id}&ln=${lang}&mxver=${Api.max_version}&mxpn=`;
     data.personalUrl = `https://pc-uc.uu.me/i/?uid=${data.id}&ln=${lang}&mxver=${Api.max_version}&mxpn=`;
-
     var tpl = `<div class="profile-dropdown">
 				<img src="${data.avatarPath}" alt="头像" onerror=""/>
 				<div class="profile-continer">
@@ -44,20 +72,15 @@ Api.useApi('account.getCurrentAccount', {}, function(data) {
 				</div>
 			</div>`;
 
-	$profile.find('.login').text(data.nikename);
+    $profile.find('.login').text(data.nikename);
     $profile.find('.profile-dropdown').empty().append(tpl);
+}
 
-    $profile.on('click', '.logout', function() {
-    	Api.useApi('account.logout', {}, function(data) {
-    		console.log(data);
-    		if(data === true) {
-    			logout();
-    		}
-    	});
-    });
-});
-
+/**
+ * 用户注销
+ * @return {[type]} [description]
+ */
 function logout() {
-	$profile.find('.login').text('游客');
-	$profile.find('.profile-dropdown').empty();
+    $profile.find('.login').text('游客');
+    $profile.find('.profile-dropdown').empty();
 }

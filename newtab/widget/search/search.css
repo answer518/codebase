@@ -51,11 +51,12 @@
 	border: 1px solid rgba(0,0,0,.25);
 	border-radius: 2px;
 	box-shadow: 0 1px 3px rgba(0,0,0,.2);
-	width: 120px;
+	width: 130px;
 	background-color: #f9f9f9;
 	position: absolute;
 	z-index: 2;
 	top: 36px;
+	display: none;
 }
 
 .search-engine .engine-list p {

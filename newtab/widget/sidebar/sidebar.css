@@ -7,7 +7,7 @@
 	bottom: 20px;
 	right:  0px;
 	height: 80px;
-	z-index: 2;
+	z-index: 4;
 }
 .siderbar > ul > li {
 	height: 40px;

@@ -1,13 +1,13 @@
 <div class="header clearfix">
 	<ul class="header-action fr">
 		<li class="fl">
-			<a href="xxx" class="">傲游笔记</a>
+			<a href="xxx" target="_blank">傲游笔记</a>
 		</li>
 		<li class="fl">
-			<a href="xxx" class="">密码大师</a>
+			<a href="xxx" target="_blank">密码大师</a>
 		</li>
 		<li class="fl">
-			<a href="xxx" class="">百变邮箱</a>
+			<a href="xxx" target="_blank">百变邮箱</a>
 		</li>
 		<li class="fl profile">
 			<span class="line">|</span>
