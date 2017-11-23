@@ -228,7 +228,7 @@ function switchDarkOrLight(brightness) {
 
 function getOption(cb) {
     Api.getSyncValue('noSyncData', function(config) {
-        cb(config.bgIndex !== undefined ? config : { bgIndex: strUtils.compare(version, '5.0.4.400') < 0 ? 2 : 4 });
+        cb(config.bgIndex !== undefined ? config : { bgIndex:0 });
     });
 }
 

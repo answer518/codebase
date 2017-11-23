@@ -28,7 +28,8 @@
 
   <!-- 引入皮肤组件 -->
   <?php widget("widget/skin/skin.php"); ?>
-
+  <!-- 引入个人信息组件 -->
+  <?php widget("widget/header/header.php"); ?>
   <!-- 顶通结束 -->
   <div id="wrapper">
     <?php widget("widget/search/search.php"); ?>
