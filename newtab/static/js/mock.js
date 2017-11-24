@@ -13,7 +13,9 @@ define('static/js/mock', function(require, exports, module) {
             usedSpace: '5',
             country: '中国',
             hashKey: '',
-            nikename: '测试二十',
+            securityUrl: 'https://pc-uc.uu.me/i/security.html?uid=40664840&ln=zh-cn&mxver=5.1.4.1300&mxpn=',
+            personalUrl: 'https://pc-uc.uu.me/i/?uid=40664840&ln=zh-cn&mxver=5.1.4.1300&mxpn=',
+            nickname: '测试二十',
             phoneNumber: '1111222333'
         },
         'account.logout': true
