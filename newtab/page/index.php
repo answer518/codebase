@@ -17,6 +17,7 @@
     <?php import('static/css/reset.css'); ?>
     <?php import('static/css/common.css'); ?>
     <?php import('static/css/layout.css'); ?>
+    <?php import('static/css/poup.css'); ?>
     <?php import('static/css/main.css'); ?>
 
     <!-- 加载同步的js -->

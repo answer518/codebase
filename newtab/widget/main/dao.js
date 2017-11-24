@@ -89,40 +89,40 @@ function updateGridGroup(group_index, group_name) {
 function getGridList(callback) {
     Api.getSyncValue(MY_SITE, function(mx5_layout) {
 
-        if (Object.prototype.toString.call(mx5_layout).slice(8, -1) === 'Object' && Object.keys(mx5_layout).length === 0) {
+        if (Object.keys(mx5_layout).length === 0) {
             mx5_layout = DEFAULT_MY_SITE;
         }
-        Api.getSyncValue('needImport', function(data) {
-            if (data.needImport && data.needImport == true) { // 需要导入MX4 guest数据
-                Api.getLayout('qa_layout_guest', 'qa_widget_guest', function(mx4_layout_guest) {
-                    Api.mx4_2_mx5({
-                        'mx4_layout_guest': JSON.stringify(mx4_layout_guest),
-                        'mx5_layout': JSON.stringify(mx5_layout),
-                        'import': 'mx4'
-                    }, function(result) {
-                        // 设置为已导入
-                        Api.setSyncValue('needImport', { 'needImport': false });
-                        Controller.onGetGridList(result, MAP_LIST);
-                    });
-                });
-                return;
-            }
+        // Api.getSyncValue('needImport', function(data) {
+        //     if (data.needImport && data.needImport == true) { // 需要导入MX4 guest数据
+        //         Api.getLayout('qa_layout_guest', 'qa_widget_guest', function(mx4_layout_guest) {
+        //             Api.mx4_2_mx5({
+        //                 'mx4_layout_guest': JSON.stringify(mx4_layout_guest),
+        //                 'mx5_layout': JSON.stringify(mx5_layout),
+        //                 'import': 'mx4'
+        //             }, function(result) {
+        //                 // 设置为已导入
+        //                 Api.setSyncValue('needImport', { 'needImport': false });
+        //                 Controller.onGetGridList(result, MAP_LIST);
+        //             });
+        //         });
+        //         return;
+        //     }
 
-            if (data.needImport5 && data.needImport5 == true) { // 需要导入MX5 guest数据
-                Api.getSyncValue('my_site_guest', function(mx5_layout_guest) {
-                    Api.mx4_2_mx5({
-                        'mx5_layout_guest': JSON.stringify(mx5_layout_guest),
-                        'mx5_layout': JSON.stringify(mx5_layout),
-                        'import': 'mx5'
-                    }, function(result) {
-                        // 设置为已导入
-                        Api.setSyncValue('needImport', { 'needImport5': false });
-                        Controller.onGetGridList(result, MAP_LIST);
-                    });
-                });
-                return;
-            }
-        });
+        //     if (data.needImport5 && data.needImport5 == true) { // 需要导入MX5 guest数据
+        //         Api.getSyncValue('my_site_guest', function(mx5_layout_guest) {
+        //             Api.mx4_2_mx5({
+        //                 'mx5_layout_guest': JSON.stringify(mx5_layout_guest),
+        //                 'mx5_layout': JSON.stringify(mx5_layout),
+        //                 'import': 'mx5'
+        //             }, function(result) {
+        //                 // 设置为已导入
+        //                 Api.setSyncValue('needImport', { 'needImport5': false });
+        //                 Controller.onGetGridList(result, MAP_LIST);
+        //             });
+        //         });
+        //         return;
+        //     }
+        // });
         
         callback && callback(mx5_layout);
     });

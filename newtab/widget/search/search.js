@@ -8,8 +8,8 @@ var $engineList = $search.find('.engine-list');
 
 var dataEngine = {
     "lang": {
-        'zh-cn' : '在这里输入网址或搜索内容',
-        'en-us' : 'Type to search or visit...'
+        'zh-cn': '在这里输入网址或搜索内容',
+        'en-us': 'Type to search or visit...'
     },
     "engineList": {
         "baidu": {
