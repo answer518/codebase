@@ -145,5 +145,7 @@ function buildEngineList(ele, data) {
     $searchInput.attr('placeholder', data['lang'][navigator.language.toLocaleLowerCase()] || data['lang']['en-us']);
 }
 
+// 初始化搜索框
+setEngine(dataEngine.engineList['baidu']);
 buildEngineList($engineList, dataEngine);
 $(document).off('click', hideEngineList).on('click', hideEngineList);
