@@ -3,31 +3,30 @@
  */
 var maxthon = require('static/js/api.js'),
     Language = require('static/js/language'),
-    Controller = require('widget/main/main'),
+    Dao = require('widget/main/dao'),
     Helper = require('widget/main/helper');
 
 var $dialog_node, $dialog_nav_node, $grid_nav_node, $grid_tab_node,
     $input_url, $input_title, $dialog_add_btn, $dialog_grid, $color_block,
     $color_block_list, $radio_list, $search_btn, $search_input, $mask_node;
 
-var mapList = {},
-    clickcalls = [];
+var mapList = {}, clickcalls = [];
 
 function init(map) {
     $dialog_node = $('#add-dialog'),
-        $dialog_nav_node = $dialog_node.find('.dialog-nav > li'),
-        $grid_nav_node = $dialog_node.find('.grid-nav > li'),
-        $grid_tab_node = $dialog_node.find('.tab > li'),
-        $input_url = $dialog_node.find('input[name="url"]'),
-        $input_title = $dialog_node.find('input[name="title"]'),
-        $dialog_add_btn = $dialog_node.find('#dialog_add_btn'),
-        $dialog_grid = $dialog_node.find('.dialog-grid-list'),
-        $color_block = $dialog_node.find('.color-block-list'),
-        $color_block_list = $dialog_node.find('.color-block-list > li'),
-        $radio_list = $dialog_node.find('.radio-list'),
-        $search_btn = $dialog_node.find('#grid-search-icon'),
-        $search_input = $dialog_node.find('#grid_search_btn'),
-        $mask_node = $('#mx_mask_layer');
+    $dialog_nav_node = $dialog_node.find('.dialog-nav > li'),
+    $grid_nav_node = $dialog_node.find('.grid-nav > li'),
+    $grid_tab_node = $dialog_node.find('.tab > li'),
+    $input_url = $dialog_node.find('input[name="url"]'),
+    $input_title = $dialog_node.find('input[name="title"]'),
+    $dialog_add_btn = $dialog_node.find('#dialog_add_btn'),
+    $dialog_grid = $dialog_node.find('.dialog-grid-list'),
+    $color_block = $dialog_node.find('.color-block-list'),
+    $color_block_list = $dialog_node.find('.color-block-list > li'),
+    $radio_list = $dialog_node.find('.radio-list'),
+    $search_btn = $dialog_node.find('#grid-search-icon'),
+    $search_input = $dialog_node.find('#grid_search_btn'),
+    $mask_node = $('#mx_mask_layer');
 
     var $alltab = $dialog_node.find('.main-warp > div');
     // 点击回调数组
@@ -176,76 +175,6 @@ function init(map) {
         }
     });
 
-    $dialog_grid.on('click', '> li', function(e) {
-        e.preventDefault();
-        var $this = $(this);
-
-        if ($this.hasClass('disable')) {
-            return;
-        }
-        // 防止频繁点击，导致添加多次
-        $this.addClass('disable');
-        var $ele = $this.find('a');
-        var item = {
-            'title': $ele.attr('d-title'), // 标题
-            'url': $ele.attr('href'), // url链接
-            'image': $ele.attr('d-image'), // 图片路径
-            'sq_img': $ele.attr('d-sq-img'),
-            'sq_md5sum': $ele.attr('d-sq-md5'),
-            're_img': $ele.attr('d-re-img'),
-            're_md5sum': $ele.attr('d-re-md5'),
-            'isHot': false
-        };
-
-        setTimeout(function() {
-            // 构建动画元素
-            var target_grid = $this.clone();
-            var w = $this.width(),
-                h = $this.innerHeight();
-            var p = $this.offset();
-
-            target_grid.css({ 'position': 'absolute', '-webkit-transition': 'all 0.3s', 'left': p.left, 'top': p.top + document.body.scrollTop });
-            document.body.appendChild(target_grid[0]);
-            // 获取移动位置
-            var grid = Controller.getGridItem(grid_index).grid;
-            item.index = grid_index;
-            if (grid.isHot === true) {
-                item.isHot = true;
-                // g.image = g.image.replace('/Re/', '/Sq/');
-            }
-
-            var editOperate = editableMode();
-            if (!editOperate) {
-                var add_uiindex = grid.isHot === true ? Math.min(grid.topuiindex + 1, 7) : grid.uiindex + 1;
-                var xy = grid.getGridPosition(add_uiindex);
-                grid.node.css({ "left": xy.left, "top": xy.top });
-            }
-
-            if (!grid.group) {
-                var p2 = grid.getGridFixed();
-                var l2 = p2.left;
-                var t2 = p2.top + document.body.scrollTop;
-                target_grid.css({ "left": l2, "top": t2 });
-                setTimeout(function() {
-                    editOperate ? Controller.onUpdateGridItem(item) : Controller.onInsertGridItem(item, grid);
-                    if (target_grid) {
-                        document.body.removeChild(target_grid[0]);
-                        target_grid = null;
-                    }
-                }, 300);
-            } else {
-                Controller.onUpdateGridItem(item);
-                if (target_grid) {
-                    document.body.removeChild(target_grid[0]);
-                    target_grid = null;
-                }
-            }
-
-            // 关闭弹框
-            closeDialog();
-        }, 50);
-    });
-
     $dialog_add_btn.on('click', function(e) {
         var $this = $(this);
         if ($this.hasClass('disable')) {
@@ -295,19 +224,14 @@ function init(map) {
             }
         });
 
-        var grid = Controller.getGridItem(grid_index).grid;
+        var grid = Dao.getGridItem(grid_index).grid;
         if (grid.isHot === true) {
             item.isHot = true;
             item.image = item.image && item.image.replace('/Re/', '/Sq/');
         }
 
-        if (maxnoteCategory && grid_source === 'maxnote') {
-            ueip_data.data.maxnoteCategory = maxnoteCategory;
-        }
         // 关闭窗口
         if (editableMode()) {
-            ueip_data.n = 'edit';
-            ueip_data.o += 'Edit';
             item.index = grid_index;
             Controller.onUpdateGridItem(item);
         } else {
@@ -616,7 +540,7 @@ function renderUrlList(data, $dom) {
                             <img src="mx://favicon/' + d.url + '" alt="' + d.title + '" height="16" width="16" onerror="this.src=\'' + staticServer + '/img/icon/6000.png\'" class="nav-icon" />\
                             <span class="nav-text">' + d.title + '</span>\
                         </a>\
-                        </li>');
+                    </li>');
     }
     html.push('</ul>');
     $dom.empty().append(html.join(''));
@@ -630,12 +554,12 @@ function getNoteListByPid(pid, cb) {
         for (var i = 0; i < notes.length; i++) {
             var d = notes[i] || {};
             html += '<li>\
-                            <div class="jstree-wholerow"></div>\
-                            <a class="jstree-note" href="' + (d.et !== 1 ? "mx://note/?id=" + d.uuid + "&pid=" + pid : d.url) + '" title="' + d.fn + '" et="' + d.et + '">\
-                                <img src="' + (d.et !== 1 ? staticServer + "/img/icon/node_icon_note.png" : "mx://favicon/" + d.url) + '" alt="' + d.fn + '" height="16" width="16" onerror="this.src=\'' + staticServer + '/img/icon/6000.png\'" class="nav-icon" />\
-                                <span class="nav-text">' + d.fn + '</span>\
-                            </a>\
-                        </li>';
+                        <div class="jstree-wholerow"></div>\
+                        <a class="jstree-note" href="' + (d.et !== 1 ? "mx://note/?id=" + d.uuid + "&pid=" + pid : d.url) + '" title="' + d.fn + '" et="' + d.et + '">\
+                            <img src="' + (d.et !== 1 ? staticServer + "/img/icon/node_icon_note.png" : "mx://favicon/" + d.url) + '" alt="' + d.fn + '" height="16" width="16" onerror="this.src=\'' + staticServer + '/img/icon/6000.png\'" class="nav-icon" />\
+                            <span class="nav-text">' + d.fn + '</span>\
+                        </a>\
+                    </li>';
         }
         cb && cb(html);
     });

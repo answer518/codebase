@@ -1,5 +1,6 @@
 var Api = require('static/js/api.js');
 var MY_SITE = 'my_site';
+
 function saveOrUpdate(cb) {
     Api.getSyncValue(MY_SITE, function(data_list) {
         if ($.isEmptyObject(data_list)) {
@@ -11,6 +12,7 @@ function saveOrUpdate(cb) {
 }
 
 function insertGridItem(i, j, item) {
+    
     saveOrUpdate(function(data_list) {
         if (j < 0) {
             data_list.splice(i, 0, item);
@@ -87,45 +89,110 @@ function updateGridGroup(group_index, group_name) {
 }
 
 function getGridList(callback) {
-    Api.getSyncValue(MY_SITE, function(mx5_layout) {
+    Api.getSyncValue(MY_SITE, function(dataList) {
 
-        if (Object.keys(mx5_layout).length === 0) {
-            mx5_layout = DEFAULT_MY_SITE;
+        if (Object.keys(dataList).length === 0) {
+            dataList = DEFAULT_MY_SITE;
         }
-        // Api.getSyncValue('needImport', function(data) {
-        //     if (data.needImport && data.needImport == true) { // 需要导入MX4 guest数据
-        //         Api.getLayout('qa_layout_guest', 'qa_widget_guest', function(mx4_layout_guest) {
-        //             Api.mx4_2_mx5({
-        //                 'mx4_layout_guest': JSON.stringify(mx4_layout_guest),
-        //                 'mx5_layout': JSON.stringify(mx5_layout),
-        //                 'import': 'mx4'
-        //             }, function(result) {
-        //                 // 设置为已导入
-        //                 Api.setSyncValue('needImport', { 'needImport': false });
-        //                 Controller.onGetGridList(result, MAP_LIST);
-        //             });
-        //         });
-        //         return;
-        //     }
 
-        //     if (data.needImport5 && data.needImport5 == true) { // 需要导入MX5 guest数据
-        //         Api.getSyncValue('my_site_guest', function(mx5_layout_guest) {
-        //             Api.mx4_2_mx5({
-        //                 'mx5_layout_guest': JSON.stringify(mx5_layout_guest),
-        //                 'mx5_layout': JSON.stringify(mx5_layout),
-        //                 'import': 'mx5'
-        //             }, function(result) {
-        //                 // 设置为已导入
-        //                 Api.setSyncValue('needImport', { 'needImport5': false });
-        //                 Controller.onGetGridList(result, MAP_LIST);
-        //             });
-        //         });
-        //         return;
-        //     }
-        // });
-        
-        callback && callback(mx5_layout);
+        initData(dataList);
+        callback && callback(data_list);
     });
+}
+
+var data_list = [];
+
+function initData(data) {
+    var top_data_list = [],
+        topuiindex = 0;
+    data.forEach(function(item, i) {
+        if (item) {
+            // 过滤无效数据： Add 增加按钮 Empty:占位格子
+            if (item.title === 'Add' || item.title === 'Empty') {
+                return true;
+            }
+            if (item.group) delete item.group;
+            if (item.uiindex) delete item.uiindex;
+            if (item.isHot === true) {
+                item.topuiindex = topuiindex++;
+                top_data_list.push(item);
+            } else {
+                if (item.children) {
+                    item.children.forEach(function(item2, j) {
+                        if (!item2) {
+                            item.children.splice(j, 1);
+                            return true;
+                        }
+                    });
+                }
+                data_list.push(item);
+            }
+        }
+    });
+
+    data_list.push({ 'title': 'Add', 'type': 'button' });
+    data_list.push.apply(data_list, autoComplete(top_data_list));
+}
+
+// 自动补全Top8
+function autoComplete(list) {
+    var length = list.length;
+
+    if (length < 8) {
+        list.push({ 'title': 'Add', isHot: true, topuiindex: length });
+        for (var i = 0; i < 8 - length; i++) {
+            list.push({ 'title': 'Empty', isHot: true, topuiindex: length + 1 + i });
+        }
+    } else {
+        list.splice(8);
+    }
+    return list;
+}
+
+/**
+ * getGridItem from index
+ * @param  {[type]} index [description]
+ * @return {[type]}       [description]
+ */
+function getGridItem(index) {
+    if (index !== 0 && !index) {
+        return {
+            grid: grid_add,
+            i: -1,
+            j: -1
+        }
+    }
+
+    var grid, item, item2,
+        i = 0,
+        j = -1,
+        length = data_list.length,
+        group_length;
+
+    for1: for (; i < length; i++) {
+        item = data_list[i];
+
+        if (item.index == index) {
+            grid = item;
+            break;
+        }
+        if (item.children) {
+            for2: for (j = 0, group_length = item.children.length; j < group_length; j++) {
+                item2 = item.children[j];
+                if (item2.index == index) {
+                    grid = item2;
+                    break for1;
+                    break;
+                }
+            }
+            j = -1;
+        }
+    }
+    return !grid ? false : {
+        grid: grid,
+        i: i,
+        j: j
+    }
 }
 
 module.exports = {
@@ -136,5 +203,6 @@ module.exports = {
     insertGridItem: insertGridItem,
     updateGridItem: updateGridItem,
     removeGridItem: removeGridItem,
+    getGridItem: getGridItem,
     getGridList: getGridList
 }
