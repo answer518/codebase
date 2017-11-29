@@ -12,7 +12,7 @@ function saveOrUpdate(cb) {
 }
 
 function insertGridItem(i, j, item) {
-    
+
     saveOrUpdate(function(data_list) {
         if (j < 0) {
             data_list.splice(i, 0, item);
@@ -149,52 +149,6 @@ function autoComplete(list) {
     return list;
 }
 
-/**
- * getGridItem from index
- * @param  {[type]} index [description]
- * @return {[type]}       [description]
- */
-function getGridItem(index) {
-    if (index !== 0 && !index) {
-        return {
-            grid: grid_add,
-            i: -1,
-            j: -1
-        }
-    }
-
-    var grid, item, item2,
-        i = 0,
-        j = -1,
-        length = data_list.length,
-        group_length;
-
-    for1: for (; i < length; i++) {
-        item = data_list[i];
-
-        if (item.index == index) {
-            grid = item;
-            break;
-        }
-        if (item.children) {
-            for2: for (j = 0, group_length = item.children.length; j < group_length; j++) {
-                item2 = item.children[j];
-                if (item2.index == index) {
-                    grid = item2;
-                    break for1;
-                    break;
-                }
-            }
-            j = -1;
-        }
-    }
-    return !grid ? false : {
-        grid: grid,
-        i: i,
-        j: j
-    }
-}
-
 module.exports = {
     addGridGroup: addGridGroup,
     updateGridGroup: updateGridGroup,
@@ -203,6 +157,5 @@ module.exports = {
     insertGridItem: insertGridItem,
     updateGridItem: updateGridItem,
     removeGridItem: removeGridItem,
-    getGridItem: getGridItem,
     getGridList: getGridList
 }

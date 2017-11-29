@@ -346,42 +346,24 @@ function showDialog(data, editable, openFlag) {
     bindData(data);
 
     add_quick_dialog = $dialog_node.Dialog({
-        close: function() {
-            return false;
-        },
         start_fn_later: function() {
-            $dialog_node.find('.close').off('click').on('click', function() {
-                var grid = Controller.getGridItem(grid_index).grid;
-                $dialog_nav_node.each(function(i, n) {
-                    if ($(n).hasClass('selected')) {
-                        grid_source = ['default', 'custome'][i];
-                        return false;
-                    }
-                });
-                // 关闭弹框
-                closeDialog(openInDialog);
-            });
+            // $dialog_node.find('.close').off('click').on('click', function() {
+            //     var grid = Controller.getGridItem(grid_index).grid;
+            //     $dialog_nav_node.each(function(i, n) {
+            //         if ($(n).hasClass('selected')) {
+            //             grid_source = ['default', 'custome'][i];
+            //             return false;
+            //         }
+            //     });
+            //     // 关闭弹框
+            //     closeDialog(openInDialog);
+            // });
         }
     });
 }
 
 function closeDialog() {
-    var openFlag = openInDialog;
     clearData();
-    // 重置自定义弹窗
-    $dialog_add_btn.removeClass('disable');
-    $input_url.removeAttr('disabled').removeAttr('style').removeClass('error');
-    $radio_list.removeClass('disabled').removeClass('selected').eq(1).addClass('selected');
-    $color_block_list.removeClass('selected').eq(0).addClass('selected');
-    // 打开文件夹弹框
-    if (openFlag === true) {
-        $dialog_node.hide();
-        $group_dialog.show();
-        $('#mx_mask_layer').off('click').on('click', function(e) {
-            window.Api.dialog.close();
-        }).show();
-        return false;
-    }
     add_quick_dialog.close();
 }
 

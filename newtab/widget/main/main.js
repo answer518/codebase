@@ -267,6 +267,7 @@ Grid.prototype = (function() {
         $group_list.find('.grid-list-container').removeClass('show');
         current_group.container.addClass('show');
         group_operate = $group_dialog.Dialog({
+            close_btn: false,
             start_fn_before: function() {
                 var urlList = [],
                     nodeList = [];
@@ -277,14 +278,6 @@ Grid.prototype = (function() {
                     urlList.push(item.url);
                     nodeList.push(item);
                 });
-
-                // Tools.isThumbExists(urlList, function(result) {
-                //     result.forEach(function(res, i) {
-                //         if (res === true) {
-                //             nodeList[i].reload();
-                //         }
-                //     });
-                // });
             },
             remove_fn_later: function() {
                 // 编辑状态
@@ -1031,7 +1024,6 @@ function readyInitUiData() {
             $cloneGrid.css({ 'position': 'absolute', '-webkit-transition': 'all 0.3s', 'left': p.left, 'top': p.top + document.body.scrollTop });
             document.body.appendChild($cloneGrid[0]);
             // 获取目标位置
-            // var grid = current_grid;
             item.index = current_grid.index;
             item.isHot = current_grid.isHot;
 
@@ -1057,7 +1049,7 @@ function readyInitUiData() {
             }
 
             // 关闭弹框
-            
+            $('#add-dialog').trigger('dialog-close');
         }, 50);
     });
 
@@ -1411,6 +1403,52 @@ function setGroupGirdNodeSize(node, index, xy) {
             node[0].style.cssText = 'left:' + left + 'px; top: ' + top + 'px; width:71px; height: 46px;';
         }, 5);
     }, 5);
+}
+
+/**
+ * getGridItem from index
+ * @param  {[type]} index [description]
+ * @return {[type]}       [description]
+ */
+function getGridItem(index) {
+    if (index !== 0 && !index) {
+        return {
+            grid: grid_add,
+            i: -1,
+            j: -1
+        }
+    }
+
+    var grid, item, item2,
+        i = 0,
+        j = -1,
+        length = data_list.length,
+        group_length;
+
+    for1: for (; i < length; i++) {
+        item = data_list[i];
+
+        if (item.index == index) {
+            grid = item;
+            break;
+        }
+        if (item.children) {
+            for2: for (j = 0, group_length = item.children.length; j < group_length; j++) {
+                item2 = item.children[j];
+                if (item2.index == index) {
+                    grid = item2;
+                    break for1;
+                    break;
+                }
+            }
+            j = -1;
+        }
+    }
+    return !grid ? false : {
+        grid: grid,
+        i: i,
+        j: j
+    }
 }
 
 module.exports = {
