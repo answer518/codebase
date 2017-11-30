@@ -6,7 +6,7 @@ var Tools = require('static/js/tools.js');
 var helper = (function() {
 
     template.on('isThumbImge', function(src) {
-        return src.slice(0, src.length) === 'mx://thumbs/';
+        return src && src.slice(0, src.length) === 'mx://thumbs/';
     });
 
     return {

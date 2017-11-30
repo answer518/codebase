@@ -3,7 +3,6 @@
  */
 var maxthon = require('static/js/api.js'),
     Language = require('static/js/language'),
-    Dao = require('widget/main/dao'),
     Helper = require('widget/main/helper');
 
 var $dialog_node, $dialog_nav_node, $grid_nav_node, $grid_tab_node,
@@ -175,11 +174,8 @@ function init(map) {
         }
     });
 
-    $dialog_add_btn.on('click', function(e) {
+    $dialog_node.on('click', '#dialog_add_btn', function(e) {
         var $this = $(this);
-        if ($this.hasClass('disable')) {
-            return;
-        }
 
         var url = $input_url.val().trim();
         var title = $input_title.val().trim();
@@ -197,13 +193,12 @@ function init(map) {
         }
 
         // 防止频繁点击，导致添加多次
-        $this.addClass('disable');
         if (title.length === 0) {
             title = url;
         }
         var item = {
             'title': title,
-            'url': url //url.notUrl() ? 'http://' + url : url
+            'url': url.match(/https?:\/\//) ? url : 'http://' + url
         };
 
         $radio_list.each(function(i, n) {
@@ -224,24 +219,19 @@ function init(map) {
             }
         });
 
-        var grid = Dao.getGridItem(grid_index).grid;
-        if (grid.isHot === true) {
-            item.isHot = true;
-            item.image = item.image && item.image.replace('/Re/', '/Sq/');
-        }
-
+        var Controller = require('widget/main/main');
+        var grid = Controller.getGridItem(grid_index).grid;
+        item.isHot = grid.isHot;
         // 关闭窗口
         if (editableMode()) {
             item.index = grid_index;
             Controller.onUpdateGridItem(item);
         } else {
-            ueip_data.n = 'add';
-            ueip_data.o += 'Add';
             Controller.onInsertGridItem(item, grid);
         }
 
         // 关闭弹框
-        closeDialog();
+        $dialog_node.trigger('dialog-close');
     });
 
     var searchTimer;
@@ -409,21 +399,7 @@ function bindData(data) {
             config.recommendlogo = { 'disable': false, 'checked': true }
             break;
     }
-    // 判断如果是第三方图库图片，还是保留推荐图
-    var matchimage = getImageFromUrl(grid_url);
-    if (matchimage === '') {
-        if (!(data.image && data.image.indexOf('http://fastdail-img') === 0)) {
-            config.recommendlogo = {
-                'disable': true
-            }
-        }
-    }
 
-    if (grid_url.indexOf('mx://note/?id') === 0) {
-        config.screenshot = { 'disable': true };
-        // 文本框置灰
-        $input_url.attr('disabled', 'disabled');
-    }
     updateRadio(config, true);
 }
 
@@ -484,24 +460,6 @@ function renderGridHtml(data) {
     for (var i = 0; i < data.list.length; i++) {
         var item = data.list[i];
         var attrHtml = [];
-        if (mapList[item.url]) { // map中有md5
-            item['sq_img'] = mapList[item.url]['sq_img'] || '';
-            if (item['sq_img'] && item['sq_img'] !== '') {
-                attrHtml.push('d-sq-img="' + item.sq_img + '" ');
-            }
-            item['re_img'] = mapList[item.url]['re_img'] || '';
-            if (item['re_img'] && item['re_img'] !== '') {
-                attrHtml.push('d-re-img="' + item.re_img + '" ');
-            }
-            item['re_md5sum'] = mapList[item.url]['re_md5sum'] || '';
-            if (item['re_md5sum'] && item['re_md5sum'] !== '') {
-                attrHtml.push('d-re-md5="' + item.re_md5sum + '" ');
-            }
-            item['sq_md5sum'] = mapList[item.url]['sq_md5sum'] || '';
-            if (item['sq_md5sum'] && item['sq_md5sum'] !== '') {
-                attrHtml.push('d-sq-md5="' + item.sq_md5sum + '" ');
-            }
-        }
         item = Helper.tranData(item);
         _html.push('<li>');
         _html.push('<a href="' + item.url + '" d-title="' + item.title + '" d-image="' + item.image + '" ' + attrHtml.join('') + ' target="_blank">');
@@ -554,85 +512,43 @@ function getNoteListByPid(pid, cb) {
  */
 function getImageFromUrl(url, callback) {
     if (url.length == 0) return;
-    var qUrl = url.notUrl() ? 'http://' + url : url;
+    var qUrl = url.match(/^https?:\/\//) ? url : 'http://' + url;
+
     var urlReg = /^((https|http)?:\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
     if (!urlReg.test(qUrl)) return '';
-    if (/http:\/\/go.maxthon.(cn|com)\/redir\/mx(4|5)\//.test(url)) {
-        var qStr = url.getQueryString('f');
-        switch (qStr) {
-            case 'tmall':
-                qUrl = 'http://jx.tmall.com';
-                break;
-            case 'fbmx5':
-                qUrl = 'https://www.facebook.com/maxthon';
-                break;
-            case 'jumei':
-                qUrl = 'http://bj.jumei.com/';
-                break;
-            case 'juhuasuan':
-                qUrl = 'https://ju.taobao.com/';
-                break;
-            case 'meituan':
-                qUrl = 'http://bj.meituan.com/';
-                break;
-            case 'aitaobao':
-                qUrl = 'http://ai.taobao.com/';
-                break;
-            case 'vipshop':
-                qUrl = 'http://www.vip.com/';
-                break;
-            case 'amazon':
-                qUrl = 'https://www.amazon.cn';
-                break;
-            case 'gome':
-                qUrl = 'http://www.gome.com.cn/';
-                break;
-            default:
-                qUrl = 'http://www.' + qStr + '.com';
-                break;
-        }
-    }
 
     var regex = /.*\:\/\/([^\/]*).*/;
     var match = qUrl.match(regex);
     var host = '',
         image = '';
-    if (typeof match != "undefined" && null != match) {
-        if ((match[0] === 'https://vk.com/maxthon_ru' ||
-                match[0] === 'https://facebook.com/maxthon.org.ru' ||
-                match[0] === 'http://maxthon.org.ru')) {
-            host = match[0];
-        } else {
-            host = match[1];
-        }
-    }
+
     if (host === 'go.maxthon.com' || host === 'go.maxthon.cn') return '';
     // 自动匹配图片
     innerloop:
-        for (var i = 0; i < SITE_LIST.length; i++) {
-            var category = SITE_LIST[i];
-            for (var j = 0; j < category.list.length; j++) {
-                var _category = category.list[j];
+    for (var i = 0; i < SITE_LIST.length; i++) {
+        var category = SITE_LIST[i];
+        for (var j = 0; j < category.list.length; j++) {
+            var _category = category.list[j];
 
-                var _url = _category.url;
-                if (_url.indexOf(host) >= 0) { // 开头// 开头
-                    image = _category.image;
-                    i = SITE_LIST.length;
-                    break innerloop;
-                }
+            var _url = _category.url;
+            if (_url.indexOf(host) >= 0) { // 开头// 开头
+                image = _category.image;
+                i = SITE_LIST.length;
+                break innerloop;
+            }
 
-                if (_category.match) {
-                    for (var k = 0; k < _category.match.length; k++) {
-                        var __url = _category.match[k];
-                        if (__url.indexOf(host) >= 0) { // 开头
-                            image = _category.image;
-                            i = SITE_LIST.length;
-                            break innerloop;
-                        }
+            if (_category.match) {
+                for (var k = 0; k < _category.match.length; k++) {
+                    var __url = _category.match[k];
+                    if (__url.indexOf(host) >= 0) { // 开头
+                        image = _category.image;
+                        i = SITE_LIST.length;
+                        break innerloop;
                     }
                 }
             }
         }
+    }
     return image;
 }
 /**

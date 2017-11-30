@@ -1096,7 +1096,7 @@ function onMovingGrid(drag_index, drop_index, group_name) {
     } else {
         data_list.splice(drop.i, 0, data_list.splice(drag.i, 1)[0]);
     }
-    
+
     // 持久化
     Dao.moveGridItem({ i: drag.i, j: drag.j }, { i: drop.i, j: drop.j });
     resizeGridPositionAndIndex();
@@ -1453,5 +1453,8 @@ function getGridItem(index) {
 }
 
 module.exports = {
-    getGridList: getGridList
+    getGridList: getGridList,
+    getGridItem: getGridItem,
+    onUpdateGridItem: onUpdateGridItem,
+    onInsertGridItem: onInsertGridItem
 }
