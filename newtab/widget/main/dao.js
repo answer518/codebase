@@ -95,58 +95,8 @@ function getGridList(callback) {
             dataList = DEFAULT_MY_SITE;
         }
 
-        initData(dataList);
-        callback && callback(data_list);
+        callback && callback(dataList);
     });
-}
-
-var data_list = [];
-
-function initData(data) {
-    var top_data_list = [],
-        topuiindex = 0;
-    data.forEach(function(item, i) {
-        if (item) {
-            // 过滤无效数据： Add 增加按钮 Empty:占位格子
-            if (item.title === 'Add' || item.title === 'Empty') {
-                return true;
-            }
-            if (item.group) delete item.group;
-            if (item.uiindex) delete item.uiindex;
-            if (item.isHot === true) {
-                item.topuiindex = topuiindex++;
-                top_data_list.push(item);
-            } else {
-                if (item.children) {
-                    item.children.forEach(function(item2, j) {
-                        if (!item2) {
-                            item.children.splice(j, 1);
-                            return true;
-                        }
-                    });
-                }
-                data_list.push(item);
-            }
-        }
-    });
-
-    data_list.push({ 'title': 'Add', 'type': 'button' });
-    data_list.push.apply(data_list, autoComplete(top_data_list));
-}
-
-// 自动补全Top8
-function autoComplete(list) {
-    var length = list.length;
-
-    if (length < 8) {
-        list.push({ 'title': 'Add', isHot: true, topuiindex: length });
-        for (var i = 0; i < 8 - length; i++) {
-            list.push({ 'title': 'Empty', isHot: true, topuiindex: length + 1 + i });
-        }
-    } else {
-        list.splice(8);
-    }
-    return list;
 }
 
 module.exports = {

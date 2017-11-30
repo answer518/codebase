@@ -35,7 +35,7 @@ function hideGroup(callback) {
     if (!current_group) return;
     current_group.addLastGridThumbnailNode();
     current_group.container.removeClass('show');
-    group_operate.close();
+    group_operate.trigger('dialog-close');
     current_group = null;
     if (callback) {
         setTimeout(function() {
@@ -224,36 +224,11 @@ Grid.prototype = (function() {
     }
 
     function gridClick(obj) {
-        // 非文件夹内
-        if (!obj.group || obj.group === '') {
-            var ueip_data = {
-                m: 'zoneClick',
-                data: { 'title': obj.title, 'url': obj.url, 'position': obj.isHot ? obj.topuiindex : obj.uiindex }
-            };
-
-            ueip_data.n = obj.isHot === true ? 'top' : 'myfav';
-            datacode && datacode.statistic(ueip_data);
-        }
-
-        if (obj.url && obj.url.slice(0, obj.url.length) === ('mx://note/?id')) {
-            Api.useApi('note.openNoteInPopWindow', {
-                'pid': obj.url.getQueryString('pid'),
-                'id': obj.url.getQueryString('id')
-            }, function(data) {
-                if (data === 0)
-                    return;
-
-                if (group_operate) {
-                    group_operate.close();
-                }
-                Tools.showNoteNotFound(data);
-            });
-            return false;
-        }
 
         setTimeout(function() {
             Api.useApi('newTabUpground', { 'url': obj.url });
         }, 10);
+
         // 关闭文件夹弹框
         current_group && hideGroup();
         // return false;
@@ -304,13 +279,14 @@ Grid.prototype = (function() {
 
         if (obj.group && obj.group !== '') {
             if (group_operate) {
-                group_operate.close();
+                group_operate.trigger('dialog-close');
                 $group_dialog.attr('edit', true);
                 dialogModel = true;
                 // fix:解决在文件夹打开状态下编辑后，把current_group置空导致交互异常的问题
                 current_group = _current_group;
             }
         }
+
         Poup.showDialog({
             'index': _this.index,
             'uiinde': _this.topuiindex || _this.uiindex,
@@ -544,9 +520,9 @@ Grid.prototype = (function() {
                 }
             }
         } else if (current_group) {
+
             if (isOutGroup(xy)) {
                 moveAnimationTimer();
-
                 if (grid_add) {
                     item = grid_add; // 增加按钮
                 }
@@ -851,29 +827,62 @@ Grid.prototype = (function() {
 
 function getGridList(mapList, callback) {
     map_list = mapList;
-    Dao.getGridList(function(data_list) {
+    Dao.getGridList(function(data) {
         readyInitUiData();
-        initGridDataList(data_list);
+        initData(data);
+        initGridDataList();
+        // 优化一下这个地方
+        resizeGridPositionAndIndex();
     });
 }
 
-function initMapList(item) {
-    if (map_list[item.url]) { // map中有md5
-        item['sq_img'] = map_list[item.url]['sq_img'] || 'offline.png';
-        item['re_img'] = map_list[item.url]['re_img'] || 'offline.png';
-        item['re_md5sum'] = map_list[item.url]['re_md5sum'] || '';
-        item['sq_md5sum'] = map_list[item.url]['sq_md5sum'] || '';
-    }
+function initData(data) {
+    var top_data_list = [],
+        topuiindex = 0;
+    data_list = [];
+    data.forEach(function(item, i) {
+        if (item) {
+            if (item.isHot === true) {
+                item.topuiindex = topuiindex++;
+                top_data_list.push(item);
+            } else {
+                if (item.children) {
+                    item.children.forEach(function(item2, j) {
+                        if (!item2) {
+                            item.children.splice(j, 1);
+                            return true;
+                        }
+                    });
+                }
+                data_list.push(item);
+            }
+        }
+    });
+
+    data_list.push({ 'title': 'Add', 'type': 'button' });
+    data_list.push.apply(data_list, autoComplete(top_data_list));
 }
 
-function initGridDataList(list) {
-    var grid;
+// 自动补全Top8
+function autoComplete(list) {
+    var length = list.length;
 
-    data_list = list;
+    if (length < 8) {
+        list.push({ 'title': 'Add', isHot: true, topuiindex: length });
+        for (var i = 0; i < 8 - length; i++) {
+            list.push({ 'title': 'Empty', isHot: true, topuiindex: length + 1 + i });
+        }
+    } else {
+        list.splice(8);
+    }
+    return list;
+}
+
+function initGridDataList() {
+    var grid;
     data_list.forEach(function(item, i) {
         if (!item.children) { // 普通格子
             item = new Grid(item, i);
-            initMapList(item);
             if (item.isHot === true) {
                 $top_container.append(item.dom());
             } else {
@@ -886,7 +895,6 @@ function initGridDataList(list) {
             item.children.forEach(function(item2, j) {
                 item2.group = grid.title;
                 item2 = new Grid(item2, j);
-                initMapList(item2);
                 grid.container.append(item2.dom());
                 grid.children[j] = item2;
             });
@@ -1013,7 +1021,7 @@ function readyInitUiData() {
             're_md5sum': $ele.attr('d-re-md5'),
             'isHot': false
         };
-        // console.log(item);
+        
         setTimeout(function() {
             // 构建动画元素
             var $cloneGrid = $this.clone();
@@ -1071,7 +1079,6 @@ function onMovingGrid(drag_index, drop_index, group_name) {
     if (dragObj.group && dragObj.group !== '') {
         if (group_name == '') {
             data_list.splice(drop.i, 0, data_list.splice(drag.i, 1)[0]);
-            // datacode.moveGrid(dragObj.isHot, dropObj.isHot);
         } else {
             delete dragObj.group;
             data_list.splice(drop.i, 0, dragGroup.children.splice(drag.j, 1)[0]);
@@ -1088,10 +1095,9 @@ function onMovingGrid(drag_index, drop_index, group_name) {
         }
     } else {
         data_list.splice(drop.i, 0, data_list.splice(drag.i, 1)[0]);
-        // datacode.moveGrid(dragObj.isHot, dropObj.isHot);
     }
+    
     // 持久化
-
     Dao.moveGridItem({ i: drag.i, j: drag.j }, { i: drop.i, j: drop.j });
     resizeGridPositionAndIndex();
 }
@@ -1108,7 +1114,6 @@ function onMovingGroup(drag_index, drop_index, group_name) {
     // 持久化
     Dao.moveGridItem({ i: drag.i, j: drag.j }, { i: drop.i, j: drop.j });
     resizeGridPositionAndIndex();
-    // datacode.moveGrid(false, false);
 }
 
 var setGroupNameTimer;
@@ -1158,7 +1163,6 @@ function onMovingInGroup(drag_index, drop_index, group_name) {
             clearDragNode();
         }, animation_time);
     }
-    // datacode.moveGrid(false, false);
 }
 
 // 增加文件夹
@@ -1216,8 +1220,6 @@ function onAddGroup(drag_index, drop_index, group_name) {
             drop_node.remove();
         }, animation_time - 150);
     }
-
-    // datacode.createFolder({});
 }
 
 // 上下互换
@@ -1275,7 +1277,6 @@ function onSwappingGrid(drag_index, drop_index) {
             resizeGridPositionAndIndex();
             clearDragNode();
             drop_node.remove();
-            // datacode.moveGrid(true, false); // 上线互换统计
         }, animation_time);
     }
 }
