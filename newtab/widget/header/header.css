@@ -30,6 +30,7 @@
     vertical-align: middle;
     height: 28px;
     width: 28px;
+    border-radius: 50%;
 }
 
 .profile .line {
