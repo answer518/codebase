@@ -39,12 +39,30 @@ fis.media('dev').match('*', {
 });
 
 // 编译环境压缩和合并
-fis.media('dist').match('*.js', {
+fis.media('dist').match('*.{js,png,css}', {
+  // domain: 'https://pc-newtab.maxthonimg.com',
   useHash: true,
-  useSprite: true,
-  optimizer: fis.plugin('uglify-js', {
-    // option of uglify-js
-  })
+  useSprite: true
+});
+
+fis.media('dist').match('*.css', {
+    // fis-optimizer-clean-css 插件进行压缩，已内置
+    optimizer: fis.plugin('clean-css')
+});
+
+fis.media('dist').match('*.js', {
+  optimizer: fis.plugin('uglify-js')
+});
+
+// 指定sw.js文件不启用压缩指纹
+// fis.media('dist').match('sw.js', {
+//     optimizer: null,
+//     useHash: false
+// });
+
+fis.media('dist').match('*.png', {
+    // fis-optimizer-png-compressor 插件进行压缩，已内置
+    optimizer: fis.plugin('png-compressor')
 });
 
 /**
@@ -66,7 +84,11 @@ fis.media('dist').match('::package', {
     '/static/pkg/main.js' : [
       '/widget/**/*.js',
       '/static/js/index.js'
-    ]
+    ],
+    '/static/pkg/aio.css' : [
+        '/static/css/*.css',
+        '/widget/**/*.css'
+      ]
   })
 });
 
