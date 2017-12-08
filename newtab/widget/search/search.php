@@ -1,5 +1,5 @@
 <div class="search-bar clearfix">
-	<form class="search-form" action="https://www.baidu.com/baidu" method="get" target="_blank">
+	<form class="search-form" action="https://www.baidu.com/baidu" method="get">
 		<div class="search-box">
 			<div class="search-engine">
 				<img class="engine-icon" src="../../static/images/baidu-icon.png"/>
