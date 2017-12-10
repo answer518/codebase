@@ -56,7 +56,6 @@ $.fn.Dialog = function(options) {
         open();
     }
 
-
     function start() {
     	Settings.start_fn_before();
 
@@ -65,20 +64,43 @@ $.fn.Dialog = function(options) {
         }
 
         container.show();
+
+        container.on('click', '.close', function() {
+            container.trigger('dialog-close');
+        });
     }
 
     //添加遮罩层
     function addMaskLayer() {
     	document.body.className += ' mask';
-    	var maskLayer = document.getElementById('mx_mask_layer');
+        var maskLayer = document.getElementById('mx_mask_layer');
     	maskLayer.style.display = 'block';
 
-    	var closeMaskLayer = function () {
-    		maskLayer.style.display = 'none';
-    		document.body.className = document.body.className.replace(/\s*mask\s*/, '');
-    		maskLayer.removeEventListener('click', closeMaskLayer);
-    		container.hide();
-    	}
-    	maskLayer.addEventListener('click', closeMaskLayer);
+        if(!Settings.close_btn) {
+            maskLayer.addEventListener('click', removeMaskLayer);
+        }
     }
+
+    function removeMaskLayer() {
+        var maskLayer = document.getElementById('mx_mask_layer');
+        if(maskLayer.style.display === 'none') return;
+        maskLayer.style.display = 'none';
+        document.body.className = document.body.className.replace(/\s*mask\s*/, '');
+        maskLayer.removeEventListener('click', removeMaskLayer);
+        container.hide();
+    }
+
+    // 关闭弹框
+    function dialogClose() {
+        Settings.close_fn_before();
+        container.hide();
+        removeMaskLayer();
+        container.data("bool", false);
+        Settings.close_fn_later();
+    }
+
+    // 自定义弹框关闭
+    container.on('dialog-close', dialogClose);
+
+    return container;
 }

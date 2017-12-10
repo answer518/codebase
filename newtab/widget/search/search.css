@@ -105,3 +105,19 @@
 	color: #000;
 	outline: none;
 }
+
+#zoom-box {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    background: #fff;
+    opacity: 0.1;
+    transition: top .3s, left .3s, right .3s, bottom .3s, opacity .3s ease-in-out;
+}
+#zoom-box.in{
+    display: block;
+}

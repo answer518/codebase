@@ -40,6 +40,12 @@ var dataEngine = {
     }
 }
 
+$searchInput.on('keydown', function(e) {
+    if(e.keyCode === 13) {
+        showZoomBox();
+    }
+});
+
 /**
  * 点击切换搜索引擎按钮
  */
@@ -52,21 +58,12 @@ $search.on('click', '.search-engine', function(e) {
 
         // 防止国际版en切到zh-cn标识丢失
         $engineList.show();
-        setEngineListPos(); // 设置engineList位置
         $changeEngine.addClass('change-engine-close');
     }
 
     e.stopPropagation();
     e.preventDefault();
 });
-
-// $search.on('keydown', '.button', function(e) {
-//     if (e.keyCode === 13) { // 回车键
-//         // e.preventDefault();
-//         // var url = $searchForm.attr('action') + '?' + $(this).serialize();
-//         // console.log(url);
-//     }
-// });
 
 /**
  * 选择搜索引擎
@@ -119,10 +116,28 @@ function setEngine(data) {
     $searchForm.find('.extra-param').remove();
     $searchForm.append($extraParam);
 }
+
 /**
- * 搜索切换列表使用fixed定位
+ * 搜索时模拟页面跳转
  */
-function setEngineListPos() {}
+function showZoomBox() {
+    var zoomBox = $('<div id="zoom-box"></div>');
+    var rect = document.body.getBoundingClientRect();
+    zoomBox.appendTo('body');
+    zoomBox.css({
+        left: rect.left + "px",
+        top: rect.top + "px",
+        right: rect.right + "px",
+        bottom: rect.bottom + "px"
+    });
+    zoomBox.addClass('in');
+
+    setTimeout(function(){
+        zoomBox[0].style.cssText = '';
+        zoomBox[0].style.opacity = 1;
+    }, 10);
+}
+
 
 /**
  * 隐藏搜索引擎切换列表
@@ -145,5 +160,7 @@ function buildEngineList(ele, data) {
     $searchInput.attr('placeholder', data['lang'][navigator.language.toLocaleLowerCase()] || data['lang']['en-us']);
 }
 
+// 初始化搜索框
+setEngine(dataEngine.engineList['baidu']);
 buildEngineList($engineList, dataEngine);
 $(document).off('click', hideEngineList).on('click', hideEngineList);

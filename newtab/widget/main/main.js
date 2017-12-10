@@ -1,7 +1,6 @@
 /**
  * 用于Controller与Model之间的业务服务层
  * @author guotingjie
- *
  */
 var Api = require('static/js/api'),
     Language = require('static/js/language'),
@@ -9,7 +8,6 @@ var Api = require('static/js/api'),
     Menu = require('static/js/menu'),
     Poup = require('widget/main/poup.js'),
     Dao = require('widget/main/dao'),
-    Global = require('widget/main/global'),
     helper = require('widget/main/helper');
 
 var $group_dialog,
@@ -24,7 +22,7 @@ var $group_dialog,
     current_col = 6,
     animation_time = 300;
 
-var top_container_width, drag_node, current_group, group_node, group_title, group_operate, grid_add;
+var top_container_width, drag_node, current_group, group_node, group_title, group_operate, grid_add, current_grid;
 
 function clearDragNode() {
     if (drag_node[0]) {
@@ -37,7 +35,7 @@ function hideGroup(callback) {
     if (!current_group) return;
     current_group.addLastGridThumbnailNode();
     current_group.container.removeClass('show');
-    group_operate.close();
+    group_operate.trigger('dialog-close');
     current_group = null;
     if (callback) {
         setTimeout(function() {
@@ -48,12 +46,6 @@ function hideGroup(callback) {
 
 function Grid(data, uiindex) {
     var _this = this;
-
-    if (!grid_ui_data) {
-        grid_ui_data = Global.grid_ui_data;
-        drag_drop_data = Global.drag_drop_data;
-        data_list = Global.data_list;
-    }
 
     _this.uiindex = uiindex;
     for (var i in data) {
@@ -206,7 +198,7 @@ Grid.prototype = (function() {
                 { 'id': 'edit-tab', 'label': Language.getLang('Edit') },
                 { 'id': 'delete-tab', 'label': Language.getLang('Delete') }
             ];
-           
+
             Menu.showPopupMenu(l, t, menuList, function(data) {
                 switch (data) {
                     case 'open-tab':
@@ -232,36 +224,11 @@ Grid.prototype = (function() {
     }
 
     function gridClick(obj) {
-        // 非文件夹内
-        if (!obj.group || obj.group === '') {
-            var ueip_data = {
-                m: 'zoneClick',
-                data: { 'title': obj.title, 'url': obj.url, 'position': obj.isHot ? obj.topuiindex : obj.uiindex }
-            };
-
-            ueip_data.n = obj.isHot === true ? 'top' : 'myfav';
-            datacode && datacode.statistic(ueip_data);
-        }
-
-        if (obj.url && obj.url.slice(0, obj.url.length) === ('mx://note/?id')) {
-            Api.useApi('note.openNoteInPopWindow', {
-                'pid': obj.url.getQueryString('pid'),
-                'id': obj.url.getQueryString('id')
-            }, function(data) {
-                if (data === 0)
-                    return;
-
-                if (group_operate) {
-                    group_operate.close();
-                }
-                Tools.showNoteNotFound(data);
-            });
-            return false;
-        }
 
         setTimeout(function() {
             Api.useApi('newTabUpground', { 'url': obj.url });
         }, 10);
+
         // 关闭文件夹弹框
         current_group && hideGroup();
         // return false;
@@ -275,6 +242,7 @@ Grid.prototype = (function() {
         $group_list.find('.grid-list-container').removeClass('show');
         current_group.container.addClass('show');
         group_operate = $group_dialog.Dialog({
+            close_btn: false,
             start_fn_before: function() {
                 var urlList = [],
                     nodeList = [];
@@ -285,14 +253,6 @@ Grid.prototype = (function() {
                     urlList.push(item.url);
                     nodeList.push(item);
                 });
-
-                // Tools.isThumbExists(urlList, function(result) {
-                //     result.forEach(function(res, i) {
-                //         if (res === true) {
-                //             nodeList[i].reload();
-                //         }
-                //     });
-                // });
             },
             remove_fn_later: function() {
                 // 编辑状态
@@ -319,13 +279,14 @@ Grid.prototype = (function() {
 
         if (obj.group && obj.group !== '') {
             if (group_operate) {
-                group_operate.close();
+                group_operate.trigger('dialog-close');
                 $group_dialog.attr('edit', true);
                 dialogModel = true;
                 // fix:解决在文件夹打开状态下编辑后，把current_group置空导致交互异常的问题
                 current_group = _current_group;
             }
         }
+
         Poup.showDialog({
             'index': _this.index,
             'uiinde': _this.topuiindex || _this.uiindex,
@@ -559,9 +520,9 @@ Grid.prototype = (function() {
                 }
             }
         } else if (current_group) {
+
             if (isOutGroup(xy)) {
                 moveAnimationTimer();
-
                 if (grid_add) {
                     item = grid_add; // 增加按钮
                 }
@@ -732,6 +693,7 @@ Grid.prototype = (function() {
                 grid_add = _this;
             }
             grid_node.on('click', '.add', function(event) {
+                current_grid = _this;
                 Poup.showDialog({ index: _this.index, uiindex: _this.topuiindex || _this.uiindex }, false);
             });
         } else {
@@ -865,20 +827,13 @@ Grid.prototype = (function() {
 
 function getGridList(mapList, callback) {
     map_list = mapList;
-    Dao.getGridList(function(gridList) {
+    Dao.getGridList(function(data) {
         readyInitUiData();
-        initData(gridList);
-        initGridDataList(mapList);
+        initData(data);
+        initGridDataList();
+        // 优化一下这个地方
+        resizeGridPositionAndIndex();
     });
-}
-
-function initMapList(item) {
-    if (map_list[item.url]) { // map中有md5
-        item['sq_img'] = map_list[item.url]['sq_img'] || 'offline.png';
-        item['re_img'] = map_list[item.url]['re_img'] || 'offline.png';
-        item['re_md5sum'] = map_list[item.url]['re_md5sum'] || '';
-        item['sq_md5sum'] = map_list[item.url]['sq_md5sum'] || '';
-    }
 }
 
 function initData(data) {
@@ -887,12 +842,6 @@ function initData(data) {
     data_list = [];
     data.forEach(function(item, i) {
         if (item) {
-            // 过滤无效数据： Add 增加按钮 Empty:占位格子
-            if (item.title === 'Add' || item.title === 'Empty') {
-                return true;
-            }
-            if (item.group) delete item.group;
-            if (item.uiindex) delete item.uiindex;
             if (item.isHot === true) {
                 item.topuiindex = topuiindex++;
                 top_data_list.push(item);
@@ -910,50 +859,8 @@ function initData(data) {
         }
     });
 
-    var last_index = data_list.length - 1;
-    // 判断是否新的结构数据
-    if (data_list.length > 0 && data_list[last_index].title === 'Add' && data_list[last_index].type) {
-        data_list.push.apply(data_list, autoComplete(top_data_list));
-    } else {
-        data_list.push({ 'title': 'Add', 'type': 'button' });
-        data_list.push.apply(data_list, autoComplete(top_data_list));
-        // 保证数据与页面结构一致
-        // Api.setSyncValue(MY_SITE, data_list);
-    }
-
-    Global.data_list = data_list;
-}
-
-function initGridDataList(mapList) {
-    var grid;
-    map_list = mapList;
-    data_list.forEach(function(item, i) {
-        if (!item.children) { // 普通格子
-            item = new Grid(item, i);
-            initMapList(item);
-            if (item.isHot === true) {
-                $top_container.append(item.dom());
-            } else {
-                $grid_container.append(item.dom());
-            }
-        } else {
-            grid = new Grid(item, i);
-            grid.container = $('<div class="grid-list-container"></div>');
-            grid.children = [];
-            item.children.forEach(function(item2, j) {
-                item2.group = grid.title;
-                item2 = new Grid(item2, j);
-                initMapList(item2);
-                grid.container.append(item2.dom());
-                grid.children[j] = item2;
-            });
-            $group_list.append(grid.container);
-            $grid_container.append(grid.dom());
-            item = grid;
-        }
-        item.index = i;
-        data_list[i] = item;
-    });
+    data_list.push({ 'title': 'Add', 'type': 'button' });
+    data_list.push.apply(data_list, autoComplete(top_data_list));
 }
 
 // 自动补全Top8
@@ -969,6 +876,35 @@ function autoComplete(list) {
         list.splice(8);
     }
     return list;
+}
+
+function initGridDataList() {
+    var grid;
+    data_list.forEach(function(item, i) {
+        if (!item.children) { // 普通格子
+            item = new Grid(item, i);
+            if (item.isHot === true) {
+                $top_container.append(item.dom());
+            } else {
+                $grid_container.append(item.dom());
+            }
+        } else {
+            grid = new Grid(item, i);
+            grid.container = $('<div class="grid-list-container"></div>');
+            grid.children = [];
+            item.children.forEach(function(item2, j) {
+                item2.group = grid.title;
+                item2 = new Grid(item2, j);
+                grid.container.append(item2.dom());
+                grid.children[j] = item2;
+            });
+            $group_list.append(grid.container);
+            $grid_container.append(grid.dom());
+            item = grid;
+        }
+        item.index = i;
+        data_list[i] = item;
+    });
 }
 
 /**
@@ -1007,8 +943,6 @@ function resizeGridPositionAndIndex() {
 
     $grid_container[0].style.height = data_list[data_list.length - 9].getGridPosition().top + grid_ui_data.height + 'px';
     drag_drop_data.height = document.body.scrollHeight;
-
-    Global.drag_drop_data = drag_drop_data;
 }
 
 /**
@@ -1018,9 +952,9 @@ function readyInitUiData() {
     $grid_body = $('.nav-body');
     $grid_container = $('#grid_list_container');
     $group_dialog = $('#group'),
-        $top_container = $('#top'),
-        $add_grid = $('#add-grid'),
-        $group_list = $('#group_list');
+    $top_container = $('#top'),
+    $add_grid = $('#add-grid'),
+    $group_list = $('#group_list');
 
     // 清空元素
     $grid_container.empty();
@@ -1043,6 +977,7 @@ function readyInitUiData() {
         }
     });
 
+    // 标题失去焦点
     group_title.on('blur', function(e) {
         var title = this.value.trim();
         var title_len = title.replace(/[^\x00-\xff]/g, '**').length;
@@ -1065,53 +1000,72 @@ function readyInitUiData() {
         group_title.removeClass('editable');
     });
 
+    // 推荐站点click行为
+    $('#add-dialog').on('click', '.dialog-grid-list > li', function(e) {
+        e.preventDefault();
+        var $this = $(this);
+
+        if ($this.hasClass('disable')) {
+            return;
+        }
+        // 防止频繁点击，导致添加多次
+        $this.addClass('disable');
+        var $ele = $this.find('a');
+        var item = {
+            'title': $ele.attr('d-title'), // 标题
+            'url': $ele.attr('href'), // url链接
+            'image': $ele.attr('d-image'), // 图片路径
+            'sq_img': $ele.attr('d-sq-img'),
+            'sq_md5sum': $ele.attr('d-sq-md5'),
+            're_img': $ele.attr('d-re-img'),
+            're_md5sum': $ele.attr('d-re-md5'),
+            'isHot': false
+        };
+        
+        setTimeout(function() {
+            // 构建动画元素
+            var $cloneGrid = $this.clone();
+            var w = $this.width(),
+                h = $this.innerHeight();
+            var p = $this.offset();
+
+            $cloneGrid.css({ 'position': 'absolute', '-webkit-transition': 'all 0.3s', 'left': p.left, 'top': p.top + document.body.scrollTop });
+            document.body.appendChild($cloneGrid[0]);
+            // 获取目标位置
+            item.index = current_grid.index;
+            item.isHot = current_grid.isHot;
+
+            if (!current_grid.group) {
+                var p2 = current_grid.getGridFixed();
+                var l2 = p2.left;
+                var t2 = p2.top + document.body.scrollTop;
+                $cloneGrid.css({ "left": l2, "top": t2 });
+                setTimeout(function() {
+                    // editOperate ? onUpdateGridItem(item) : onInsertGridItem(item, grid);
+                    onInsertGridItem(item, current_grid);
+                    if ($cloneGrid) {
+                        document.body.removeChild($cloneGrid[0]);
+                        $cloneGrid = null;
+                    }
+                }, 300);
+            } else {
+                Controller.onUpdateGridItem(item);
+                if ($cloneGrid) {
+                    document.body.removeChild($cloneGrid[0]);
+                    $cloneGrid = null;
+                }
+            }
+
+            // 关闭弹框
+            $('#add-dialog').trigger('dialog-close');
+        }, 50);
+    });
+
     grid_ui_data.top_container_width = $top_container.width();
     grid_ui_data.container_width = $grid_body.width();
     grid_ui_data.height = grid_ui_data.container_width * 0.15 * 0.7 + grid_ui_data.container_width * 0.01;
-
-    Global.grid_ui_data = grid_ui_data;
 }
 
-function getGridItem(index) {
-    if (index !== 0 && !index) {
-        return {
-            grid: grid_add,
-            i: -1,
-            j: -1
-        }
-    }
-
-    var grid, item, item2,
-        i = 0,
-        j = -1,
-        length = data_list.length,
-        group_length;
-
-    for1: for (; i < length; i++) {
-        item = data_list[i];
-
-        if (item.index == index) {
-            grid = item;
-            break;
-        }
-        if (item.children) {
-            for2: for (j = 0, group_length = item.children.length; j < group_length; j++) {
-                item2 = item.children[j];
-                if (item2.index == index) {
-                    grid = item2;
-                    break for1;
-                    break;
-                }
-            }
-            j = -1;
-        }
-    }
-    return !grid ? false : {
-        grid: grid,
-        i: i,
-        j: j
-    }
-}
 
 function onMovingGrid(drag_index, drop_index, group_name) {
     var dragGroup, dropGroup, drag = getGridItem(drag_index),
@@ -1125,7 +1079,6 @@ function onMovingGrid(drag_index, drop_index, group_name) {
     if (dragObj.group && dragObj.group !== '') {
         if (group_name == '') {
             data_list.splice(drop.i, 0, data_list.splice(drag.i, 1)[0]);
-            // datacode.moveGrid(dragObj.isHot, dropObj.isHot);
         } else {
             delete dragObj.group;
             data_list.splice(drop.i, 0, dragGroup.children.splice(drag.j, 1)[0]);
@@ -1142,10 +1095,9 @@ function onMovingGrid(drag_index, drop_index, group_name) {
         }
     } else {
         data_list.splice(drop.i, 0, data_list.splice(drag.i, 1)[0]);
-        // datacode.moveGrid(dragObj.isHot, dropObj.isHot);
     }
-    // 持久化
 
+    // 持久化
     Dao.moveGridItem({ i: drag.i, j: drag.j }, { i: drop.i, j: drop.j });
     resizeGridPositionAndIndex();
 }
@@ -1162,7 +1114,6 @@ function onMovingGroup(drag_index, drop_index, group_name) {
     // 持久化
     Dao.moveGridItem({ i: drag.i, j: drag.j }, { i: drop.i, j: drop.j });
     resizeGridPositionAndIndex();
-    // datacode.moveGrid(false, false);
 }
 
 var setGroupNameTimer;
@@ -1212,7 +1163,6 @@ function onMovingInGroup(drag_index, drop_index, group_name) {
             clearDragNode();
         }, animation_time);
     }
-    // datacode.moveGrid(false, false);
 }
 
 // 增加文件夹
@@ -1270,8 +1220,6 @@ function onAddGroup(drag_index, drop_index, group_name) {
             drop_node.remove();
         }, animation_time - 150);
     }
-
-    // datacode.createFolder({});
 }
 
 // 上下互换
@@ -1329,7 +1277,6 @@ function onSwappingGrid(drag_index, drop_index) {
             resizeGridPositionAndIndex();
             clearDragNode();
             drop_node.remove();
-            // datacode.moveGrid(true, false); // 上线互换统计
         }, animation_time);
     }
 }
@@ -1459,6 +1406,55 @@ function setGroupGirdNodeSize(node, index, xy) {
     }, 5);
 }
 
+/**
+ * getGridItem from index
+ * @param  {[type]} index [description]
+ * @return {[type]}       [description]
+ */
+function getGridItem(index) {
+    if (index !== 0 && !index) {
+        return {
+            grid: grid_add,
+            i: -1,
+            j: -1
+        }
+    }
+
+    var grid, item, item2,
+        i = 0,
+        j = -1,
+        length = data_list.length,
+        group_length;
+
+    for1: for (; i < length; i++) {
+        item = data_list[i];
+
+        if (item.index == index) {
+            grid = item;
+            break;
+        }
+        if (item.children) {
+            for2: for (j = 0, group_length = item.children.length; j < group_length; j++) {
+                item2 = item.children[j];
+                if (item2.index == index) {
+                    grid = item2;
+                    break for1;
+                    break;
+                }
+            }
+            j = -1;
+        }
+    }
+    return !grid ? false : {
+        grid: grid,
+        i: i,
+        j: j
+    }
+}
+
 module.exports = {
-    getGridList: getGridList
+    getGridList: getGridList,
+    getGridItem: getGridItem,
+    onUpdateGridItem: onUpdateGridItem,
+    onInsertGridItem: onInsertGridItem
 }

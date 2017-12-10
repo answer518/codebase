@@ -3,31 +3,29 @@
  */
 var maxthon = require('static/js/api.js'),
     Language = require('static/js/language'),
-    Controller = require('widget/main/main'),
     Helper = require('widget/main/helper');
 
 var $dialog_node, $dialog_nav_node, $grid_nav_node, $grid_tab_node,
     $input_url, $input_title, $dialog_add_btn, $dialog_grid, $color_block,
     $color_block_list, $radio_list, $search_btn, $search_input, $mask_node;
 
-var mapList = {},
-    clickcalls = [];
+var mapList = {}, clickcalls = [];
 
 function init(map) {
     $dialog_node = $('#add-dialog'),
-        $dialog_nav_node = $dialog_node.find('.dialog-nav > li'),
-        $grid_nav_node = $dialog_node.find('.grid-nav > li'),
-        $grid_tab_node = $dialog_node.find('.tab > li'),
-        $input_url = $dialog_node.find('input[name="url"]'),
-        $input_title = $dialog_node.find('input[name="title"]'),
-        $dialog_add_btn = $dialog_node.find('#dialog_add_btn'),
-        $dialog_grid = $dialog_node.find('.dialog-grid-list'),
-        $color_block = $dialog_node.find('.color-block-list'),
-        $color_block_list = $dialog_node.find('.color-block-list > li'),
-        $radio_list = $dialog_node.find('.radio-list'),
-        $search_btn = $dialog_node.find('#grid-search-icon'),
-        $search_input = $dialog_node.find('#grid_search_btn'),
-        $mask_node = $('#mx_mask_layer');
+    $dialog_nav_node = $dialog_node.find('.dialog-nav > li'),
+    $grid_nav_node = $dialog_node.find('.grid-nav > li'),
+    $grid_tab_node = $dialog_node.find('.tab > li'),
+    $input_url = $dialog_node.find('input[name="url"]'),
+    $input_title = $dialog_node.find('input[name="title"]'),
+    $dialog_add_btn = $dialog_node.find('#dialog_add_btn'),
+    $dialog_grid = $dialog_node.find('.dialog-grid-list'),
+    $color_block = $dialog_node.find('.color-block-list'),
+    $color_block_list = $dialog_node.find('.color-block-list > li'),
+    $radio_list = $dialog_node.find('.radio-list'),
+    $search_btn = $dialog_node.find('#grid-search-icon'),
+    $search_input = $dialog_node.find('#grid_search_btn'),
+    $mask_node = $('#mx_mask_layer');
 
     var $alltab = $dialog_node.find('.main-warp > div');
     // 点击回调数组
@@ -176,81 +174,8 @@ function init(map) {
         }
     });
 
-    $dialog_grid.on('click', '> li', function(e) {
-        e.preventDefault();
+    $dialog_node.on('click', '#dialog_add_btn', function(e) {
         var $this = $(this);
-
-        if ($this.hasClass('disable')) {
-            return;
-        }
-        // 防止频繁点击，导致添加多次
-        $this.addClass('disable');
-        var $ele = $this.find('a');
-        var item = {
-            'title': $ele.attr('d-title'), // 标题
-            'url': $ele.attr('href'), // url链接
-            'image': $ele.attr('d-image'), // 图片路径
-            'sq_img': $ele.attr('d-sq-img'),
-            'sq_md5sum': $ele.attr('d-sq-md5'),
-            're_img': $ele.attr('d-re-img'),
-            're_md5sum': $ele.attr('d-re-md5'),
-            'isHot': false
-        };
-
-        setTimeout(function() {
-            // 构建动画元素
-            var target_grid = $this.clone();
-            var w = $this.width(),
-                h = $this.innerHeight();
-            var p = $this.offset();
-
-            target_grid.css({ 'position': 'absolute', '-webkit-transition': 'all 0.3s', 'left': p.left, 'top': p.top + document.body.scrollTop });
-            document.body.appendChild(target_grid[0]);
-            // 获取移动位置
-            var grid = Controller.getGridItem(grid_index).grid;
-            item.index = grid_index;
-            if (grid.isHot === true) {
-                item.isHot = true;
-                // g.image = g.image.replace('/Re/', '/Sq/');
-            }
-
-            var editOperate = editableMode();
-            if (!editOperate) {
-                var add_uiindex = grid.isHot === true ? Math.min(grid.topuiindex + 1, 7) : grid.uiindex + 1;
-                var xy = grid.getGridPosition(add_uiindex);
-                grid.node.css({ "left": xy.left, "top": xy.top });
-            }
-
-            if (!grid.group) {
-                var p2 = grid.getGridFixed();
-                var l2 = p2.left;
-                var t2 = p2.top + document.body.scrollTop;
-                target_grid.css({ "left": l2, "top": t2 });
-                setTimeout(function() {
-                    editOperate ? Controller.onUpdateGridItem(item) : Controller.onInsertGridItem(item, grid);
-                    if (target_grid) {
-                        document.body.removeChild(target_grid[0]);
-                        target_grid = null;
-                    }
-                }, 300);
-            } else {
-                Controller.onUpdateGridItem(item);
-                if (target_grid) {
-                    document.body.removeChild(target_grid[0]);
-                    target_grid = null;
-                }
-            }
-
-            // 关闭弹框
-            closeDialog();
-        }, 50);
-    });
-
-    $dialog_add_btn.on('click', function(e) {
-        var $this = $(this);
-        if ($this.hasClass('disable')) {
-            return;
-        }
 
         var url = $input_url.val().trim();
         var title = $input_title.val().trim();
@@ -268,13 +193,12 @@ function init(map) {
         }
 
         // 防止频繁点击，导致添加多次
-        $this.addClass('disable');
         if (title.length === 0) {
             title = url;
         }
         var item = {
             'title': title,
-            'url': url //url.notUrl() ? 'http://' + url : url
+            'url': url.match(/https?:\/\//) ? url : 'http://' + url
         };
 
         $radio_list.each(function(i, n) {
@@ -295,29 +219,19 @@ function init(map) {
             }
         });
 
+        var Controller = require('widget/main/main');
         var grid = Controller.getGridItem(grid_index).grid;
-        if (grid.isHot === true) {
-            item.isHot = true;
-            item.image = item.image && item.image.replace('/Re/', '/Sq/');
-        }
-
-        if (maxnoteCategory && grid_source === 'maxnote') {
-            ueip_data.data.maxnoteCategory = maxnoteCategory;
-        }
+        item.isHot = grid.isHot;
         // 关闭窗口
         if (editableMode()) {
-            ueip_data.n = 'edit';
-            ueip_data.o += 'Edit';
             item.index = grid_index;
             Controller.onUpdateGridItem(item);
         } else {
-            ueip_data.n = 'add';
-            ueip_data.o += 'Add';
             Controller.onInsertGridItem(item, grid);
         }
 
         // 关闭弹框
-        closeDialog();
+        $dialog_node.trigger('dialog-close');
     });
 
     var searchTimer;
@@ -422,42 +336,24 @@ function showDialog(data, editable, openFlag) {
     bindData(data);
 
     add_quick_dialog = $dialog_node.Dialog({
-        close: function() {
-            return false;
-        },
         start_fn_later: function() {
-            $dialog_node.find('.close').off('click').on('click', function() {
-                var grid = Controller.getGridItem(grid_index).grid;
-                $dialog_nav_node.each(function(i, n) {
-                    if ($(n).hasClass('selected')) {
-                        grid_source = ['default', 'custome'][i];
-                        return false;
-                    }
-                });
-                // 关闭弹框
-                closeDialog(openInDialog);
-            });
+            // $dialog_node.find('.close').off('click').on('click', function() {
+            //     var grid = Controller.getGridItem(grid_index).grid;
+            //     $dialog_nav_node.each(function(i, n) {
+            //         if ($(n).hasClass('selected')) {
+            //             grid_source = ['default', 'custome'][i];
+            //             return false;
+            //         }
+            //     });
+            //     // 关闭弹框
+            //     closeDialog(openInDialog);
+            // });
         }
     });
 }
 
 function closeDialog() {
-    var openFlag = openInDialog;
     clearData();
-    // 重置自定义弹窗
-    $dialog_add_btn.removeClass('disable');
-    $input_url.removeAttr('disabled').removeAttr('style').removeClass('error');
-    $radio_list.removeClass('disabled').removeClass('selected').eq(1).addClass('selected');
-    $color_block_list.removeClass('selected').eq(0).addClass('selected');
-    // 打开文件夹弹框
-    if (openFlag === true) {
-        $dialog_node.hide();
-        $group_dialog.show();
-        $('#mx_mask_layer').off('click').on('click', function(e) {
-            window.Api.dialog.close();
-        }).show();
-        return false;
-    }
     add_quick_dialog.close();
 }
 
@@ -503,21 +399,7 @@ function bindData(data) {
             config.recommendlogo = { 'disable': false, 'checked': true }
             break;
     }
-    // 判断如果是第三方图库图片，还是保留推荐图
-    var matchimage = getImageFromUrl(grid_url);
-    if (matchimage === '') {
-        if (!(data.image && data.image.indexOf('http://fastdail-img') === 0)) {
-            config.recommendlogo = {
-                'disable': true
-            }
-        }
-    }
 
-    if (grid_url.indexOf('mx://note/?id') === 0) {
-        config.screenshot = { 'disable': true };
-        // 文本框置灰
-        $input_url.attr('disabled', 'disabled');
-    }
     updateRadio(config, true);
 }
 
@@ -578,24 +460,6 @@ function renderGridHtml(data) {
     for (var i = 0; i < data.list.length; i++) {
         var item = data.list[i];
         var attrHtml = [];
-        if (mapList[item.url]) { // map中有md5
-            item['sq_img'] = mapList[item.url]['sq_img'] || '';
-            if (item['sq_img'] && item['sq_img'] !== '') {
-                attrHtml.push('d-sq-img="' + item.sq_img + '" ');
-            }
-            item['re_img'] = mapList[item.url]['re_img'] || '';
-            if (item['re_img'] && item['re_img'] !== '') {
-                attrHtml.push('d-re-img="' + item.re_img + '" ');
-            }
-            item['re_md5sum'] = mapList[item.url]['re_md5sum'] || '';
-            if (item['re_md5sum'] && item['re_md5sum'] !== '') {
-                attrHtml.push('d-re-md5="' + item.re_md5sum + '" ');
-            }
-            item['sq_md5sum'] = mapList[item.url]['sq_md5sum'] || '';
-            if (item['sq_md5sum'] && item['sq_md5sum'] !== '') {
-                attrHtml.push('d-sq-md5="' + item.sq_md5sum + '" ');
-            }
-        }
         item = Helper.tranData(item);
         _html.push('<li>');
         _html.push('<a href="' + item.url + '" d-title="' + item.title + '" d-image="' + item.image + '" ' + attrHtml.join('') + ' target="_blank">');
@@ -616,7 +480,7 @@ function renderUrlList(data, $dom) {
                             <img src="mx://favicon/' + d.url + '" alt="' + d.title + '" height="16" width="16" onerror="this.src=\'' + staticServer + '/img/icon/6000.png\'" class="nav-icon" />\
                             <span class="nav-text">' + d.title + '</span>\
                         </a>\
-                        </li>');
+                    </li>');
     }
     html.push('</ul>');
     $dom.empty().append(html.join(''));
@@ -630,12 +494,12 @@ function getNoteListByPid(pid, cb) {
         for (var i = 0; i < notes.length; i++) {
             var d = notes[i] || {};
             html += '<li>\
-                            <div class="jstree-wholerow"></div>\
-                            <a class="jstree-note" href="' + (d.et !== 1 ? "mx://note/?id=" + d.uuid + "&pid=" + pid : d.url) + '" title="' + d.fn + '" et="' + d.et + '">\
-                                <img src="' + (d.et !== 1 ? staticServer + "/img/icon/node_icon_note.png" : "mx://favicon/" + d.url) + '" alt="' + d.fn + '" height="16" width="16" onerror="this.src=\'' + staticServer + '/img/icon/6000.png\'" class="nav-icon" />\
-                                <span class="nav-text">' + d.fn + '</span>\
-                            </a>\
-                        </li>';
+                        <div class="jstree-wholerow"></div>\
+                        <a class="jstree-note" href="' + (d.et !== 1 ? "mx://note/?id=" + d.uuid + "&pid=" + pid : d.url) + '" title="' + d.fn + '" et="' + d.et + '">\
+                            <img src="' + (d.et !== 1 ? staticServer + "/img/icon/node_icon_note.png" : "mx://favicon/" + d.url) + '" alt="' + d.fn + '" height="16" width="16" onerror="this.src=\'' + staticServer + '/img/icon/6000.png\'" class="nav-icon" />\
+                            <span class="nav-text">' + d.fn + '</span>\
+                        </a>\
+                    </li>';
         }
         cb && cb(html);
     });
@@ -648,85 +512,43 @@ function getNoteListByPid(pid, cb) {
  */
 function getImageFromUrl(url, callback) {
     if (url.length == 0) return;
-    var qUrl = url.notUrl() ? 'http://' + url : url;
+    var qUrl = url.match(/^https?:\/\//) ? url : 'http://' + url;
+
     var urlReg = /^((https|http)?:\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
     if (!urlReg.test(qUrl)) return '';
-    if (/http:\/\/go.maxthon.(cn|com)\/redir\/mx(4|5)\//.test(url)) {
-        var qStr = url.getQueryString('f');
-        switch (qStr) {
-            case 'tmall':
-                qUrl = 'http://jx.tmall.com';
-                break;
-            case 'fbmx5':
-                qUrl = 'https://www.facebook.com/maxthon';
-                break;
-            case 'jumei':
-                qUrl = 'http://bj.jumei.com/';
-                break;
-            case 'juhuasuan':
-                qUrl = 'https://ju.taobao.com/';
-                break;
-            case 'meituan':
-                qUrl = 'http://bj.meituan.com/';
-                break;
-            case 'aitaobao':
-                qUrl = 'http://ai.taobao.com/';
-                break;
-            case 'vipshop':
-                qUrl = 'http://www.vip.com/';
-                break;
-            case 'amazon':
-                qUrl = 'https://www.amazon.cn';
-                break;
-            case 'gome':
-                qUrl = 'http://www.gome.com.cn/';
-                break;
-            default:
-                qUrl = 'http://www.' + qStr + '.com';
-                break;
-        }
-    }
 
     var regex = /.*\:\/\/([^\/]*).*/;
     var match = qUrl.match(regex);
     var host = '',
         image = '';
-    if (typeof match != "undefined" && null != match) {
-        if ((match[0] === 'https://vk.com/maxthon_ru' ||
-                match[0] === 'https://facebook.com/maxthon.org.ru' ||
-                match[0] === 'http://maxthon.org.ru')) {
-            host = match[0];
-        } else {
-            host = match[1];
-        }
-    }
+
     if (host === 'go.maxthon.com' || host === 'go.maxthon.cn') return '';
     // 自动匹配图片
     innerloop:
-        for (var i = 0; i < SITE_LIST.length; i++) {
-            var category = SITE_LIST[i];
-            for (var j = 0; j < category.list.length; j++) {
-                var _category = category.list[j];
+    for (var i = 0; i < SITE_LIST.length; i++) {
+        var category = SITE_LIST[i];
+        for (var j = 0; j < category.list.length; j++) {
+            var _category = category.list[j];
 
-                var _url = _category.url;
-                if (_url.indexOf(host) >= 0) { // 开头// 开头
-                    image = _category.image;
-                    i = SITE_LIST.length;
-                    break innerloop;
-                }
+            var _url = _category.url;
+            if (_url.indexOf(host) >= 0) { // 开头// 开头
+                image = _category.image;
+                i = SITE_LIST.length;
+                break innerloop;
+            }
 
-                if (_category.match) {
-                    for (var k = 0; k < _category.match.length; k++) {
-                        var __url = _category.match[k];
-                        if (__url.indexOf(host) >= 0) { // 开头
-                            image = _category.image;
-                            i = SITE_LIST.length;
-                            break innerloop;
-                        }
+            if (_category.match) {
+                for (var k = 0; k < _category.match.length; k++) {
+                    var __url = _category.match[k];
+                    if (__url.indexOf(host) >= 0) { // 开头
+                        image = _category.image;
+                        i = SITE_LIST.length;
+                        break innerloop;
                     }
                 }
             }
         }
+    }
     return image;
 }
 /**
