@@ -127,7 +127,7 @@
 	display: block;
 }
 
-#config-layer .close {
+#config-layer .close-btn {
     color: #666;
     font-size: 26px;
     font-weight: normal;
@@ -135,7 +135,7 @@
     top: 4px;
 }
 
-#config-layer .close:hover{
+#config-layer .close-btn:hover{
 	color: #fff;
 }
 .a-upload {position: relative; cursor: pointer;height: 40px;line-height: 40px;width: 175px;margin-bottom: 10px;background-color: #575a60;}

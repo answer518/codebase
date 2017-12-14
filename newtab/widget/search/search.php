@@ -1,8 +1,7 @@
 <div class="search-bar clearfix">
-	<form class="search-form" action="https://www.baidu.com/baidu" method="get">
+	<form class="search-form" action="" method="get">
 		<div class="search-box">
 			<div class="search-engine">
-				<img class="engine-icon" src="../../static/images/baidu-icon.png"/>
 				<span class="change-engine"></span>
 				<div class="engine-list" style="display: none;"></div>
 			</div>

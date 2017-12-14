@@ -7,7 +7,7 @@ var maxthon = require('static/js/api.js'),
 
 var $dialog_node, $dialog_nav_node, $grid_nav_node, $grid_tab_node,
     $input_url, $input_title, $dialog_add_btn, $dialog_grid, $color_block,
-    $color_block_list, $radio_list, $search_btn, $search_input, $mask_node;
+    $color_block_list, $radio_list, $search_btn, $search_input;
 
 var mapList = {}, clickcalls = [];
 
@@ -24,42 +24,35 @@ function init(map) {
     $color_block_list = $dialog_node.find('.color-block-list > li'),
     $radio_list = $dialog_node.find('.radio-list'),
     $search_btn = $dialog_node.find('#grid-search-icon'),
-    $search_input = $dialog_node.find('#grid_search_btn'),
-    $mask_node = $('#mx_mask_layer');
-
+    $search_input = $dialog_node.find('#grid_search_btn');
     var $alltab = $dialog_node.find('.main-warp > div');
     // 点击回调数组
     clickcalls = [
-        function(index) {
-            maxthon.useApi('common.getCurrentOpenedList', {}, function(data) {
+        function (index) {
+            maxthon.useApi('common.getCurrentOpenedList', {}, function (data) {
                 renderUrlList(data, $alltab.eq(index));
             });
         },
-        function(index) {
-            maxthon.useApi('history.getTopVisitedList', {}, function(data) {
+        function (index) {
+            maxthon.useApi('history.getTopVisitedList', {}, function (data) {
                 renderUrlList(data, $alltab.eq(index));
             });
         },
-        function(index) {
-            maxthon.useApi(getNodeFolderApiName, {}, function(data) {
+        function (index) {
+            maxthon.useApi('note.getFoldersTree', {}, function (data) {
                 if (!data.folders) return;
                 var tree = new treeMenu(data.folders);
                 $alltab.eq(index).empty().append(tree.init(data.pid));
-
-                if (getNodeFolderApiName === 'note.getFoldersTree') return;
-                getNoteListByPid('00000001-0000-0000-0000-000000000000', function(html) {
-                    $alltab.eq(index).append(html);
-                });
             });
         },
-        function(index) {
-            maxthon.useApi('getLastOpenList', {}, function(data) {
+        function (index) {
+            maxthon.useApi('getLastOpenList', {}, function (data) {
                 renderUrlList(data, $alltab.eq(index));
             });
         }
     ];
 
-    $dialog_nav_node.on('click', function() {
+    $dialog_nav_node.on('click', function () {
         var $this = $(this);
         $this.siblings().removeClass('selected');
         $this.addClass('selected');
@@ -67,7 +60,7 @@ function init(map) {
     });
 
     // 导航切换
-    $grid_nav_node.on('click', function() {
+    $grid_nav_node.on('click', function () {
         var $this = $(this);
         $this.siblings('li').removeClass('current');
         $this.addClass('current');
@@ -75,7 +68,7 @@ function init(map) {
     });
 
     // 网址来源选
-    $grid_tab_node.on('click', function() {
+    $grid_tab_node.on('click', function () {
         var $this = $(this),
             index = $this.index();
 
@@ -86,7 +79,7 @@ function init(map) {
         index != -1 && clickcalls[index].call(this, index);
     });
 
-    $input_url.on('init', function() {
+    $input_url.on('init', function () {
         var url = $input_url.val().trim();
         if (url.length === 0) return;
         $input_url.removeClass('error');
@@ -123,20 +116,20 @@ function init(map) {
             };
             updateRadio(config, editable);
         }
-    }).on('blur', function() {
+    }).on('blur', function () {
         $(this).trigger('init');
-    }).on('focus', function() {
+    }).on('focus', function () {
         $(this).removeClass('error');
     });
 
-    $dialog_node.on('click', '.main-warp li:not(.folder) > a', function(e) {
+    $dialog_node.on('click', '.main-warp li:not(.folder) > a', function (e) {
         e.preventDefault();
         e.stopPropagation();
         var $this = $(this);
 
         $input_title.val($this.attr('title'));
         $input_url.val($this.attr('href')).trigger('init');
-        $grid_tab_node.each(function(i, n) {
+        $grid_tab_node.each(function (i, n) {
             if ($(n).hasClass('hover')) {
                 grid_source = ['currentlyOpen', 'mostVisited', 'maxnote', 'lastSession'][i];
                 return false;
@@ -154,18 +147,18 @@ function init(map) {
         return false;
     });
 
-    $dialog_node.on('click', '.main-warp li.folder', function(e) {
+    $dialog_node.on('click', '.main-warp li.folder', function (e) {
         var $this = $(this);
         $this.toggleClass('open');
         var pid = $this.attr('uuid');
 
-        getNoteListByPid(pid, function(html) {
+        getNoteListByPid(pid, function (html) {
             $this.find('>ul').find('li:not(.folder)').remove().end().append(html);
         });
         return false;
     });
 
-    $dialog_node.on('mouseover mouseout', '.main-warp .menu-head,.main-warp .jstree-note', function(e) {
+    $dialog_node.on('mouseover mouseout', '.main-warp .menu-head,.main-warp .jstree-note', function (e) {
         e.stopPropagation();
         if (e.type == "mouseover") {
             $(this).siblings('.jstree-wholerow').show();
@@ -174,12 +167,88 @@ function init(map) {
         }
     });
 
-    $dialog_node.on('click', '#dialog_add_btn', function(e) {
+    // 推荐站点click行为
+    $dialog_node.on('click', '.dialog-grid-list > li', function (e) {
+        e.preventDefault();
         var $this = $(this);
+
+        if ($this.hasClass('disable')) {
+            return;
+        }
+        // 防止频繁点击，导致添加多次
+        $this.addClass('disable');
+        var $ele = $this.find('a');
+        var item = {
+            'title': $ele.attr('d-title'), // 标题
+            'url': $ele.attr('href'), // url链接
+            'image': $ele.attr('d-image'), // 图片路径
+            'sq_img': $ele.attr('d-sq-img'),
+            'sq_md5sum': $ele.attr('d-sq-md5'),
+            're_img': $ele.attr('d-re-img'),
+            're_md5sum': $ele.attr('d-re-md5'),
+            'isHot': false
+        };
+
+        setTimeout(function () {
+            // 构建动画元素
+            var $cloneGrid = $this.clone();
+            var w = $this.width(),
+                h = $this.innerHeight();
+            var p = $this.offset();
+
+            $cloneGrid.css({ 'position': 'absolute', '-webkit-transition': 'all 0.3s', 'left': p.left, 'top': p.top + document.body.scrollTop });
+            document.body.appendChild($cloneGrid[0]);
+            var Controller = require('widget/main/main');
+            var current_grid = Controller.getGridItem(grid_index).grid;
+            // 获取目标位置
+            item.index = grid_index;
+            item.isHot = current_grid.isHot;
+
+            if (!current_grid.group) {
+                var p2 = current_grid.getGridFixed();
+                var l2 = p2.left;
+                var t2 = p2.top + document.body.scrollTop;
+                $cloneGrid.css({ "left": l2, "top": t2 });
+
+                var editOperate = editableMode();
+                if (!editOperate) {
+                    var add_uiindex = current_grid.isHot === true ? Math.min(current_grid.topuiindex + 1, 7) : current_grid.uiindex + 1;
+                    var xy = current_grid.getGridPosition(add_uiindex);
+                    current_grid.node.css({ "left": xy.left, "top": xy.top });
+                } else {
+                    current_grid.node.hide();
+                }
+                setTimeout(function () {
+                    editOperate ? Controller.onUpdateGridItem(item) : Controller.onInsertGridItem(item, current_grid);
+                    if ($cloneGrid) {
+                        document.body.removeChild($cloneGrid[0]);
+                        $cloneGrid = null;
+                    }
+                }, 200);
+            } else {
+                Controller.onUpdateGridItem(item);
+                if ($cloneGrid) {
+                    document.body.removeChild($cloneGrid[0]);
+                    $cloneGrid = null;
+                }
+            }
+
+            // 关闭弹框
+            $dialog_node.trigger('dialog-close');
+        }, 50);
+    });
+
+    $dialog_node.on('click', '#dialog_add_btn', function (e) {
+        var $this = $(this);
+        if ($this.hasClass('disable')) {
+            return;
+        }
 
         var url = $input_url.val().trim();
         var title = $input_title.val().trim();
         $dialog_node.find('.error').hide();
+        // 防止频繁点击，导致添加多次
+        $this.addClass('disable');
         if (url.length === 0) {
             $dialog_node.find('.error').eq(0).find('>span').html(Language.getLang('EnterUrl')).end().show();
             $input_url.addClass('error');
@@ -201,7 +270,7 @@ function init(map) {
             'url': url.match(/https?:\/\//) ? url : 'http://' + url
         };
 
-        $radio_list.each(function(i, n) {
+        $radio_list.each(function (i, n) {
             var $item = $(n);
             if ($item.hasClass('selected')) {
                 switch (i) {
@@ -235,18 +304,18 @@ function init(map) {
     });
 
     var searchTimer;
-    $search_input.on('input', function() {
+    $search_input.on('input', function () {
 
         if (searchTimer) {
             clearTimeout(searchTimer);
         }
-        searchTimer = setTimeout(function() {
+        searchTimer = setTimeout(function () {
             searchFun();
         }, 200);
         return false;
     });
 
-    $color_block_list.on('click', function(e) {
+    $color_block_list.on('click', function (e) {
         var $this = $(this);
         e.stopPropagation();
         if ($this.parent().hasClass('disable')) return;
@@ -254,14 +323,14 @@ function init(map) {
         $this.siblings().removeClass('selected').end().addClass('selected');
     });
 
-    $radio_list.on('click', function(e) {
+    $radio_list.on('click', function (e) {
         var $this = $(this);
         if ($this.hasClass('disabled')) return;
         switchRadio($this); // 切换
     });
 }
 
-init();
+// init();
 
 function switchRadio($this) {
     var index = $this.index();
@@ -334,20 +403,9 @@ function showDialog(data, editable, openFlag) {
     $dialog_nav_node.eq(selectIndex).click();
     $dialog_add_btn.text(btnText);
     bindData(data);
-
     add_quick_dialog = $dialog_node.Dialog({
-        start_fn_later: function() {
-            // $dialog_node.find('.close').off('click').on('click', function() {
-            //     var grid = Controller.getGridItem(grid_index).grid;
-            //     $dialog_nav_node.each(function(i, n) {
-            //         if ($(n).hasClass('selected')) {
-            //             grid_source = ['default', 'custome'][i];
-            //             return false;
-            //         }
-            //     });
-            //     // 关闭弹框
-            //     closeDialog(openInDialog);
-            // });
+        start_fn_later: function () {
+            // $dialog_node.off('dialog-close')
         }
     });
 }
@@ -487,7 +545,7 @@ function renderUrlList(data, $dom) {
 }
 
 function getNoteListByPid(pid, cb) {
-    maxthon.useApi(getNotesByPidApiName, { 'pid': pid }, function(data) {
+    maxthon.useApi('note.getEntriesByPid', { 'pid': pid }, function (data) {
         var html = '';
         var notes = data.notes || data.nodes;
         if (!notes) return;
@@ -505,6 +563,15 @@ function getNoteListByPid(pid, cb) {
     });
 }
 
+function getQueryString(url, name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+    if (url.split('?')[1]) {
+      var r = url.split('?')[1].match(reg);
+      if (r != null) return unescape(r[2]);
+    }
+    return null;
+}
+
 /**
  * 根据URL匹配相关图片列表
  * @param  {[type]}   url      [description]
@@ -516,12 +583,54 @@ function getImageFromUrl(url, callback) {
 
     var urlReg = /^((https|http)?:\/\/)+[A-Za-z0-9]+\.[A-Za-z0-9]+[\/=\?%\-&_~`@[\]\':+!]*([^<>\"\"])*$/;
     if (!urlReg.test(qUrl)) return '';
+    if (/http:\/\/go.maxthon.(cn|com)\/redir\/mx(4|5)\//.test(url)) {
+        var qStr = getQueryString(url, 'f');
+        switch (qStr) {
+            case 'tmall':
+                qUrl = 'http://jx.tmall.com';
+                break;
+            case 'fbmx5':
+                qUrl = 'https://www.facebook.com/maxthon';
+                break;
+            case 'jumei':
+                qUrl = 'http://bj.jumei.com/';
+                break;
+            case 'juhuasuan':
+                qUrl = 'https://ju.taobao.com/';
+                break;
+            case 'meituan':
+                qUrl = 'http://bj.meituan.com/';
+                break;
+            case 'aitaobao':
+                qUrl = 'http://ai.taobao.com/';
+                break;
+            case 'vipshop':
+                qUrl = 'http://www.vip.com/';
+                break;
+            case 'amazon':
+                qUrl = 'https://www.amazon.cn';
+                break;
+            case 'gome':
+                qUrl = 'http://www.gome.com.cn/';
+                break;
+            default:
+                qUrl = 'http://www.' + qStr + '.com';
+                break;
+        }
+    }
 
     var regex = /.*\:\/\/([^\/]*).*/;
     var match = qUrl.match(regex);
-    var host = '',
-        image = '';
-
+    var host = '', image = '';
+    if (typeof match != "undefined" && null != match) {
+        if ((match[0] === 'https://vk.com/maxthon_ru' ||
+            match[0] === 'https://facebook.com/maxthon.org.ru' ||
+            match[0] === 'http://maxthon.org.ru')) {
+            host = match[0];
+        } else {
+            host = match[1];
+        }
+    }
     if (host === 'go.maxthon.com' || host === 'go.maxthon.cn') return '';
     // 自动匹配图片
     innerloop:
@@ -568,6 +677,7 @@ function getThumbsUrl(url, reflush) {
 }
 
 module.exports = {
+    init: init,
     showDialog: showDialog,
     getThumbsUrl: getThumbsUrl,
     getImageFromUrl: getImageFromUrl

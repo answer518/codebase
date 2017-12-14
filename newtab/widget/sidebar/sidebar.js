@@ -1,6 +1,7 @@
 var Api = require('static/js/api.js');
 var Tools = require('static/js/tools.js');
 var strUtils = require('static/js/strUtils');
+var Language = require('static/js/language');
 
 var platform = Api.platform,
     version = Api.max_version;
@@ -13,7 +14,12 @@ var $wallpapers = $('#wallpapers'),
 
 function initOption() {
     $siderbar = $('#config-layer'), $config_button = $('#config-button'),
-        $siderbarMain = $siderbar.find('.skin-img-list');
+    $siderbarMain = $siderbar.find('.skin-img-list');
+
+    // 多语言设置
+    var text = Language.getLang('SelectBackground');
+    $siderbar.find('.c-layer-title > span').text(text).attr('title', text);
+    $siderbar.find('.c-layer-title > i > p').html(Language.getLang('SelectBackgroundNotice'));
 
     background = [
         { 'pic': 'light.jpg', 'type': 'picture', 'brightness': 'dark', 'data_code': 'defaultlight' },
@@ -32,8 +38,8 @@ function initOption() {
         { 'pic': 'balloon.jpg', 'type': 'picture', 'brightness': 'light', 'data_code': 'balloon' }
     ];
     // 当版本小于5.0.4.400时，由于会有视频弹框需要屏蔽
-    strUtils.compare(version, '5.0.4.400') < 0 && background.splice(2, 5);
-    strUtils.compare(version, '5.0.3.400') < 0 && $siderbar.find(".tips").remove() && $siderbar.find(".a-upload").height(0);
+    // strUtils.compare(version, '5.0.4.400') < 0 && background.splice(2, 5);
+    // strUtils.compare(version, '5.0.3.400') < 0 && $siderbar.find(".tips").remove() && $siderbar.find(".a-upload").height(0);
 
     var htmlAttr = [];
     background.forEach(function(data, i) {
@@ -132,7 +138,7 @@ function bindEvent() {
         }, 50);
     });
 
-    $siderbar.on('click', '.close', function() {
+    $siderbar.on('click', '.close-btn', function() {
         $siderbar.removeAttr('style');
         $('#mx_mask_layer').hide().unbind('click');
         window.onresize = null;

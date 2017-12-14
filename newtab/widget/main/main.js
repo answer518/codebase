@@ -13,7 +13,6 @@ var Api = require('static/js/api'),
 var $group_dialog,
     $grid_container,
     $top_container,
-    $add_grid,
     $group_list,
     data_list,
     grid_ui_data = {},
@@ -22,7 +21,7 @@ var $group_dialog,
     current_col = 6,
     animation_time = 300;
 
-var top_container_width, drag_node, current_group, group_node, group_title, group_operate, grid_add, current_grid;
+var top_container_width, drag_node, current_group, group_node, group_title, group_operate, grid_add;
 
 function clearDragNode() {
     if (drag_node[0]) {
@@ -38,7 +37,7 @@ function hideGroup(callback) {
     group_operate.trigger('dialog-close');
     current_group = null;
     if (callback) {
-        setTimeout(function() {
+        setTimeout(function () {
             callback();
         }, animation_time);
     }
@@ -60,7 +59,7 @@ function getScroll() {
     }
 }
 
-Grid.prototype = (function() {
+Grid.prototype = (function () {
 
     var current_drag, current_drop, ban_move, animationTimer, cover_timer, scroll_state,
         addArea = 0.2,
@@ -113,6 +112,20 @@ Grid.prototype = (function() {
         }
 
         if (self.thumburls.length === 0) return;
+        // 截图代码调整成异步执行
+        setTimeout(function () {
+            Api.useApi('quickaccess.isThumbExists', { 'urls': self.thumburls }, function (result) {
+                var childNodes = self.list_node.childNodes;
+                result.forEach(function (item, i) {
+                    var childNode = childNodes[i];
+                    if (item === true && childNode.className.indexOf('loading') !== -1) {
+                        var url = self.thumburls[i];
+                        childNode.className = 'thumbnail';
+                        childNode.style.cssText = 'background-image : url(' + newWin.getThumbsUrl(url, 0) + ')';
+                    }
+                });
+            });
+        }, 10);
     }
 
     function getGridPosition(index) {
@@ -172,9 +185,16 @@ Grid.prototype = (function() {
             version = Api.max_version;
         if (obj.children) {
             var list = obj.children;
-            Menu.showPopupMenu(l, t, menuList, function(data) {
+            menuList = [
+                { 'id': 'open-all-tab', 'label': Language.getLang('NewTabOpenAll') },
+                { 'id': 'delete-tab', 'label': Language.getLang('Delete') },
+                { type: true },
+                { 'id': 'open-all-newwin-tab', 'label': Language.getLang('NewWindowOpenAll') },
+                { 'id': 'open-all-invisible-tab', 'label': Language.getLang('NewInvisibleOpenAll') }
+            ];
+            Menu.showPopupMenu(l, t, menuList, function (data) {
                 var urls = [];
-                list.forEach(function(item, i) {
+                list.forEach(function (item, i) {
                     urls.push(item.url);
                 });
                 switch (data) {
@@ -199,7 +219,7 @@ Grid.prototype = (function() {
                 { 'id': 'delete-tab', 'label': Language.getLang('Delete') }
             ];
 
-            Menu.showPopupMenu(l, t, menuList, function(data) {
+            Menu.showPopupMenu(l, t, menuList, function (data) {
                 switch (data) {
                     case 'open-tab':
                         Api.useApi('newTabBackground', { 'url': obj.url });
@@ -225,7 +245,7 @@ Grid.prototype = (function() {
 
     function gridClick(obj) {
 
-        setTimeout(function() {
+        setTimeout(function () {
             Api.useApi('newTabUpground', { 'url': obj.url });
         }, 10);
 
@@ -243,10 +263,10 @@ Grid.prototype = (function() {
         current_group.container.addClass('show');
         group_operate = $group_dialog.Dialog({
             close_btn: false,
-            start_fn_before: function() {
+            start_fn_before: function () {
                 var urlList = [],
                     nodeList = [];
-                current_group.children.forEach(function(item, i) {
+                current_group.children.forEach(function (item, i) {
                     if (!item.node.hasClass('loading')) {
                         return true;
                     }
@@ -254,7 +274,7 @@ Grid.prototype = (function() {
                     nodeList.push(item);
                 });
             },
-            remove_fn_later: function() {
+            close_fn_later: function () {
                 // 编辑状态
                 $group_dialog.attr('edit', false);
                 if (current_group) current_group = null;
@@ -270,7 +290,21 @@ Grid.prototype = (function() {
             onRemoveGrid(_this.index);
             return;
         }
-        Tools.showDeleteFolder(_this);
+        
+        var $dialog = $('#delete_folder');
+        $dialog.Dialog({
+            ajaxUrl: '/static/res/tpl/test.tpl',
+            start_fn_later: function () {
+                $dialog.on('click', '.button', function () {
+                    var $this = $(this);
+                    $dialog.trigger('dialog-close');
+                    if ($this.index() === 0) {
+                        // 删除文件夹
+                        onRemoveGrid(_this.index);
+                    }
+                });
+            }
+        });
     }
 
     function showEdit(obj) {
@@ -356,7 +390,7 @@ Grid.prototype = (function() {
         return false;
     }
 
-    var bodyScroll = (function() {
+    var bodyScroll = (function () {
 
         var current_state, current_body, body_height, current_scrollTop, content_height,
             add_height, default_add_height = 5,
@@ -373,7 +407,7 @@ Grid.prototype = (function() {
 
         function begin() {
             ban_move = true;
-            timer = setInterval(function() {
+            timer = setInterval(function () {
                 current_scrollTop = current_body.scrollTop;
                 current_scrollTop += add_height;
                 current_body.scrollTop = current_scrollTop;
@@ -443,7 +477,7 @@ Grid.prototype = (function() {
     function moveAnimationTimer() {
         animationTimer && clearTimeout(animationTimer);
         ban_move = true;
-        animationTimer = setTimeout(function() {
+        animationTimer = setTimeout(function () {
             ban_move = false;
         }, animation_time);
     }
@@ -487,7 +521,7 @@ Grid.prototype = (function() {
         // 拖动是文件夹
         if (current_drag.children) {
             children = current_drag.children;
-            forEachGrid(function(item, i) {
+            forEachGrid(function (item, i) {
                 if (i !== current_drag.uiindex && !isCross(current_drag, item)) {
                     area = coverArea(xy, item.getGridFixed());
 
@@ -529,7 +563,7 @@ Grid.prototype = (function() {
                 onMovingGrid(current_drag.index, item.index, current_drag.group);
                 return;
             }
-            forEachGrid(function(item, i) {
+            forEachGrid(function (item, i) {
                 if (i !== current_drag.uiindex && coverArea(xy, item.getGridFixed()) > moveArea) {
                     moveAnimationTimer();
                     onMovingGroup(current_drag.index, item.index, current_drag.group);
@@ -537,7 +571,7 @@ Grid.prototype = (function() {
                 }
             });
         } else {
-            forEachGrid(function(item, i) {
+            forEachGrid(function (item, i) {
                 if (i !== current_drag.uiindex) {
                     area = coverArea(xy, item.getGridFixed());
                     if (area > addArea) { // 合并文件夹
@@ -607,7 +641,7 @@ Grid.prototype = (function() {
                 current_drag = _this;
                 dragState = true;
                 scrollBody(xy);
-                setTimeout(function() {
+                setTimeout(function () {
                     drag_node.addClass('notran');
                 }, 20);
                 grid_node.addClass('draging');
@@ -623,9 +657,9 @@ Grid.prototype = (function() {
                 sxy = getScroll();
             drag_node.removeClass('notran');
             drag_node.css({ 'left': xy.left + sxy.left, 'top': xy.top + sxy.top });
-            setTimeout(function() {
+            setTimeout(function () {
                 grid_node.removeClass('draging');
-                setTimeout(function() {
+                setTimeout(function () {
                     grid_node.removeClass('notran');
                     clearDragNode();
                 }, 20);
@@ -692,15 +726,14 @@ Grid.prototype = (function() {
                 // fixed: 用于定位从文件夹中脱出时追加的位置
                 grid_add = _this;
             }
-            grid_node.on('click', '.add', function(event) {
-                current_grid = _this;
+            grid_node.on('click', '.add', function (event) {
                 Poup.showDialog({ index: _this.index, uiindex: _this.topuiindex || _this.uiindex }, false);
             });
         } else {
             // 实体格子
             if (!_this.children) {
                 grid_node = $(_this.html());
-                grid_node.on('click', function(event) {
+                grid_node.on('click', function (event) {
                     event.stopPropagation();
                     var target = $(event.target);
                     if (target.is('button')) {
@@ -722,6 +755,17 @@ Grid.prototype = (function() {
                     return true;
                 });
 
+                // 截图loading的问题
+                if (_this.image && _this.image.indexOf('mx://thumbs') === 0) {
+                    grid_node.addClass('loading');
+                    Api.useApi('quickaccess.isThumbExists', { 'urls': [_this.url] }, function (result) {
+                        result.forEach(function (item, i) {
+                            if (item === true) {
+                                _this.node.removeClass('loading');
+                            }
+                        });
+                    });
+                }
             } else { // 文件夹
                 _this.group = _this.title;
 
@@ -739,10 +783,11 @@ Grid.prototype = (function() {
                 grid_node.append(function_node);
                 _this.list_node = list_node[0];
                 _this.function_node = function_node[0];
-                _this.list_node.addEventListener('click', function(event) {
+                _this.list_node.addEventListener('click', function (event) {
                     event.button === 0 && _this.showGroup();
                 });
-                _this.function_node.addEventListener('click', function(event) {
+
+                _this.function_node.addEventListener('click', function (event) {
                     var target = $(event.target);
                     if (target.is('button')) {
                         var buttonType = target.prop('className');
@@ -762,11 +807,11 @@ Grid.prototype = (function() {
                 });
             }
 
-            grid_node.on('mousedown', function(event) {
+            grid_node.on('mousedown', function (event) {
                 startDrag(event);
             });
 
-            grid_node.on('contextmenu', function(event) {
+            grid_node.on('contextmenu', function (event) {
                 showMenu(_this, event.clientX, event.clientY);
                 event.stopPropagation();
                 event.preventDefault();
@@ -796,7 +841,7 @@ Grid.prototype = (function() {
 
         _this.group = group_name;
         if (list) {
-            list.forEach(function(item) {
+            list.forEach(function (item) {
                 item.group = group_name;
             });
 
@@ -827,12 +872,14 @@ Grid.prototype = (function() {
 
 function getGridList(mapList, callback) {
     map_list = mapList;
-    Dao.getGridList(function(data) {
+    Dao.getGridList(function (data) {
         readyInitUiData();
         initData(data);
         initGridDataList();
         // 优化一下这个地方
         resizeGridPositionAndIndex();
+        // addEventListeners
+        require('widget/main/listener').init(data_list);
     });
 }
 
@@ -840,14 +887,20 @@ function initData(data) {
     var top_data_list = [],
         topuiindex = 0;
     data_list = [];
-    data.forEach(function(item, i) {
+    data.forEach(function (item, i) {
         if (item) {
+            // 过滤无效数据： Add 增加按钮 Empty:占位格子
+            if (item.title === 'Add' || item.title === 'Empty') {
+                return true;
+            }
+            if (item.group) delete item.group;
+            if (item.uiindex) delete item.uiindex;
             if (item.isHot === true) {
                 item.topuiindex = topuiindex++;
                 top_data_list.push(item);
             } else {
                 if (item.children) {
-                    item.children.forEach(function(item2, j) {
+                    item.children.forEach(function (item2, j) {
                         if (!item2) {
                             item.children.splice(j, 1);
                             return true;
@@ -880,7 +933,7 @@ function autoComplete(list) {
 
 function initGridDataList() {
     var grid;
-    data_list.forEach(function(item, i) {
+    data_list.forEach(function (item, i) {
         if (!item.children) { // 普通格子
             item = new Grid(item, i);
             if (item.isHot === true) {
@@ -892,7 +945,7 @@ function initGridDataList() {
             grid = new Grid(item, i);
             grid.container = $('<div class="grid-list-container"></div>');
             grid.children = [];
-            item.children.forEach(function(item2, j) {
+            item.children.forEach(function (item2, j) {
                 item2.group = grid.title;
                 item2 = new Grid(item2, j);
                 grid.container.append(item2.dom());
@@ -915,7 +968,7 @@ function resizeGridPositionAndIndex() {
         topindex = 0,
         children;
 
-    data_list.forEach(function(item, i) {
+    data_list.forEach(function (item, i) {
         item.uiindex = i;
         if (item.isHot === true) {
             if (topindex > 7) {
@@ -928,7 +981,7 @@ function resizeGridPositionAndIndex() {
         item.locate();
         children = item.children;
         if (children) {
-            children.forEach(function(item2, j) {
+            children.forEach(function (item2, j) {
                 item2.uiindex = j;
                 item2.locate(j);
                 if (item2.url) {
@@ -953,7 +1006,6 @@ function readyInitUiData() {
     $grid_container = $('#grid_list_container');
     $group_dialog = $('#group'),
     $top_container = $('#top'),
-    $add_grid = $('#add-grid'),
     $group_list = $('#group_list');
 
     // 清空元素
@@ -962,13 +1014,13 @@ function readyInitUiData() {
 
     group_title = $('#group-title');
 
-    group_title.on('click', function(e) {
+    group_title.on('click', function (e) {
         e.stopPropagation();
         if (group_title.hasClass('editable'))
             return;
         group_title.addClass('editable');
         this.focus();
-        document.onkeydown = function(e) {
+        document.onkeydown = function (e) {
             if (e.keyCode === 13) {
                 group_title.removeClass('editable');
                 return false;
@@ -978,7 +1030,7 @@ function readyInitUiData() {
     });
 
     // 标题失去焦点
-    group_title.on('blur', function(e) {
+    group_title.on('blur', function (e) {
         var title = this.value.trim();
         var title_len = title.replace(/[^\x00-\xff]/g, '**').length;
 
@@ -998,67 +1050,6 @@ function readyInitUiData() {
         // 关闭右键弹层
         Menu.hideAndRemovePopupMenu();
         group_title.removeClass('editable');
-    });
-
-    // 推荐站点click行为
-    $('#add-dialog').on('click', '.dialog-grid-list > li', function(e) {
-        e.preventDefault();
-        var $this = $(this);
-
-        if ($this.hasClass('disable')) {
-            return;
-        }
-        // 防止频繁点击，导致添加多次
-        $this.addClass('disable');
-        var $ele = $this.find('a');
-        var item = {
-            'title': $ele.attr('d-title'), // 标题
-            'url': $ele.attr('href'), // url链接
-            'image': $ele.attr('d-image'), // 图片路径
-            'sq_img': $ele.attr('d-sq-img'),
-            'sq_md5sum': $ele.attr('d-sq-md5'),
-            're_img': $ele.attr('d-re-img'),
-            're_md5sum': $ele.attr('d-re-md5'),
-            'isHot': false
-        };
-        
-        setTimeout(function() {
-            // 构建动画元素
-            var $cloneGrid = $this.clone();
-            var w = $this.width(),
-                h = $this.innerHeight();
-            var p = $this.offset();
-
-            $cloneGrid.css({ 'position': 'absolute', '-webkit-transition': 'all 0.3s', 'left': p.left, 'top': p.top + document.body.scrollTop });
-            document.body.appendChild($cloneGrid[0]);
-            // 获取目标位置
-            item.index = current_grid.index;
-            item.isHot = current_grid.isHot;
-
-            if (!current_grid.group) {
-                var p2 = current_grid.getGridFixed();
-                var l2 = p2.left;
-                var t2 = p2.top + document.body.scrollTop;
-                $cloneGrid.css({ "left": l2, "top": t2 });
-                setTimeout(function() {
-                    // editOperate ? onUpdateGridItem(item) : onInsertGridItem(item, grid);
-                    onInsertGridItem(item, current_grid);
-                    if ($cloneGrid) {
-                        document.body.removeChild($cloneGrid[0]);
-                        $cloneGrid = null;
-                    }
-                }, 300);
-            } else {
-                Controller.onUpdateGridItem(item);
-                if ($cloneGrid) {
-                    document.body.removeChild($cloneGrid[0]);
-                    $cloneGrid = null;
-                }
-            }
-
-            // 关闭弹框
-            $('#add-dialog').trigger('dialog-close');
-        }, 50);
     });
 
     grid_ui_data.top_container_width = $top_container.width();
@@ -1125,7 +1116,7 @@ function onSetGroupName(first_index, last_index, group_name) {
     obj.title = group_name;
     obj.setGroupName(group_name);
     clearTimeout(setGroupNameTimer);
-    setGroupNameTimer = setTimeout(function() {
+    setGroupNameTimer = setTimeout(function () {
         // 持久化
         Dao.updateGridGroup(obj.uiindex, group_name);
     }, animation_time);
@@ -1155,7 +1146,7 @@ function onMovingInGroup(drag_index, drop_index, group_name) {
 
         // 设置缩略图大小
         setGroupGirdNodeSize(drag_node, length, xy);
-        setTimeout(function() {
+        setTimeout(function () {
             dropGroup.addLastGridThumbnailNode();
             // 持久化
             Dao.insertGridItem(drag.i, drop.i);
@@ -1211,7 +1202,7 @@ function onAddGroup(drag_index, drop_index, group_name) {
     if (drag_node) {
         setGroupGirdNodeSize(drop_node, 0, xy);
         setGroupGirdNodeSize(drag_node, 1, xy);
-        setTimeout(function() {
+        setTimeout(function () {
             group_node.removeAttr('style');
             // 持久化
             Dao.addGridGroup(uiindex, drag.i, drop.i, group_name);
@@ -1242,8 +1233,8 @@ function onSwappingGrid(drag_index, drop_index) {
     drop_node.css({ 'left': drag_xy.left + sxy.left, 'top': drag_xy.top + sxy.top });
     drag_node.css({ 'left': drop_xy.left + sxy.left, 'top': drop_xy.top + sxy.top });
 
-    dropData = Object.assign({}, dropObj);
-    dragData = Object.assign({}, dragObj);
+    dropData = $.extend({}, dropObj);
+    dragData = $.extend({}, dragObj);
     if (dragObj.isHot === true) {
         dropData.isHot = true;
         dropData.topuiindex = dragObj.topuiindex;
@@ -1269,7 +1260,7 @@ function onSwappingGrid(drag_index, drop_index) {
     dragObj.removeClass('draging');
     dragObj.removeClass('notran');
     if (drag_node) {
-        setTimeout(function() {
+        setTimeout(function () {
             dragItem.node.removeClass('draging');
             dropItem.node.removeClass('draging');
             // 持久化
@@ -1350,7 +1341,7 @@ function onRemoveGrid(index) {
         group;
 
     grid.addClass('remove');
-    setTimeout(function() {
+    setTimeout(function () {
         grid.node.remove();
         if (j < 0) {
             data_list.splice(i, 1);
@@ -1398,9 +1389,9 @@ function setGroupGirdNodeSize(node, index, xy) {
     top += xy.top + sxy.top;
     left += xy.left + sxy.left;
     node.removeClass('notran');
-    setTimeout(function() {
+    setTimeout(function () {
         node.addClass('small');
-        setTimeout(function() {
+        setTimeout(function () {
             node[0].style.cssText = 'left:' + left + 'px; top: ' + top + 'px; width:71px; height: 46px;';
         }, 5);
     }, 5);

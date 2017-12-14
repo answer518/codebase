@@ -65,17 +65,17 @@ function bindeEvent() {
     //自动播放功能
     var $container = $navigation.find('.container');
     //鼠标移入box时清除定时器
-    $container.mouseover(function () {
-        clearInterval(timer);
-    });
+    // $container.mouseover(function () {
+    //     clearInterval(timer);
+    // });
     
-    //鼠标移出box时开始定时器
-    $container.mouseleave(function () {
-        timer = setInterval(nextImg, 4000);
-    });
+    // //鼠标移出box时开始定时器
+    // $container.mouseleave(function () {
+    //     timer = setInterval(nextImg, 4000);
+    // });
     
-    // 进入页面自动开始定时器
-    timer = setInterval(nextImg, 4000);
+    // // 进入页面自动开始定时器
+    // timer = setInterval(nextImg, 4000);
 }
 
 function initList() {

@@ -1,4 +1,4 @@
-<ul id="top" class="clearfix"></ul>
+<!-- <ul id="top" class="clearfix"></ul>
 <div id="main">
     <div class="nav-header clearfix">
         <ul class="nav-header-menu">
@@ -13,9 +13,9 @@
             <ul id="grid_list_container" class="grid-list-container"></ul>
         </div>
     </div>       
-</div>
+</div> -->
 <!-- 添加快速拨号 -->
-<div id="add-dialog" class="dialog">
+<!-- <div id="add-dialog" class="dialog">
     <div class="dialog-warp">
         <div class="dialog-header">
             <ul class="dialog-nav">
@@ -106,4 +106,4 @@
             </article>
         </div>
     </div>
-</div>
+</div> -->

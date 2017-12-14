@@ -5,8 +5,8 @@
 var Tools = require('static/js/tools.js');
 var helper = (function() {
 
-    template.on('isThumbImge', function(src) {
-        return src && src.slice(0, src.length) === 'mx://thumbs/';
+    template.on('iSprintScreen', function(src) {
+        return src && src.indexOf('mx://thumbs/') === 0;
     });
 
     return {
@@ -24,9 +24,9 @@ var helper = (function() {
                     </li>',
         grid_html: '<li class="main grid">\
                     <a href="<%= this.url || \"\" %>" title="" target="_blank" <% if(!!this.image) {%> <% } else {%> class="<%=this.colorBlock || \"\" %>" <% } %>\
-                        <% if(this.isThumbImge(this.image)) {%>style="background-color:#fff;"<% } %>>\
+                        <% if(this.iSprintScreen(this.image)) {%>style="background-color:#fff;"<% } %>>\
                         <% if(!!this.image) {%>\
-                            <% if(this.isThumbImge(this.image)) {%>\
+                            <% if(this.iSprintScreen(this.image)) {%>\
                                 <p class="thumb" style="background-image:url(<%= this.image%>);"></p>\
                             <% } else {%>\
                                 <img src="<%= this.image %>" alt="<%=this.title || \"\" %>">\
@@ -37,7 +37,7 @@ var helper = (function() {
                     </a>\
                     <div class="function">\
                         <strong class="title"><%=this.title || \"\" %></strong>\
-                        <% if(this.isThumbImge(this.image)) {%><button class="refresh">×</button><% } %>\
+                        <% if(this.iSprintScreen(this.image)) {%><button class="refresh">×</button><% } %>\
                         <button class="edit"></button>\
                         <button class="delete"></button>\
                     </div>\

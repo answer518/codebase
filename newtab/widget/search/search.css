@@ -1,6 +1,7 @@
 .search-bar {
-	width: 60%;
-	margin: 50px auto;
+	/* width: 40%; */
+	min-width: 900px;
+	margin: 20px auto;
 }
 
 .search-box {
@@ -12,22 +13,18 @@
 	background-color: #f9f9f9;
 	border-radius: 2px;
 	box-shadow: 0 1px 3px rgba(0,0,0,.25),0 0 0 1px #cfcfcf;
+	width: 40%;
+	margin: 0 auto;
 }
 
 .search-engine {
     cursor: pointer;
     position: relative;
-    padding: 4px 6px 4px 0;
+    padding: 4px 6px 4px 30px;
     height: 28px;
-    line-height: 28px;
-}
-
-.search-engine .engine-icon {
-	float: left;
-	margin: 4px 6px 0 8px;
-	vertical-align: top;
-	max-width: 100%;
-	border:0;
+	line-height: 28px;
+	white-space: nowrap;
+	background: url('//pc-newtab.maxthonimg.com/static/img/grey.gif') no-repeat 10px 10px;
 }
 
 .change-engine::after {
@@ -56,6 +53,7 @@
 	position: absolute;
 	z-index: 2;
 	top: 36px;
+	left: 0;
 	display: none;
 }
 
@@ -74,15 +72,19 @@
 
 .search-engine .engine-list img {
 	display: inline-block;
-	padding: 7px 6px 7px 8px;
+	width: 16px;
+	height: 16px;
+	padding: 9px 6px 7px 8px;
 }
 
 .search-engine .engine-list span {
 	display: inline-block;
 	vertical-align: middle;
 	line-height: 35px;
-	/*font-size: 12px;*/
 	font-weight: 400;
+	width: 100px;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .search-input {

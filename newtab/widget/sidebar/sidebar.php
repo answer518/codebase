@@ -16,13 +16,13 @@
 
     <div id="config-layer">
         <h4>
-            <i class="close">×</i>
+            <i class="close-btn">×</i>
         </h4>
         <div class="c-layer-main">
             <div class="c-layer-title">
-                <span title="设置背景">设置背景</span>
+                <span title="设置背景"></span>
                 <i class="tips">
-                    <p><%= this.getLang('SelectBackgroundNotice') %></p>
+                    <p></p>
                 </i>
             </div>
             <div class="a-upload">
