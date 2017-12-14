@@ -13,10 +13,10 @@
     height: 120px;
 }
 
-#main {
+/*#main {
     position: relative;
     z-index: 1;
-}
+}*/
 
 #main .nav-header {
     margin-left: -0.8%;
