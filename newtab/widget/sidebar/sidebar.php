@@ -1,14 +1,5 @@
 <div id="siderbar" class="siderbar">
     <ul>
-        <li class="no">
-            <span id="qr-Code">&nbsp;</span>
-            <div class="download">
-                <div class="title">下载傲游5移动版</div>
-                <p><img src="//pc-newtab.maxthonimg.com/static/img/qcode-china.png" alt="" /></p>
-                <div class="dev">iOS&Android</div>
-                <ins></ins>
-            </div>
-        </li>
         <li>
             <span id="config-button"></span>
         </li>
