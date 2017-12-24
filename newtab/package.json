@@ -1,11 +1,11 @@
 {
-  "name": "fis3-pure-php",
+  "name": "mx5-newtab-php",
   "version": "0.0.1",
-  "description": "fis 3.0 DEMO",
-  "scripts" : {
-    "test" : "",
-    "release" : "fis3 release dist -d D:\\phpStudy\\WWW",
-    "dev" : "fis3 release -w -d D:\\phpStudy\\WWW"
+  "description": "mx5-newtab",
+  "scripts": {
+    "test": "",
+    "release": "fis3 release dist -d /Library/WebServer/Documents",
+    "dev": "fis3 release -w -d /Library/WebServer/Documents"
   },
   "dependencies": {
     "fis3-hook-module": "*"
@@ -14,7 +14,7 @@
     "fis3"
   ],
   "author": {
-    "name": "fis"
+    "name": "guotingjie"
   },
-  "license": "BSD"
+  "license": "MIT"
 }

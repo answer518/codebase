@@ -24,6 +24,8 @@
     <?php import('static/js/lib/jquery-2.2.4.min.js'); ?>
     <?php import('static/js/lib/dialog.js'); ?>
     <?php import('static/js/lib/template.js'); ?>
+    <?php import('static/js/lib/mock.js'); ?>
+    <?php import('static/js/language.js'); ?>
 </head>
 <body>
 
@@ -38,7 +40,7 @@
   </div>
 
   <!-- 引入侧边栏组件 -->
-  <?php widget("widget/sidebar/sidebar.php"); ?>
+  <?php //widget("widget/sidebar/sidebar.php"); ?>
   <!-- 引入文件夹弹框组件 -->
   <?php widget("widget/group/group.php"); ?>
   <!-- 加载一些对开发有用的片段 -->
@@ -63,7 +65,7 @@
       <script type="text/javascript">
         require('widget/header/header');
         require('widget/search/search'); // auto run 
-        require('widget/sidebar/sidebar');
+        // require('widget/sidebar/sidebar');
         require('static/js/index.js');
       </script>
   <?php scriptEnd(); ?>

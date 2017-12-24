@@ -1,6 +1,6 @@
 'use strict';
 // mock数据
-define('static/js/mock', function(require, exports, module) {
+define('static/js/lib/mock', function(require, exports, module) {
 
     module.exports = {
         'account.getCurrentAccount': {
@@ -8,6 +8,7 @@ define('static/js/mock', function(require, exports, module) {
             vipLevel: 3,
             syncTime: 'xxxx-xx-xx xx:xx:xx',
             email: 'guest',
+            avatarUrl: '',
             avatarPath: '../../static/images/multi-icon.png',
             totalSpace: '40',
             usedSpace: '5',
