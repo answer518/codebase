@@ -19,6 +19,11 @@ define('static/js/lib/mock', function(require, exports, module) {
             nickname: '测试二十',
             phoneNumber: '1111222333'
         },
-        'account.logout': true
+        'account.logout': true,
+        'config.getMultiValues' : [
+            [
+                
+            ],[]
+        ]
     }
 });
