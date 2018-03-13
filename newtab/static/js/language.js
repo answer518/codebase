@@ -8,7 +8,7 @@ define('static/js/language', function(require, exports, module) {
             lang: {
                   'DocumentTitle': {
                         'zh-cn': '新标签',
-                        'en': 'New tab',
+                        'en-us': 'New tab',
                         'ar-bh': 'جديد إطار',
                         'ar-sa': 'لسان جديد',
                         'ar-ye': 'جديد إطار',
@@ -63,33 +63,6 @@ define('static/js/language', function(require, exports, module) {
                         'zh-hk': '新標籤',
                         'zh-tw': '新標籤'
                   },
-                  'New': {
-                        'de-de': 'Hinzufügen',
-                        'bg-bg': 'Добави',
-                        'cs-cz': 'Přidat',
-                        'es-pe': 'Añadir',
-                        'eu-es': 'Gehitu',
-                        'en-gb': 'Add',
-                        'eu': 'Gehitu',
-                        //'fa-ir': 'افزودن',
-                        'fr-fr': 'Ajouter',
-                        'it-it': 'Aggiungi',
-                        'ko-kr': '추가',
-                        'nb-no': 'Legg til',
-                        'pl-pl': 'Dodaj',
-                        'pt-br': 'Adicionar',
-                        'sr-cyrl' : 'Додај',
-                        'sr-latn' : 'Dodaj',
-                        'sl-si': 'Dodaj',
-                        'tr-tr': 'Ekle',
-                        'vec-it': 'Xonta',
-                        'zh-cn': '新增',
-                        'zh-tw': '新增',
-                        'ru-ru': 'Добавить',
-                        'sr-cs': 'Dodaj',
-                        'es-es': 'Añadir',
-                        'en-us': 'Add'
-                  },
                   'Url': {
                         //'fa-ir': 'نشانی',
                         'zh-cn': '网址:',
@@ -123,33 +96,6 @@ define('static/js/language', function(require, exports, module) {
                         'es-es': 'Titulo',
                         'en-us': 'Title'
                   },
-                  'CustomAdd': {
-                        'de-de': 'Hinzufügen',
-                        'bg-bg': 'Добави',
-                        'cs-cz': 'Přidat',
-                        'es-pe': 'Añadir',
-                        'eu-es': 'Gehitu',
-                        'en-gb': 'Add',
-                        'eu': 'Gehitu',
-                        //'fa-ir': 'افزودن',
-                        'fr-fr': 'Ajouter',
-                        'it-it': 'Aggiungi',
-                        'ko-kr': '추가',
-                        'nb-no': 'Legg til',
-                        'pl-pl': 'Dodaj',
-                        'pt-br': 'Adicionar',
-                        'sr-cyrl' : 'Додај',
-                        'sr-latn' : 'Dodaj',
-                        'sl-si': 'Dodaj',
-                        'tr-tr': 'Ekle',
-                        'vec-it': 'Xonta',
-                        'zh-cn': '添加此项',
-                        'zh-tw': '加入此項目',
-                        'ru-ru': 'Добавить',
-                        'sr-cs': 'Dodaj',
-                        'es-es': 'Añadir',
-                        'en-us': 'Add'
-                  },
                   'Add': {
                         'de-de': 'Hinzufügen',
                         'bg-bg': 'Добави',
@@ -176,33 +122,6 @@ define('static/js/language', function(require, exports, module) {
                         'sr-cs': 'Dodaj',
                         'es-es': 'Añadir',
                         'en-us': 'Add'
-                  },
-                  'Hot': {
-                        'de-de': 'Beliebt',
-                        'bg-bg': 'Горещи',
-                        'cs-cz': 'Horký',
-                        'es-pe': 'Popular',
-                        'eu-es': 'Beroa',
-                        'en-gb': 'Hot',
-                        'eu': 'Beroa',
-                        //'fa-ir': 'محبوب',
-                        'fr-fr': 'Populaire',
-                        'it-it': 'Più richieste',
-                        'ko-kr': '인기',
-                        'nb-no': 'Populær',
-                        'pl-pl': 'Gorąco',
-                        'pt-br': 'Quente',
-                        'sr-cyrl' : 'Популарно',
-                        'sr-latn' : 'Popularno',
-                        'sl-si': 'Vroče',
-                        'tr-tr': 'Yeni',
-                        'vec-it': 'Popoƚar',
-                        'zh-cn': '推荐图片',
-                        'zh-tw': '推薦圖片',
-                        'ru-ru': 'Топ',
-                        'sr-cs': 'Popularno',
-                        'es-es': 'Popular',
-                        'en-us': 'Hot'
                   },
                   'Open': {
                         'de-de': 'Öffnen',
@@ -366,60 +285,6 @@ define('static/js/language', function(require, exports, module) {
                         'es-es': 'Cancelar',
                         'en-us': 'Cancel'
                   },
-                  'HotTab': {
-                        'de-de': 'Webseiten',
-                        'bg-bg': 'Сайтове',
-                        'cs-cz': 'Webové stránky',
-                        'es-pe': 'Sitios web',
-                        'eu-es': 'Webguneak',
-                        'en-gb': 'Websites',
-                        'eu': 'Webguneak',
-                        //'fa-ir': 'وبگاه ها',
-                        'fr-fr': 'Sites Web',
-                        'it-it': 'Siti web',
-                        'ko-kr': '웹사이트',
-                        'nb-no': 'Nettsteder',
-                        'pl-pl': 'Strony WWW',
-                        'pt-br': 'Sites da Web',
-                        'sr-cyrl' : 'Веб сајтови',
-                        'sr-latn' : 'Vеb sajtovi',
-                        'sl-si': 'Spletne strani',
-                        'tr-tr': 'Web Siteleri',
-                        'vec-it': 'Siti web',
-                        'zh-cn': '热门网址',
-                        'zh-tw': '熱門網址',
-                        'ru-ru': 'Веб-сайты',
-                        'sr-cs': 'Vеb sajtovi',
-                        'es-es': 'Sitios web',
-                        'en-us': 'Websites'
-                  },
-                  'CustomAddTab': {
-                        'de-de': 'Benutzerdefiniert',
-                        'bg-bg': 'По избор',
-                        'cs-cz': 'Vlastní',
-                        'es-pe': 'Personalizado',
-                        'eu-es': 'Norberea',
-                        'en-gb': 'Custom',
-                        'eu': 'Norberea',
-                        //'fa-ir': 'سفارشی',
-                        'fr-fr': 'Personnalisé',
-                        'it-it': 'Personalizzato',
-                        'ko-kr': '사용자 정의',
-                        'nb-no': 'Tilpasset',
-                        'pl-pl': 'Własna',
-                        'pt-br': 'Personalizado',
-                        'sr-cyrl' : 'Прилагођено',
-                        'sr-latn' : 'Prilagođеno',
-                        'sl-si': 'Po meri',
-                        'tr-tr': 'Özel',
-                        'vec-it': 'Personaƚixà',
-                        'zh-cn': '自定义添加',
-                        'zh-tw': '自訂加入',
-                        'ru-ru': 'Пользовательские',
-                        'sr-cs': 'Prilagođеno',
-                        'es-es': 'Personalizar',
-                        'en-us': 'Custom'
-                  },
                   'MyFavorites': {
                         'de-de': 'Meine Favoriten',
                         'bg-bg': 'Моите Отметки',
@@ -446,33 +311,6 @@ define('static/js/language', function(require, exports, module) {
                         'sr-cs': 'Moji obеlеživači',
                         'es-es': 'Mis favoritos',
                         'en-us': 'My Favorites'
-                  },
-                  'SuggestedWebSite': {
-                        'de-de': 'Vorgeschlagene WebSite',
-                        'bg-bg': 'Предложени Сайтове',
-                        'cs-cz': 'Navrhovaná stránka',
-                        'es-pe': 'Sitio web sugerido',
-                        'eu-es': 'Iradokitako WebGunea',
-                        'en-gb': 'Suggested Websites',
-                        'eu': 'Iradokitako WebGunea', // 兼容mac 语言编码不统一
-                        //'fa-ir': 'وبگاه پیشنهادی',
-                        'fr-fr': 'Site Web suggéré',
-                        'it-it': 'WebSite suggerito',
-                        'ko-kr': '추천 웹사이트',
-                        'nb-no': 'Foreslått nettside',
-                        'pl-pl': 'Sugerowane strony WWW',
-                        'pt-br': 'Site da web sugerido',
-                        'sr-cyrl' : 'Предложени сајтови',
-                        'sr-latn' : 'Prеdložеni sajtovi',
-                        'sl-si': 'Predlagana spletna stran',
-                        'tr-tr': 'Önerilen Web Siteleri',
-                        'vec-it': 'Sito web sugerìo',
-                        'zh-cn': '推荐站点',
-                        'zh-tw': '推薦網站',
-                        'ru-ru': 'Предложенные сайты',
-                        'sr-cs': 'Prеdložеni sajtovi',
-                        'es-es': 'Sitios web sugeridos',
-                        'en-us': 'Suggested WebSite'
                   },
                   'SearchEnterURL': {
                         'de-de': 'Suchen',
@@ -555,6 +393,114 @@ define('static/js/language', function(require, exports, module) {
                         'es-es': 'Le recomendamos que cargue una imagen más grande que la resolución de pantalla actual con formato JPG, PNG o GIF.',
                         'en-us': 'We recommend you upload a picture larger than the current screen resolution in JPG, PNG or GIF format.'
                   },
+                  'SyncDataAutomatically': {
+                        'zh-cn':'自动同步数据',
+                        'en-us':'Sync Data Automatically',
+                  },
+                  'SyncDataAutomaticallyNotice': {
+                        'zh-cn':'开启后数据发生变化时自动同步',
+                        'en-us':'Automatic synchronization when the data is changed after opening',
+                  },
+                  'DynamicBackground': {
+                        'zh-cn':'动态背景',
+                        'en-us':'Dynamic Background',
+                  },
+                  'DynamicBackgroundNotice': {
+                        'zh-cn':'禁用后动态背景不加载动效',
+                        'en-us':'Dynamic background not load effect after disable',
+                  },
+                  'MostVisit': {
+                        'zh-cn':'最常访问',
+                        'en-us':'Most Visit',
+                  },
+                  'MostVisitNotice': {
+                        'zh-cn':'开启后在快速拨号区上显示最常访问区',
+                        'en-us':'The Most Visit area is displayed on the fast dial-up area after opening',
+                  },
+                  'RecoverNow': {
+                        'zh-cn':'立即还原',
+                        'en-us':'Recover Now',
+                  },
+                  'OpenSearchResultNewTab': {
+                        'zh-cn':'在新标签中，打开搜索结果',
+                        'en-us':'Open the search result in new tab',
+                  },
+                  'OpenURLNewTab': {
+                        'zh-cn':'在新标签中，打开网址',
+                        'en-us':'Open the URL in new tab',
+                  },
+                  'SetTextColor': {
+                        'zh-cn':'设置文字颜色',
+                        'en-us':'Set the text color',
+                  },
+                  'light': {
+                        'zh-cn':'浅色',
+                        'en-us':'light',
+                  },
+                  'dark': {
+                        'zh-cn':'深色',
+                        'en-us':'dark',
+                  },
+                  'RecoverDefaultSettings': {
+                        'zh-cn':'还原默认设置',
+                        'en-us':'Recover Default Settings',
+                  },
+                  'RecoverDefaultSettingsNotice': {
+                        'zh-cn':'执行后所有设置还原',
+                        'en-us':'All settings recovered after execution',
+                  },
+                  'Recommend': {
+                        'zh-cn':'推荐',
+                        'en-us':'Recommend',
+                  },
+                  'Customize': {
+                        'zh-cn':'自定义',
+                        'en-us':'Customize',
+                  },
+                  'Background': {
+                        'zh-cn':'背景',
+                        'en-us':'Background',
+                  },
+                  'Other': {
+                        'zh-cn':'其它',
+                        'en-us':'Other',
+                  },
+                  'PreviewIcon': {
+                        'zh-cn':'图标预览',
+                        'en-us':'Preview Icon',
+                  },
+                  'UploadIcon': {
+                        'zh-cn':'上传图标',
+                        'en-us':'Upload Icon',
+                  },
+                  'RecommendedIconSize': {
+                        'zh-cn':'建议图标尺寸',
+                        'en-us':'Recommended Icon Size',
+                  },
+                  'RecommendedIconVolume': {
+                        'zh-cn':'建议图标大小',
+                        'en-us':'Recommended Icon Volume',
+                  },
+                  'AddRecommendSites': {
+                        'zh-cn':'添加推荐站点',
+                        'en-us':'Add Recommend Sites',
+                  },
+                  'HideOftenVisit': {
+                        'zh-cn':'隐藏最常访问',
+                        'en-us':'Hide Often Visit',
+                  },
+                  'DisplayOftenVisit': {
+                        'zh-cn':'显示最常访问',
+                        'en-us':'Display Often Visit',
+                  },
+                  'GoToAdd': {
+                        'zh-cn':'前往添加',
+                        'en-us':'Go To Add',
+                  },
+                  'NotFound': {
+                        'zh-cn':'搜索不到您要的结果，<br/>换个关键词试试吧~',
+                        'en-us':'There are no item matches your searching, <br/>please try another keyword',
+                  },
                   'EnterUrl': {
                         'de-de': 'URL hier eingeben',
                         'bg-bg': 'Въведете URL',
@@ -580,7 +526,7 @@ define('static/js/language', function(require, exports, module) {
                         'ru-ru': 'Введите адрес',
                         'sr-cs': 'Unеsitе adrеsu',
                         'es-es': 'Introduzca la URL',
-                        'en-us': 'Enter the URL'
+                        'en-us': 'Please enter the URL'
                   },
                   'CheckUrl': {
                         'de-de': 'Bitte überprüfen Sie die URL.',
@@ -602,12 +548,12 @@ define('static/js/language', function(require, exports, module) {
                         'sl-si': 'Prosimo, preverite naslov URL.',
                         'tr-tr': 'Lütfen URL\'yi kontrol edin.',
                         'vec-it': 'Contròƚa el indriso WEB.',
-                        'zh-cn': '网址输入不合法',
-                        'zh-tw': '網址輸入不符規定',
+                        'zh-cn': '您输入的网址格式不正确，请重新输入',
+                        // 'zh-tw': '網址輸入不符規定',
                         'ru-ru': 'Проверьте адрес.',
                         'sr-cs': 'Provеritе adrеsu.',
                         'es-es': 'Compruebe la Url.',
-                        'en-us': 'Please check the URL.'
+                        'en-us': 'The format of URL you entered is incorrect, please re-enter'
                   },
                   'EnterTitle': {
                         'de-de': 'Name',
@@ -634,88 +580,7 @@ define('static/js/language', function(require, exports, module) {
                         'ru-ru': 'Заголовок',
                         'sr-cs': 'Unеsitе naslov',
                         'es-es': 'Título',
-                        'en-us': 'Title'
-                  },
-                  'EnterTitleMoreThan30': {
-                        'de-de': 'Geben Sie nie mehr als 30 Zeichen ein.',
-                        'bg-bg': 'заглавието да не е по-голямо от 30 символа.',
-                        'cs-cz': 'název není delší než 30 znaků.',
-                        'es-pe': 'el título no debe tener más de 30 caracteres.',
-                        'eu-es': 'izenburuak ez ditu 30 hizkirri baino gehiago.',
-                        'en-gb': 'The title should be no more than 30 characters',
-                        'eu': 'izenburuak ez ditu 30 hizkirri baino gehiago.',
-                        //'fa-ir': 'عنوان نباید بیش از ٣٠ رقم باشد.',
-                        'fr-fr': 'le titre ne doit pas dépasser 30 caractères.',
-                        'it-it': 'Il titolo non è superiore a 30 caratteri.',
-                        'ko-kr': '제목은 30 문자보다 적어야 합니다.',
-                        'nb-no': 'tittelen kan ikke være mer enn 30 karakterer.',
-                        'pl-pl': 'tytuł nie może przekraczać 30-tu znaków.',
-                        'pt-br': 'o título não é mais do que 30 caracteres.',
-                        'sr-cyrl' : 'Наслов не сме имати више од 30 знакова.',
-                        'sr-latn' : 'Naslov nе smе imati višе od 30 znakova.',
-                        'sl-si': 'naslov ne sme biti daljši od 30 znakov.',
-                        'tr-tr': 'Başlık 30 karakterden fazla olamaz.',
-                        'vec-it': 'el tìtoƚo no\'l pasa i 30 caràteri.',
-                        'zh-cn': '标题不能超过30个字符。',
-                        'zh-tw': '標題不能超過30個字元。',
-                        'ru-ru': 'заголовок не длиннее 30 символов.',
-                        'sr-cs': 'naslov nе smе imati višе od 30 znakova.',
-                        'es-es': 'El titulo no debe tener más de 20 caracteres.',
-                        'en-us': 'The title is no more than 30 characters.'
-                  },
-                  'CurrentlyOpen': {
-                        'de-de': 'Derzeit geöffnet',
-                        'bg-bg': 'Отворени в момента',
-                        'cs-cz': 'Aktuálně otevřené',
-                        'es-pe': 'Actualmente Abierto',
-                        'eu-es': 'Orain Irekita',
-                        'en-gb': 'Currently Open',
-                        'eu': 'Orain Irekita',
-                        //'fa-ir': 'هم اکنون بازست',
-                        'fr-fr': 'Actuellement ouvert',
-                        'it-it': 'Attualmente aperto',
-                        'ko-kr': '열린 사이트',
-                        'nb-no': 'Åpen nå',
-                        'pl-pl': 'Aktualnie Otwarte',
-                        'pt-br': 'Atualmente aberto',
-                        'sr-cyrl' : 'Тренутно отворено',
-                        'sr-latn' : 'Trеnutno otvorеno',
-                        'sl-si': 'Trenutno odprto',
-                        'tr-tr': 'Şu Anda Açık',
-                        'vec-it': 'Atualmente vèrto',
-                        'zh-cn': '当前打开',
-                        'zh-tw': '目前開啟',
-                        'ru-ru': 'Открытые сейчас',
-                        'sr-cs': 'Trеnutno otvorеno',
-                        'es-es': 'Abiertos',
-                        'en-us': 'Currently Open'
-                  },
-                  'MostVisited': {
-                        'de-de': 'Meist besucht',
-                        'bg-bg': 'Най-посещавани',
-                        'cs-cz': 'Nejnavštěvovanější',
-                        'es-pe': 'Más visitado',
-                        'eu-es': 'Ikusienak',
-                        'en-gb': 'Most Visited',
-                        'eu': 'Ikusienak',
-                        //'fa-ir': 'پربازدیدترین',
-                        'fr-fr': 'Les plus visités',
-                        'it-it': 'I più visitati',
-                        'ko-kr': '자주 방문',
-                        'nb-no': 'Mest besøkt',
-                        'pl-pl': 'Najczęściej Odwiedzane',
-                        'pt-br': 'Mais visitados',
-                        'sr-cyrl' : 'Најпосећеније',
-                        'sr-latn' : 'Najposеćеnijе',
-                        'sl-si': 'Najbolj obiskane',
-                        'tr-tr': 'En Çok Ziyaret Edilen',
-                        'vec-it': 'I pì vixitài',
-                        'zh-cn': '最常访问',
-                        'zh-tw': '最常瀏覽',
-                        'ru-ru': 'Часто посещаемые',
-                        'sr-cs': 'Najposеćеnijе',
-                        'es-es': 'Los más visitados',
-                        'en-us': 'Most Visited'
+                        'en-us': 'Please enter the title'
                   },
                   'Maxnote': {
                         'ko-kr': '맥스노트',
@@ -723,6 +588,50 @@ define('static/js/language', function(require, exports, module) {
                         'en-gb': 'Infobox',
                         'zh-tw': 'Maxthon筆記',
                         'en-us': 'Maxnote'
+                  },
+                  'Passkeeper': {
+                        'en-us':'Passkeeper',
+                        'zh-cn':'密码大师'
+                  },
+                  'UUMail': {
+                        'en-us':'UUMail',
+                        'zh-cn':'百变邮箱'
+                  },
+                  'Settings': {
+                        'en-us':'Settings',
+                        'zh-cn':'设置'
+                  },
+                  'CloudUseInfo': {
+                        'en-us':'Cloud storage: <span class="used-space">$used$</span>M used, <span class="total-space">$total$</span>G in total',
+                        'zh-cn':'云空间：已用<span class="used-space">$used$</span>M，总共 <span class="total-space">$total$</span>G'
+                  },
+                  'LastSyncDate': {
+                        'en-us':'Last sync date',
+                        'zh-cn':'最后同步时间'
+                  },
+                  'AccountInfo': {
+                        'en-us':'Account information',
+                        'zh-cn':'账户信息'
+                  },
+                  'AccountSecur': {
+                        'en-us':'Account security',
+                        'zh-cn':'账户安全'
+                  },
+                  'Logout': {
+                        'en-us':'Log out',
+                        'zh-cn':'注销'
+                  },
+                  'Login': {
+                        'en-us':'Login',
+                        'zh-cn':'登录'
+                  },
+                  'SelectDefaultEngine': {
+                        'en-us':'Select default search engine',
+                        'zh-cn':'选择默认搜索引擎'
+                  },
+                  'OldVersion': {
+                        'en-us':'Old Version',
+                        'zh-cn':'回到旧版'
                   },
                   'LastSession': {
                         'de-de': 'Letzte Sitzung',
@@ -744,120 +653,36 @@ define('static/js/language', function(require, exports, module) {
                         'sl-si': 'Zadnja seja',
                         'tr-tr': 'Son Oturum',
                         'vec-it': 'Sesion ùltima',
-                        'zh-cn': '上次未关闭',
-                        'zh-tw': '上次未關閉',
+                        'zh-cn': '最近关闭',
+                        'zh-tw': '最近關閉',
                         'ru-ru': 'Последняя сессия',
                         'sr-cs': 'Poslеdnja sеsija',
                         'es-es': 'Ultima sesion',
                         'en-us': 'Last Session'
                   },
-                  'Screenshot': {
-                        'de-de': 'Bildschirmfoto',
-                        'bg-bg': 'Снимка на екрана',
-                        'cs-cz': 'Snímek stránky',
-                        'es-pe': 'Captura de pantalla',
-                        'eu-es': 'Ikusleiho-argazkia',
-                        'en-gb': 'Screenshot',
-                        'eu': 'Ikusleiho-argazkia',
-                        //'fa-ir': 'عكس فوري',
-                        'fr-fr': 'Capture d\'écran',
-                        'it-it': 'Cattura',
-                        'ko-kr': '스크린샷',
-                        'nb-no': 'Skjermdump',
-                        'pl-pl': 'Zrzut ekranu',
-                        'pt-br': 'Captura de tela',
-                        'sr-cyrl' : 'Снимак екрана',
-                        'sr-latn' : '',
-                        'sl-si': 'Posnetek zaslona',
-                        'tr-tr': 'Ekran Görüntüsü',
-                        'vec-it': 'Catura schermada',
-                        'zh-cn': '网页截图',
-                        'zh-tw': '網頁截圖',
-                        'ru-ru': 'Снимок экрана',
-                        'sr-cs': 'Snimak еkrana',
-                        'es-es': 'Captura de pantalla',
-                        'en-us': 'Screenshot'
+                  'AllSelecte': {
+                        'zh-cn': '选择全部',
+                        'en-us': 'Selecte all'
                   },
-                  'ColorBlock': {
-                        'de-de': 'Farbblock',
-                        'bg-bg': 'Цветен блок',
-                        'cs-cz': 'Barevné pozadí',
-                        'es-pe': 'Bloque de color',
-                        'eu-es': 'Margo Blokea',
-                        'en-gb': 'Color Block',
-                        'eu': 'Margo Blokea',
-                        //'fa-ir': 'رنگ قطعه',
-                        'fr-fr': 'Couleur de bloc',
-                        'it-it': 'Blocco di colore',
-                        'ko-kr': '색상 블럭',
-                        'nb-no': 'Blokkfarge',
-                        'pl-pl': 'Kolorowy kafelek',
-                        'pt-br': 'Cor do Bloco',
-                        'sr-cyrl' : 'Обојени блок',
-                        'sr-latn' : 'Obojеni blok',
-                        'sl-si': 'Barvni blok',
-                        'tr-tr': 'Renk Bloğu',
-                        'vec-it': 'Blòco coƚor',
-                        'zh-cn': '色块文字',
-                        'zh-tw': '色塊文字',
-                        'ru-ru': 'Цвет блока',
-                        'sr-cs': 'Obojеni blok',
-                        'es-es': 'Bloqueo de color',
-                        'en-us': 'Color Block'
+                  'BatchOpening': {
+                        'zh-cn': '批量打开',
+                        'en-us': 'Batch opening'
                   },
-                  'NoteBeenCompleteDeleted': {
-                        'de-de': 'Der Rekord existierte nicht mehr. Fügen Sie Ihren Schnellzugriff wieder hinzu.',
-                        'bg-bg': 'Записът вече не съществува. Добавете отново Бърз Достъп.',
-                        'cs-cz': 'Záznam už neexistuje. Přidejte znovu Rychlý přístup.',
-                        'es-pe': 'El registro ya no existía. Vuelva a agregar su acceso rápido.',
-                        'eu-es': 'Grabaketa ez dago jadanik. Gehitu zure Sarbide Azkarra berriro.',
-                        'en-gb': 'The record no longer exists. Add to your Quick Access again.',
-                        'eu': 'Grabaketa ez dago jadanik. Gehitu zure Sarbide Azkarra berriro.',
-                        //'fa-ir': 'این سابقه دیگر موجود نیست. بندانگشتی خود را دوباره بیفزایید.',
-                        'fr-fr': 'L\'enregistrement n\'existait plus. Ajoutez à nouveau votre accès rapide.',
-                        'it-it': 'Il record non esisteva più. Aggiungi nuovamente il tuo accesso rapido.',
-                        'ko-kr': '레코드가 더 이상 존재하지 않습니다. 다시 빠른 액세스를 추가하십시오.',
-                        'nb-no': 'Posten eksisterer ikke lenger. Legg til i Quick Access igjen.',
-                        'pl-pl': 'Ta pozycja już nie istnieje. Dodaj ją ponownie do swojego Szybkiego Dostępu.',
-                        'pt-br': 'O registro não existie mais. Adicione seu acesso rápido novamente.',
-                        'sr-cyrl' : 'Запис више не постоји. Поново додајте Брзо бирање.',
-                        'sr-latn' : 'Zapis višе nе postoji. Ponovo dodajtе Brzo biranjе.',
-                        'sl-si': 'Zapis ne obstaja več. Ponovno dodajte vaš Hitri dostop.',
-                        'tr-tr': 'Kayıt artık mevcut değil. Hızlı Erişim\'inizi tekrar ekleyin.',
-                        'vec-it': 'El record no\'l existe altro. Xonta da novo el to Quick Access.',
-                        'zh-cn': '该笔记已不存在，请重新选择。',
-                        'zh-tw': '該筆記已不存在，請重新選擇。',
-                        'ru-ru': 'Запись больше не существует. Добавьте свою плитку снова.',
-                        'sr-cs': 'Zapis višе nе postoji. Ponovo dodajtе Brzo biranjе.',
-                        'es-es': 'El registro ya no existe. Agregue su acceso rápido nuevamente',
-                        'en-us': 'The record no longer existed. Add your Quick Access again.'
+                  'BatchDelete': {
+                        'zh-cn': '批量删除',
+                        'en-us': 'Batch delete'
                   },
-                  'NoteBeenDeleted': {
-                        'de-de': 'Der Datensatz wurde gelöscht. Überprüfen Sie den Maxnote Trash.',
-                        'bg-bg': 'Записът беше изтрит. Проверете в кошчето на Maxnote.',
-                        'cs-cz': 'Záznam byl odstraněn. Zkontrolujte Koš v Maxnote.',
-                        'es-pe': 'Se ha eliminado el registro. Compruebe en la Papelera de Maxnote.',
-                        'eu-es': 'Grabaketa ezabatua izan da. Egiaztatu Maxnote Zakarrontzian.',
-                        'en-gb': 'The record has been deleted. Check in the Maxnote Trash.',
-                        'eu': 'Grabaketa ezabatua izan da. Egiaztatu Maxnote Zakarrontzian.',
-                        //'fa-ir': 'سابقه مذکو Maxnote ده است. زباله دان سَبَدداده را ببینید.',
-                        'fr-fr': 'L\'enregistrement a été supprimé. Vérifiez dans la poubelle de Maxnote.',
-                        'it-it': 'Il record è stato eliminato. Controllate il cestino di Maxnote.',
-                        'ko-kr': '레코드가 삭제되었습니다. Maxnote 휴지통을 확인하십시오.',
-                        'nb-no': 'Posten er slettet. Se etter i Maxnote Trash.',
-                        'pl-pl': 'Ta pozycja została skasowana. Sprawdź zawartość śmietnika Maxnote.',
-                        'pt-br': 'O registro foi excluído. Verifique na lixeira do Maxnote.',
-                        'sr-cyrl' : 'Запис је избрисан. Проверите отпад у Maxnote.',
-                        'sr-latn' : 'Zapis jе izbrisan. Provеritе otpad u Maxnote.',
-                        'sl-si': 'Zapis je bil zbrisan. Preverite v Maxnote smetnjaku.',
-                        'tr-tr': 'Kayıt silindi. Maxnote Çöp Kutusunu kontrol edin.',
-                        'vec-it': 'El record el xé stà scanseƚà. Varda inte i scarti de Maxnote.',
-                        'zh-cn': '该笔记已被删除，请在傲游笔记回收站查看。',
-                        'zh-tw': '該筆記已被刪除，請在傲遊筆記回收桶查看。',
-                        'ru-ru': 'Запись была удалена. Возможно она в Корзине Maxnote.',
-                        'sr-cs': 'Zapis jе izbrisan. Provеritе otpad u Maxnote.',
-                        'es-es': 'Se ha eliminado el registro. Compruebe en la Papelera de Maxnote.',
-                        'en-us': 'The record has been deleted. Check in the Maxnote Trash.'
+                  'ClearList': {
+                        'zh-cn': '清空列表',
+                        'en-us': 'Clear list'
+                  },
+                  'OpenTheHistory': {
+                        'zh-cn': '打开历史记录',
+                        'en-us': 'Open the history'
+                  },
+                  'CloseMostVisit': {
+                        'zh-cn': '关闭最常访问',
+                        'en-us': 'close most visit'
                   },
                   'NewFolder': {
                         'de-de': 'Neuer Ordner',
@@ -1128,6 +953,22 @@ define('static/js/language', function(require, exports, module) {
                         'sr-cs': 'Otvori svе u privatnom prozoru',
                         'es-es': 'Abrir todo en ventana privada',
                         'en-us': 'Open all in private window'
+                  },
+                  'user-guide-step1': {
+                        'zh-cn': '欢迎使用新版快速访问。<br/>您的8个置顶站点现在展示在这里。',
+                        'en-us': 'Welcome to the brand new Quick Access.<br/>Your 8 pinned sites will be displayed here.'   
+                  },
+                  'user-guide-step2': {
+                        'zh-cn': '这里是最常访问，会记录您经常访问的站点。',
+                        'en-us': 'Here\'s the Most-Visit, which will record your often visited websites.'   
+                  },
+                  'user-guide-step3': {
+                        'zh-cn': '点击这里可以收起最常访问。',
+                        'en-us': 'Click here to collapse Most-Visit.'   
+                  },
+                  'user-guide-step4': {
+                        'zh-cn': '点击这里可以回到旧版新标签页（在新版新标签页添加的站点数据不会同步到旧版中）。',
+                        'en-us': 'Click here for the old version(Site data which added to the new tab in new version will not synchronize to the old version ).'   
                   }
             },
 
@@ -1137,12 +978,11 @@ define('static/js/language', function(require, exports, module) {
             }
       };
 
-      // Language.init = function () {
-      //       var thiz = this;
-      //       thiz.Locale = navigator.language.toLocaleLowerCase();
-      //       $('title').html(Language.getLang('DocumentTitle'));
-      // }
-      // Language.init();
-
+      Language.init = function () {
+            var thiz = this;
+            thiz.Locale = navigator.language.toLocaleLowerCase();
+            $('title').html(Language.getLang('DocumentTitle'));
+      }
+      Language.init();
       module.exports = Language;
 });

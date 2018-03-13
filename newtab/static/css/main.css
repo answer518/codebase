@@ -6,122 +6,100 @@
 .grid {
     position: absolute;
     transition: all 0.3s;
+    margin-bottom: 30px;
 }
 
-.grid::before {
-    content: "";
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 2;
-}
-
-.top.grid {
-    width: 7%;
-    margin: 0 2%;
-}
-
-.top.grid:hover {
-    transform: scale(1.08);
-    transition: .3s transform;
-}
-
-.top.grid > a {
+.grid > a {
     display: block;
-    text-align: center;
-    height: 0;
-    padding-bottom: 97%;
-    width: 97%;
-    border-radius: 10px;
-    margin: 0 auto;
-    background-size: cover;
-    box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.1);
-}
-
-.top.grid .empty {
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-.top.grid .add {
-    overflow: hidden;
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-.top.grid i.sprite.sprite-circle {
-    background-position: 3px -188px;
-}
-
-.top.grid .color-block {
-    font-size: 40px;
-    overflow: hidden;
-    padding: 50% 0;
-    width: 100%;
-    height: 0;
-    line-height: 4%;
-    max-width: 100px;
-    border-radius: 10px;
-    box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.1);
-}
-
-.top.grid::before {
-    border-radius: 10px;
-}
-
-
-/**
- * 我的站点
- */
-
-.main.grid {
-    box-shadow: 0px 2px 4px 0 rgba(0, 0, 0, 0.1);
-    margin: 0 0.8% 1% 0.8%;
-    width: 15%;
-    height: 0px;
-    padding-bottom: 10%;
-    overflow: hidden;
-    border-radius: 3px;
-}
-
-.main.grid > a {
-    display: block;
-    height: 0;
-    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    width: 60px;
     text-align: center;
     border: none;
     overflow: hidden;
-    padding-bottom: 70%;
-    position: absolute;
+    margin: 0 auto;
+    color:#fff;
+    font-size:34px;
+    text-transform: capitalize;
+    border-radius: 10px;
 }
 
-.main.grid > a > img {
+.grid img {
     width: 100%;
     height: auto;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .15);
 }
 
-.main.grid .add {
+.grid .function {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 60px;
-    height: 60px;
-    padding: 0;
-    margin: -30px 0 0 -30px;
-    z-index: 2;
-    text-indent: -999px;
-    overflow: hidden;
+    width: 100px;
+    left: -20px;
+    top: 70px;
 }
 
-.main.grid.remove {
+.grid .title {
+    font-size: 13px;
+    color: #fff;
+    opacity: 0.8;
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.grid .add {
+    z-index: 2;
+    overflow: hidden;
+    background: #fff;
+    position: relative;
+}
+
+.grid.remove {
     transform: scale(0);
 }
 
-.main.grid:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, .3);
+ /* .grid::before {
+    position: absolute;
+    content: "";
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 29px;
+    z-index: 2;
+} */
+
+.function button {
+    position: absolute;
+    top: -80px;
+    right: 10px;
+    z-index: 2;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+    display: none;
 }
 
-.main.grid.small {
+.grid:hover button {
+    display: block;
+}
+
+.grid:hover button.new {
+    background: url(/static/img/icon/new.svg) center center no-repeat;
+}
+
+.grid:hover button.edit {
+    background: url(/static/img/icon/edit.svg) center center no-repeat;
+}
+
+.grid:hover button.del {
+    background: url(/static/img/icon/delete.svg) center center no-repeat;
+}
+
+.grid.small {
     padding-bottom: 0px;
 }
 
@@ -129,68 +107,145 @@
     transition: all 0s;
 }
 
-.main.grid.add::before {
-    background-color: rgba(255, 255, 255, 0.8);
-    position: absolute;
+.fav-list {
+    position: relative;
+    z-index: 2;
 }
 
-.current::before {
+.fav-list-warp {
+    transition: all .5s;
+}
+
+.fav-list-container {
+    margin: 0 20px 20px;
+    height: 120px;
+    transition: all .5s;
+    overflow: hidden;
+    position: relative;
+}
+
+.fav-list-container .before, .fav-list-container .after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 10px;
+}
+
+.fav-list-container .before {
+    background-image: none;
+    background-position: center top;
+    background-size: cover;
+    background-attachment: fixed;
+    filter: blur(20px);
+}
+
+.fav-list-container .after {
+    z-index: 1;
+    opacity: 0.1;
+}
+
+.fav-list-container .grid .title {
+    -webkit-line-clamp: 1;
+}
+
+.expand {
+    height: 140px;
+}
+
+.collapse {
+    height: 0px;
+    padding: 0px;
+    margin-bottom: 0px;
+}
+
+.fav-collapse {
+    position: absolute;
+    right: 12px;
+    top: -4px;
+}
+
+.fav-collapse::after {
+    background: none;
+}
+
+.fav-collapse::before {
+    background-image: url(/static/img/icon/drop-down-light.svg);
+}
+
+/* .fav-list-warp:hover .fav-collapse {
+    display: block;
+} */
+
+.grid-list-container {
+    position: relative;
+    margin: 0px 20px 0;
+    /* height: 500px; */
+}
+
+/**
+ * 我的站点
+ */
+
+/* .current::before {
     background-color: rgba(0, 0, 0, 0.4);
     transition: all 0.3s;
     position: absolute;
+} */
+
+.grid.combo {
+    transform: scale(1.1);
 }
 
-.main.combo::before {
+/* .grid.combo::before {
     background-color: rgba(0, 0, 0, 0.4);
     transition: all 0.3s;
+    border-radius: 8px;
+    bottom: 29px;
     position: absolute;
-    border: 6px solid rgba(0, 0, 0, 0.4);
-}
-
-.main.swap::before {
-    background: rgba(0, 0, 0, 0.4) url(//pc-newtab.maxthonimg.com/static/img/swap_icon.gif) no-repeat 6px 6px;
-    transition: all 0.3s;
-    position: absolute;
-}
-
-
-/** 截图loading */
-
-.grid.loading::before {
-    background: #fff url(//pc-newtab.maxthonimg.com/static/img/loading.gif) no-repeat center center;
-    position: absolute;
-}
-
-.grid.loading > a {
-    visibility: hidden;
-}
+    border: 6px solid rgba(0, 0, 0, 0.3);
+} */
 
 .thumbnail-container {
     height: 0;
-    background-image: linear-gradient(-180deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.70) 100%);
-    border: 1px solid rgba(0, 0, 0, 0.30);
+    background: rgba(0, 0, 0, 0.20);
     cursor: pointer;
-    padding-bottom: 67%;
+    width: 60px;
+    padding-bottom: 60px;
+    margin: 0 auto;
     overflow: hidden;
-}
-
-.thumbnail-container .loading {
-    background: #fff url(//pc-newtab.maxthonimg.com/static/img/loading.gif) no-repeat center center;
-    background-size: 30% 45%;
+    border-radius: 10px;
 }
 
 .thumbnail {
     width: 40%;
     height: 0;
-    margin: 4.5% 0 0 6.5%;
+    /* margin: 6.5% 0 0 6.5%; */
     background-size: 100%;
+    border-radius: 6px;
     overflow: hidden;
-    padding-bottom: 26%;
+    padding-bottom: 40%;
     float: left;
     position: relative;
+    color: #fff;
 }
 
-.thumbnail>span {
+.thumbnail:nth-child(1) {
+    margin: 5px 1px 1px 5px;
+}
+.thumbnail:nth-child(2) {
+    margin: 5px 5px 1px 1px;
+}
+.thumbnail:nth-child(3) {
+    margin: 1px 1px 5px 5px;
+}
+.thumbnail:nth-child(4) {
+    margin: 1px 5px 5px 1px;
+}
+
+.thumbnail > span {
     position: absolute;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -213,161 +268,76 @@
     background-size: cover;
 }
 
-.main.grid.loading > a > img {
-    visibility: hidden;
-}
-
-.grid .function {
-    text-align: left;
+.grid .color-block {
+    font-size: 40px;
     overflow: hidden;
+    line-height: 52px;
     color: #fff;
-    background-color: #000;
-    font-size: 12px;
-    position: absolute;
-    bottom: 0px;
-    width: 100%;
-    height: 0px;
-    line-height: 24px;
-}
-
-.main.grid:hover .function,
-.group .function {
-    display: block;
-    opacity: 0.7;
-    cursor: pointer;
-    height: 24px;
-    transition: height 0.3s;
-}
-
-.grid .function .title {
-    float: left;
-    margin-left: 10px;
-    font-weight: normal;
-    width: 46%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: pointer;
-}
-
-.grid .function button {
-    position: absolute;
-    width: 18px;
-    height: 18px;
-    text-indent: -99px;
-    background-size: 20px;
-    top: 2px;
-    overflow: hidden;
-}
-
-.grid .function button.delete {
-    right: 5px;
-    background: url(//pc-newtab.maxthonimg.com/static/img/icon/delete.png) no-repeat #000;
-    background-size: 20px;
-}
-
-.grid .function button.delete:hover {
-    background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/delete_hover.png);
-}
-
-.grid .function button.edit {
-    right: 27px;
-    background: url(//pc-newtab.maxthonimg.com/static/img/icon/edit.png) no-repeat #000;
-    background-size: 20px;
-}
-
-.grid .function button.edit:hover {
-    background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/edit_hover.png);
-}
-
-.grid .function button.refresh {
-    right: 51px;
-    background: url(//pc-newtab.maxthonimg.com/static/img/icon/refresh.png) no-repeat #000;
-    background-size: 20px;
-}
-
-.grid .function button.refresh:hover {
-    background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/refresh_hover.png);
-}
-
-.group .function button {
-    display: none;
-}
-
-.group:hover .function button {
-    display: block;
-}
-
-.main.grid .color-block {
-    font-size: 20px;
-    width: 60%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    margin-top: -15px;
-    margin-left: -30%;
-    height: 30px;
-    line-height: 20px;
-}
-
-.color-block-1 {
-    background-color: #00BD9C;
-    color: #fff;
-}
-
-.color-block-2 {
-    background-color: #1FCE6D;
-    color: #fff;
-}
-
-.color-block-3 {
-    background-color: #E87E04;
-    color: #fff;
-}
-
-.color-block-4 {
-    background-color: #E94B35;
-    color: #fff;
-}
-
-.color-block-5 {
-    background-color: #2C97DE;
-    color: #fff;
-}
-
-.color-block-6 {
-    background-color: #ffffff;
-    color: #545454;
-}
-
-.color-block-7 {
-    background-color: #33495F;
-    color: #fff;
-}
-
-.color-block-8 {
-    background-color: #94A5A6;
-    color: #fff;
-}
-
-.color-block-9 {
-    background-color: #9C56B8;
-    color: #fff;
-}
-
-.main.grid.loading .grid .function,
-.main.grid.loading .color-block,
-.main.grid.loading .my-site-mask {
-    visibility: hidden;
 }
 
 #group_list .grid-list-container {
     display: none;
+    margin: 0;
 }
 
 #group_list .grid-list-container.show {
     display: block;
+    height: 320px;
+    overflow-y: auto;
+}
+
+/* @media screen and (min-width:1280px) and (max-width: 1920px) {
+} */
+
+@media screen and (min-width:1680px)  {
+    #wrapper {
+        width: 65%;
+    }
+
+    .grid > a {
+        width: 72px;
+        height: 72px;
+        line-height: 72px;
+    }
+
+    .grid .function {
+        width: 110px;
+        top: 80px;
+    }
+
+    .function button {
+        top: -90px;
+    }
+
+    .fav-list-container {
+        margin: 0 40px 20px;
+        height: 130px;
+    }
+
+    .fav-list-container.collapse {
+        height: 0;
+        margin-bottom: 0;
+    }
+
+    .grid-list-container {
+        margin: 0px 40px 0px;
+    }
+
+    .thumbnail-container {
+        width: 72px;
+        padding-bottom: 72px;
+    }
+
+    .thumbnail:nth-child(1) {
+        margin: 6px 1px 1px 6px;
+    }
+    .thumbnail:nth-child(2) {
+        margin: 6px 6px 1px 1px;
+    }
+    .thumbnail:nth-child(3) {
+        margin: 1px 1px 6px 6px;
+    }
+    .thumbnail:nth-child(4) {
+        margin: 1px 6px 6px 1px;
+    }
 }

@@ -48,17 +48,6 @@ define('static/js/tools', function(require, exports, module) {
     }
 
     /**
-     * 判断本地是否存在截图
-     * @param url 
-     * @param cb
-     */
-    function isThumbExists(url, cb) {
-        api.useApi('quickaccess.isThumbExists', { 'urls': url }, function(data) {
-            cb && cb(data);
-        })
-    }
-
-    /**
      * 判断客户端是否支持webp格式
      * @return {Boolean} [description]
      */
@@ -66,11 +55,58 @@ define('static/js/tools', function(require, exports, module) {
         return !!!navigator.userAgent.match(/Intel Mac OS X/);
     }
 
+    /**
+     * 数组中查找重复项
+     * @param {*} objects 
+     * @param {*} item 
+     */
+    function getCountByItem(objects, item) {
+        var count = 0;
+        for (var i = 0; i < objects.length; i++) {
+            if (objects[i] === null) continue;
+            if(objects[i].children) {
+                count += getCountByItem(objects[i].children, item);
+                continue;
+            }
+            if(!objects[i].url || !item.url) continue;
+            if (objects[i].url.replace(/^https?:\/\//,'') === item.url.replace(/^https?:\/\//,'')) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    /**
+     * 设置cookie
+     * @param {*} c_name 
+     * @param {*} value 
+     * @param {*} expiredays 
+     */
+    function setCookie(c_name, value, expiredays) {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + expiredays)
+        document.cookie = c_name + "=" + escape(value) +
+            ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
+    }
+
+    /**
+     * 读取cookie
+     * @param {*} name 
+     */
+    function getCookie(name) {  
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");  
+        if(arr=document.cookie.match(reg))  
+            return unescape(arr[2]);   
+        else   
+            return null;   
+    }
+
     module.exports = {
         throttle: throttle,
         getLocale: getLocale,
-        isThumbExists: isThumbExists,
-        isSupportWebp: isSupportWebp
+        setCookie: setCookie,
+        getCookie: getCookie,
+        isSupportWebp: isSupportWebp,
+        getCountByItem: getCountByItem
     };
-    // exports.Api = Api;
 });

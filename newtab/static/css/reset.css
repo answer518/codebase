@@ -5,35 +5,34 @@ div,
 p,
 ul,
 ol,
-li {
+li,input,button {
     padding: 0;
     margin: 0;
+    list-style: none;
+    font-family:  'Microsoft Yahei','Helvetica Neue', Arial, sans-serif;
 }
 
 body {
-    font: 12px/1.2 "Segoe UI", Tahoma, Geneva, Verdana, "Microsoft YaHei", Helvetica, Tahoma, Arial;
+    font-size: 12px;
     color: #333;
-    padding-left: calc(100vw - 100%);
+    /* padding-left: calc(100vw - 100%); */
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #c0c0c0;
+    background: rgba(0,0,0,0.3);
     border-radius: 8px;
+    transition: background 0.3s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background-color: #999;
+    background: rgba(0,0,0,0.4);
 }
+
+/*定义滑块 内阴影+圆角*/ 
 
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
-}
-
-ul,
-ol,
-li {
-    list-style: none;
 }
 
 button {

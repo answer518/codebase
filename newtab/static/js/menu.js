@@ -8,7 +8,7 @@
 /**
  * @require ../css/menu.css
  */
-define('static/js/menu', function(require, exports, module) {
+define('static/js/menu', function (require, exports, module) {
 
     function genPopupMenuLi(item) {
         return '<li class="menu-item" event-id="' + item.id + '">' +
@@ -77,11 +77,19 @@ define('static/js/menu', function(require, exports, module) {
         hideAndRemovePopupMenu();
         var menuContent = createPopupMenu();
         menuContent.innerHTML = genPopupMenu(menu);
-        var scrollTop = document.body.scrollTop,
+        var scrollTop = document.body.scrollTop + document.documentElement.scrollTop,
             scrollLeft = document.body.scrollLeft,
             browserWidth = document.documentElement.clientWidth,
+            browserHeight = document.documentElement.clientHeight,
             offsetWidth = menuContent.offsetWidth,
+            offsetHeight = menuContent.offsetHeight,
             left, top = clientY;
+
+        if (clientY + offsetHeight >= browserHeight) {
+            top = clientY - offsetHeight;
+        } else {
+            top = clientY;
+        }
 
         if (clientX + offsetWidth >= browserWidth) {
             left = clientX - offsetWidth;
@@ -93,38 +101,38 @@ define('static/js/menu', function(require, exports, module) {
 
         var items = $(menuContent).find('.menu-item');
         for (var i = 0, len = items.length; i < len; i++) {
-            items[i].onclick = function(e) {
+            items[i].onclick = function (e) {
                 hideAndRemovePopupMenu();
                 var value = this.attributes['event-id'].value;
-                setTimeout(function() {
+                setTimeout(function () {
                     callback(value);
                 }, 200);
             };
-            items[i].oncontextmenu = function() {
+            items[i].oncontextmenu = function () {
                 hideAndRemovePopupMenu();
                 var value = this.attributes['event-id'].value;
-                setTimeout(function() {
+                setTimeout(function () {
                     callback(value);
                 }, 200);
             }
         }
         var items = $(menuContent).find('.menu-item-disabled');
         for (var i = 0, len = items.length; i < len; i++) {
-            items[i].onclick = function() {
+            items[i].onclick = function () {
                 hideAndRemovePopupMenu();
             };
-            items[i].oncontextmenu = function() {
+            items[i].oncontextmenu = function () {
                 hideAndRemovePopupMenu();
             }
         }
 
-        document.onclick = function(e) {
+        document.onclick = function (e) {
             hideAndRemovePopupMenu();
         }
-        menuContent.onclick = function(e) {
+        menuContent.onclick = function (e) {
             return false;
         }
-        menuContent.oncontextmenu = function(e) {
+        menuContent.oncontextmenu = function (e) {
             return false;
         }
         return "none";

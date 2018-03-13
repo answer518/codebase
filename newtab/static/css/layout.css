@@ -1,8 +1,7 @@
 #wrapper {
-    width: 85%;
-    max-width: 1200px;
+    width: 75%;
     min-width: 900px;
-    margin: 70px auto 100px;
+    margin: 40px auto 100px;
 }
 
 #top {
@@ -12,11 +11,6 @@
     z-index: 1;
     height: 120px;
 }
-
-/*#main {
-    position: relative;
-    z-index: 1;
-}*/
 
 #main .nav-header {
     margin-left: -0.8%;
@@ -33,84 +27,132 @@
     position: relative;
     left: -50%;
     text-align: center;
-    height: 40px;
-    line-height: 40px;
-    padding: 0px 20px;
-    font-size: 15px;
+    height: 28px;
+    line-height: 28px;
+    padding: 0px 24px;
+    font-size: 13px;
+    margin-left: 10px;
+}
+
+.nav-header-menu li.active { 
+    background: rgba(255,255,255,0.20);
+    border-radius: 100px;
 }
 
 .nav-header-menu li > a {
     display: block;
     height: 100%;
-    color: #000;
-    opacity: 0.5;
+    color: #fff;
 }
 
 .nav-header-menu li.active > a {
-    color: #333;
-    /* 解决点击出现外边框的问题 */
-    outline: medium;
-    border-bottom: 1px solid #333;
-    height: 39px;
-    opacity: 1;
+    opacity: 0.5;
 }
 
 .nav-body {
     position: relative;
     left: 1px;
     top: 20px;
-    margin-left: -0.8%;
+    /* margin-left: -0.8%; */
 }
 
 
 /** 背景透明时的样式 */
 
-.light .nav-header-menu li>a {
+.dark .nav-header-menu li>a {
     color: #fff;
-    opacity: 0.5
+    opacity: 0.9;
+}
+
+.light .nav-header-menu li.active {
+    background: rgba(0,0,0,0.30);
+}
+
+.light .nav-header-menu li>a {
+    color: #333;
+    opacity: 0.9;
 }
 
 .light .nav-header-menu li.active > a {
-    border-bottom-color: #fff;
-    opacity: 1;
+    color: #fff;
 }
 
-.light .thumbnail-container {
+.light .grid .title {
+    color: #333;
+}
+
+.light .fav-collapse::before {
+    background-image: url(/static/img/icon/drop-down.svg)
+}
+
+.light .fav-list-container .after {
+    background-color: #000;
+}
+
+/* .light .header .after {
+    opacity: 0.05;
+} */
+
+.light .grid > a {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.1);
+}
+
+.dark .fav-list-container .after {
+    background-color: #fff;
+}
+
+.dark .thumbnail-container {
     background-color: rgba(255, 255, 255, .3);
-    border: 1px solid rgba(255, 255, 255, 0.15);
     background-image: none;
+}
+
+#wallpapers, #wallpapers .anim_fade_image {
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 #wallpapers {
     position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    min-width: 1000px;
     z-index: -10;
-    background-position: center bottom;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-color: #e2ebf8;
+    background-color: #fff;
+}
+
+#wallpapers .anim_fade_image {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
 
 #wallpapers video {
-    display: none;
-    min-width: 100%;
-    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 1px;
+    height: 1px;
+    /* display: none; */
+    position: absolute;
+    left: -1px;
 }
 
-
-/* 阻止滚动事件加模糊效果 */
+#wallpapers video.show {
+    width: 100%;
+    height: auto;
+    object-position: left top;
+    object-fit: none;
+}
 
 .mask {
-    overflow-y: hidden;
-    padding-right: 17px;
+    overflow: hidden;
 }
 
-.mask #top,
-.mask #main,
-.mask footer {
-    -webkit-filter: blur(8.2px);
+/* 阻止滚动事件加模糊效果 */
+.mask .header,
+.mask .search-bar,
+.mask #wrapper, .mask #wallpapers {
+    filter: blur(20px);
+    -webkit-filter: blur(20px);
 }
