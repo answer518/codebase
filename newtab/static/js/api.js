@@ -10,7 +10,7 @@ define('static/js/api', function(require, exports, module) {
     var SYNC_KEY_QA = 'qa_layout';
     var SYNC_KEY_QA_WIDGET = 'qa_widget';
     var MAP_LIST = {};
-    var mock = require('static/js/mock');
+    var mock = require('static/js/lib/mock');
 
     /**
      * API使用
@@ -111,5 +111,4 @@ define('static/js/api', function(require, exports, module) {
     };
 
     module.exports = Api;
-    // exports.Api = Api;
 });

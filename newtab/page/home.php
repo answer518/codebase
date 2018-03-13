@@ -2,17 +2,17 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>æ–°æ ‡ç­¾é¡µ</title>
+    <title>ÐÂ±êÇ©Ò³</title>
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="renderer" content="webkit" />
-    <!-- ä½¿ç”¨modjsä½œä¸ºèµ„æºåŠ è½½å™¨ -->
+    <!-- Ê¹ÓÃmodjs×÷Îª×ÊÔ´¼ÓÔØÆ÷ -->
     <?php framework('static/js/lib/mod.js'); ?>
     
-    <!-- æ ‡è®°cssè¾“å‡ºä½ç½® -->
+    <!-- ±ê¼ÇcssÊä³öÎ»ÖÃ -->
     <?php placeholder('css');?>
 
-    <!-- åŠ è½½css -->
+    <!-- ¼ÓÔØcss -->
     <?php import('static/css/reset.css'); ?>
     <?php import('static/css/common.css'); ?>
     <?php import('static/css/layout.css'); ?>
@@ -20,38 +20,38 @@
     <?php import('static/css/main.css'); ?>
     <?php import('static/res/intro/introjs.css'); ?>
 
-    <!-- åŠ è½½åŒæ­¥çš„js -->
+    <!-- ¼ÓÔØÍ¬²½µÄjs -->
     <?php import('static/js/lib/jquery-2.2.4.min.js'); ?>
     <?php import('static/js/lib/template.js'); ?>
     <?php import('static/res/data/datasource.js'); ?>
 </head>
 <body class="light">
-  <!-- å¼•å¯¼è½®æ’­ç»„ä»¶ -->
+  <!-- Òýµ¼ÂÖ²¥×é¼þ -->
   <?php widget("widget/navigation/navigation.php"); ?>
-  <!-- èŠ‚æ—¥çš®è‚¤ç»„ä»¶ -->
+  <!-- ½ÚÈÕÆ¤·ô×é¼þ -->
   <?php //widget("widget/skin/skin.php"); ?>
-  <!-- ä¸ªäººä¿¡æ¯ç»„ä»¶ -->
+  <!-- ¸öÈËÐÅÏ¢×é¼þ -->
   <?php widget("widget/header/header.php"); ?>
-  <!-- æœç´¢å¼•æ“Žç»„ä»¶ -->
+  <!-- ËÑË÷ÒýÇæ×é¼þ -->
   <?php widget("widget/search/search.php"); ?>
-  <!-- æˆ‘çš„ç«™ç‚¹ -->
+  <!-- ÎÒµÄÕ¾µã -->
   <div id="wrapper">
     <?php widget("widget/main/main.php"); ?>
   </div>
 
-  <!-- å¼•å…¥ä¾§è¾¹æ ç»„ä»¶ -->
+  <!-- ÒýÈë²à±ßÀ¸×é¼þ -->
   <?php widget("widget/sidebar/sidebar.php"); ?>
-  <!-- å¼•å…¥æ–‡ä»¶å¤¹å¼¹æ¡†ç»„ä»¶ -->
+  <!-- ÒýÈëÎÄ¼þ¼Ðµ¯¿ò×é¼þ -->
   <?php widget("widget/group/group.php"); ?>
-  <!-- åŠ è½½ä¸€äº›å¯¹å¼€å‘æœ‰ç”¨çš„ç‰‡æ®µ -->
+  <!-- ¼ÓÔØÒ»Ð©¶Ô¿ª·¢ÓÐÓÃµÄÆ¬¶Î -->
   <?php widget("widget/fragment/fragment.php"); ?>
-  <!-- åŠ è½½ç»„ä»¶åŠå¯¹åº”ä¾èµ–çš„jså’Œcss -->
+  <!-- ¼ÓÔØ×é¼þ¼°¶ÔÓ¦ÒÀÀµµÄjsºÍcss -->
   <div id="wallpapers">
     <div class="anim_fade_image"></div>
-    <!-- poster ä¸€ä¸ªåˆå§‹åŒ–çš„ç”»é¢, è§£å†³é»‘å±çš„é—®é¢˜  -->
+    <!-- poster Ò»¸ö³õÊ¼»¯µÄ»­Ãæ, ½â¾öºÚÆÁµÄÎÊÌâ  -->
     <video id="media" preload="true" loop="loop"></video>
   </div>
-  <!-- æ”¶é›†styleç‰‡æ®µä»¥ä¾¿åœ¨é¡¶éƒ¨è¾“å‡º,styleæ ‡ç­¾å¯é€‰ -->
+  <!-- ÊÕ¼¯styleÆ¬¶ÎÒÔ±ãÔÚ¶¥²¿Êä³ö,style±êÇ©¿ÉÑ¡ -->
   <?php styleStart() ?>
   <style type="text/css">  
     .swap {
@@ -61,14 +61,14 @@
   </style>
   <?php styleEnd() ?> 
   <script type="text/javascript" src="//pc-newtab.maxthonimg.com/static/res/intro/intro.js"></script>
-  <!-- æ”¶é›†scriptç‰‡æ®µå¹¶åˆ†æžå…¶ä¾èµ–ã€‚
-    å¦‚æžœä¸æƒ³æ”¹å˜å†…åµŒjsçš„ä½ç½®å¯ä»¥ä¸ç”¨phpåŒ…è£¹ï¼Œä½†æ³¨æ„æ­¤æ—¶å¯èƒ½modjsè¿˜æ²¡åŠ è½½ -->
+  <!-- ÊÕ¼¯scriptÆ¬¶Î²¢·ÖÎöÆäÒÀÀµ¡£
+    Èç¹û²»Ïë¸Ä±äÄÚÇ¶jsµÄÎ»ÖÃ¿ÉÒÔ²»ÓÃphp°ü¹ü£¬µ«×¢Òâ´ËÊ±¿ÉÄÜmodjs»¹Ã»¼ÓÔØ -->
   <?php scriptStart(); ?>
       <script type="text/javascript">
         // if ('serviceWorker' in navigator) {
         //     navigator.serviceWorker.register('/sw.js', { scope: '/' })
         //         .then(function (reg) {
-        //             // æ³¨å†Œ
+        //             // ×¢²á
         //             if (reg.installing) {
         //                 console.log('Service worker installing at scope: ' + reg.scope);
         //             } else if (reg.waiting) {
@@ -83,7 +83,7 @@
         require('static/js/index.js');
       </script>
   <?php scriptEnd(); ?>
-  <!-- jsè¾“å‡ºä½ç½®ï¼Œæ”¾åœ¨åº•éƒ¨åŠ å¿«é¡µé¢è§£æž -->
+  <!-- jsÊä³öÎ»ÖÃ£¬·ÅÔÚµ×²¿¼Ó¿ìÒ³Ãæ½âÎö -->
   <?php placeholder('js'); ?>
 </body>
 </html>
