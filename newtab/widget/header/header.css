@@ -1,42 +1,90 @@
 .header {
-    margin-top: 16px;
     min-width: 900px;
+    height: 32px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 998;
+    transition: top .5s linear;
+}
+
+.no-fixed {
+    position: absolute;
+    top: 240px;
+}
+
+/* .header .before, .header .after {} */
+
+/* .header .before {
+    background-image: none;
+} */
+
+.header .after {
+    overflow: hidden;
+    z-index: -1;
+    position: relative;
+    height: 32px;
+    width: 100%;
+    /* background-color: #000; */
+    /* opacity: 0.2; */
+}
+
+.header .blbg {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-position: center top;
+    background-size: cover;
+    background-attachment: fixed;
+    filter: blur(10px);
+    transform: scale(1.5);
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
 
 .header-action {
-    padding-left: 10px;
+    position: absolute;
+    right: 0;
+    z-index: 2;
 }
 
 .header-action > li {
     padding: 0 10px;
-    height: 30px;
-    line-height: 30px;
+    height: 32px;
+    line-height: 32px;
 }
 
 .header-action > li.profile {
     padding-left: 10px;
     display: flex;
+    display: -webkit-flex;
     cursor: pointer;
 }
 
-.header-action > li > a {
-    text-decoration: underline;
-}
-
-.light .header-action > li > a, .light .header-action > li > span {
+.dark .header-action > li > a, .dark .header-action > li > span {
     color: #fff;
+    opacity: 0.9;
 }
 
 .header-action > li img {
-    vertical-align: middle;
-    height: 28px;
-    width: 28px;
+    margin-top: 8px;
+    height: 16px;
+    width: 16px;
     border-radius: 50%;
 }
 
-.profile .line {
-    color: #ddd;
-    margin-right: 20px;
+.header-action > li > span.line {
+    opacity: 0.16;
+}
+
+.header .setting {
+    display: inline-block;
+    padding-right:16px;
+    cursor: pointer;
 }
 
 .profile .login {
@@ -98,6 +146,7 @@
     height: 4px;
     border-radius: 10px;
     background: #D8D8D8;
+    position: relative;
 }
 
 .progress .extend {
@@ -109,7 +158,7 @@
 .profile-continer > ul {
     border-top: 1px solid #DDD;
     background-color: #fff;
-    padding: 6px 0;
+    padding: 2px 0 4px;
 }
 
 .profile-continer li {
@@ -127,26 +176,29 @@
 .gl {
     width: 20px;
     height: 25px;
-    position: absolute;
+    position: fixed;
     background:transparent url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20171128) no-repeat -146px -126px;
     cursor: pointer;
     display: none;
+    z-index: 2;
+    left: -4px;
+    top: 3px;
 }
 
 .gl.lt {
     background-position-y: -153px;
 }
 .gl.gt {
-    background-position-y: -129px;
+    background-position-y: -130px;
 }
 
-.light .gl {
+.dark .gl {
     background-position-x: -168px;
 }
-.light .gl.lt{
+.dark .gl.lt{
     background-position-y: -153px;
 }
 
-.light .gl.gt {
+.dark .gl.gt {
     background-position-y: -130px;
 }

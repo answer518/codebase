@@ -1,5 +1,7 @@
 var Api = require('static/js/api.js'),
     Language = require('static/js/language');
+var lang = navigator.language.toLocaleLowerCase();
+var isZh = lang === 'zh-cn';
 
 var $search = $('.search-bar');
 var $searchEngine = $search.find('.search-engine');
@@ -7,32 +9,57 @@ var $changeEngine = $search.find('.change-engine');
 var $searchForm = $search.find('.search-form');
 var $searchInput = $search.find('.button');
 var $engineList = $search.find('.engine-list');
+var $searchLogo = $search.find('#s_lg_img');
 
 var dataEngine = {
     "lang": {
-        'zh-cn': '搜索',
-        'en-us': 'search'
+        'searchText': {
+            'zh-cn': '请在这里输入搜索内容',
+            'en-us': 'Please enter the search content here'
+        }
+    },
+    'logo': {
+        'default': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/default' + (!isZh ? '_en' : '') + '.svg',
+        'www.google.com': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/google' + (!isZh ? '_en' : '') + '.svg',
+        'www.google.com.hk': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/google' + (!isZh ? '_en' : '') + '.svg',
+        'www.baidu.com': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/baidu' + (!isZh ? '_en' : '') + '.svg',
+        'www.bing.com': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/bing' + (!isZh ? '_en' : '') + '.svg',
+        '1001': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/gouwu' + (!isZh ? '_en' : '') + '.svg',
+        'www.amazon.com': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/Amoazon' + (!isZh ? '_en' : '') + '.svg',
+        'search.yahoo.com': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/Yahoo' + (!isZh ? '_en' : '') + '.svg',
+        'yandex.ru': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/Yandex' + (!isZh ? '_en' : '') + '.svg',
+        's.maxthon.com': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/muti' + (!isZh ? '_en' : '') + '.svg',
+        'eu.ask.com': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/ASK' + (!isZh ? '_en' : '') + '.svg',
+        'www.sougou.com': '//pc-newtab.maxthonimg.com/static/img/search_logo/_light/sougou' + (!isZh ? '_en' : '') + '.svg'
     }
 }
 
 $search.on('submit', '.search-form', function (e) {
-    
+
+    // 搜索框输入关键词回车或点击搜索按钮时触发
+    require('static/js/datacode').statistic({m: 'newSearch'});
+    // 挖矿浏览器心跳上报
+    Api.useApi('common.reportLVTAction', { 'action': 'p-mx5Newtab_searchResult'});
     var action = $(this).attr('action');
     if (action === 'http://s.maxthon.com/') {
         var key = $searchInput.val();
-        if(key === '') {
+        if (key === '') {
             return false;
         }
         maxthon.webSend("quickaccess.multiSearch", { key: key }, function (data) { })
         return false;
     }
-    
-    showZoomBox();
+    var $form = $(this);
+    // 根据用户配置打开网址
+    Api.getUserProfile(function(userProfile) {
+        if(userProfile['open-search-newtab'] === true) {
+            e.preventDefault();
+            Api.useApi('newTabUpground', { 'url': action + '?' + $form.serialize()});
+        } else {
+            showZoomBox();
+        }
+    });
 });
-
-// $searchInput.on('keydown', function (e) {
-//     if (e.keyCode === 13) {}
-// });
 
 /**
  * 点击切换搜索引擎按钮
@@ -44,9 +71,35 @@ $search.on('click', '.search-engine', function (e) {
     } else {
         // 防止国际版en切到zh-cn标识丢失
         $engineList.show();
-        $changeEngine.addClass('change-engine-close');
     }
+    var curIndex = 0;
+    var maxLenght = $engineList.find('p').length - 1;
+    $(document).off('keydown').on('keydown', function (e) {
+        switch (e.keyCode) {
+            case 38: //向上键
+                if (curIndex < 0) {
+                    curIndex = maxLenght;
+                }
+                // console.log(curIndex);
+                $engineList.find('p').removeClass('hover');
+                $engineList.find('p').eq(curIndex--).addClass('hover');
+                break;
+            case 40: //向下键
+                if (curIndex > maxLenght) {
+                    curIndex = 0;
+                }
+                // console.log(curIndex);
+                $engineList.find('p').removeClass('hover');
+                $engineList.find('p').eq(curIndex++).addClass('hover');
+                break;
+            case 13:
+                $engineList.find('p').eq(curIndex).trigger('click');
+                break;
+        }
+        e.preventDefault();
+    });
 
+    $changeEngine.toggleClass('down');
     e.stopPropagation();
     e.preventDefault();
 });
@@ -56,7 +109,6 @@ $search.on('click', '.search-engine', function (e) {
  */
 function setEngine(data) {
     var arrTmp = data.url.split('?');
-    var action = arrTmp[0];
     var action = arrTmp[0];
     if (arrTmp[1]) {
         var nameParam = arrTmp[1].match(/[\w\-]+=%[\w\-]+/g);
@@ -80,8 +132,22 @@ function setEngine(data) {
         $searchForm.append($extraParam);
         $extraParam.html(tmpl);
     }
+    
+    var domain = data.url.match(/https?:\/\/([^\/]+)\//i);
+    if (domain) {
+        domain = domain[1];
+    }
 
-    $searchEngine.css({ 'background-image': 'url(mx://favicon/' + data.url + ')' });
+    var searchLogo = dataEngine['logo'][domain];
+    if (searchLogo === undefined || searchLogo === '') {
+        searchLogo = dataEngine['logo']['default'];
+    }
+
+    if ($('body').hasClass('dark')) {
+        searchLogo = searchLogo.replace('/_light/', '/_dark/');
+    }
+
+    $searchLogo.attr('src', searchLogo);
     $changeEngine.text(data.name);
     $searchForm.attr('action', action);
     // 百度搜索特殊处理
@@ -116,7 +182,9 @@ function showZoomBox() {
  */
 function hideEngineList() {
     $engineList.hide();
-    $changeEngine.removeClass('change-engine-close'); // 恢复箭头方向
+    $changeEngine.addClass('down'); // 恢复箭头方向
+    $(document).off('keydown');
+    $engineList.find('p').removeClass('hover');
 }
 
 /**
@@ -124,7 +192,7 @@ function hideEngineList() {
  */
 function buildEngineList(ele, list) {
     var res = '<div class="engine-list-inner">';
-
+    var _Language = dataEngine['lang'];
     list.forEach(function (item, i) {
         res += '<p data-engine=' + i + '><img src="mx://favicon/' + item.url + '" /><span>' + item.name + '</span></p>';
     });
@@ -132,9 +200,7 @@ function buildEngineList(ele, list) {
     res += '</div>';
     ele.empty().append(res);
 
-    var lang = navigator.language.toLocaleLowerCase();
-    $searchInput.attr('placeholder', dataEngine['lang'][lang] || data['lang']['en-us']);
-
+    $searchInput.attr('placeholder', _Language['searchText'][lang] || _Language['searchText']['en-us']);
     $searchEngine.attr('title', Language.getLang('SelectDefaultEngine'));
 }
 
@@ -146,20 +212,23 @@ function initEngineList() {
         // 初始化搜索框
         setEngine(defaultSearchEngin);
         buildEngineList($engineList, searchEngineList);
-
         /**
          * 选择搜索引擎
          */
         $search.on('click', '.engine-list p', function (e) {
-
             var defaultSearch = searchEngineList[$(this).index()];
             setEngine(defaultSearch);
-
             Api.useApi('config.set', { key: 'browser.general.default_search_engine2', value: JSON.stringify(defaultSearch) }, function () {
             });
             hideEngineList();
             e.stopPropagation();
         });
+    });
+    
+    Api.useApi('config.onChange', {}, function(data) {
+        if(data.key && data.key === 'browser.general.default_search_engine2') {
+            setEngine(JSON.parse(data.value));
+        }
     });
 }
 

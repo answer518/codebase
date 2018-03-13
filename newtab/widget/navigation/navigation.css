@@ -1,35 +1,101 @@
 #navigation {
     width: 100%;
-    height: 0px;
-    transition: height .5s linear;
+    min-width: 900px;
     position: relative;
-    overflow: hidden;
     top: 0;
-    background-color: #fff;
+    z-index: 9;
 }
 
-.topbar{
-    height: 20px;
+#navigation.fixed {
+    position: fixed;
+}
+
+#navigation .close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 36px;
+    width: 40px;
+    background: none;
+    cursor: pointer;
+    z-index: 999;
+}
+
+.click-btn {
+    position: absolute;
+    width: 560px;
+    cursor: pointer;
+    left: 0px;
+    top: 0;
+    height: 200px;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.p4 .click-btn {
+    visibility: visible;
+}
+
+.ad-text {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    height: 18px;
+    padding: 0 6px;
+    border-radius: 3px;
+    line-height: 18px;
+    font-family: '微软雅黑';
+    font-size: 12px;
+    color: #fff;
+    background: rgba(255, 255, 255, .2);    
+}
+
+.small-hanger {
+    position: absolute;
+	right: 60px;
+	top: 0px;
+	height: 65px;
+	width: 24px;
+	background: url(/static/img/boot_logo/banner-build.png) bottom no-repeat;
+    z-index: 2;
+    /* transition: visibility .5s linear; */
+    visibility: hidden;
+}
+
+.small-hanger.visible{
+    visibility: visible;
+}
+
+.container-warp {
+    overflow: hidden;
+    transition: height .5s linear;
+    height: 0px;
+    position: relative;
+}
+
+.height24 .container-warp{
+    height: 240px;
 }
 
 .container {
     position: relative;
     width: 100%;
-    margin: 0 auto;
+    margin: 20px auto 0;
     height: 200px;
     max-width: 1020px;
 }
 
 .list {
-    width: 1020px;
-    height: 300px;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
     overflow: hidden;   /*溢出的隐藏掉，默认的是：内容不会被修剪，会呈现在元素框之外。*/
-    position: absolute;
+    /* position: absolute;
     left: 50%;
-    margin-left: -510px;
+    margin-left: -510px; */
 }
 
-.list li{
+.list li {
     list-style: none;
     position: absolute;   /*一定要设置这个*/
     top: 10px;
@@ -37,21 +103,25 @@
     opacity: 0;
     transition: all 0.3s ease-out;
 }
-.list img{
+.list img {
     border: none;
     width: 560px;
     height: 200px;
     float: left;
+    border-radius: 5px;
 }
 
-.list li.p5{
+.list li.p5 {
     transform: translate3d(-116px,0,0) scale(0.81);
+    -webkit-transform: translate3d(-116px,0,0) scale(0.81);
     transform-origin: 100% 25%;
+    -webkit-transform-origin: 100% 25%;
     opacity: 0.8;
     z-index: 2;
 }
 .list li.p4{
     transform:translate3d(224px,0,0) scale(1);
+    -webkit-transform: translate3d(224px,0,0) scale(1);
     z-index: 3;
     opacity: 1;
     top: 0px;
@@ -62,15 +132,19 @@
 }
 .list li.p3{
     transform: translate3d(449px,0,0) scale(0.81);
+    -webkit-transform: translate3d(449px,0,0) scale(0.81);
     transform-origin: 100% 25%;
+    -webkit-transform-origin: 100% 25%;
     opacity: 0.8;
     z-index: 2;
 }
 .list li.p2{
     transform:translate3d(672px,0,0) scale(0.81);
+    -webkit-transform: translate3d(672px,0,0) scale(0.81);
 }
 .list li.p1{
     transform:translate3d(896px,0,0) scale(0.81);
+    -webkit-transform: translate3d(896px,0,0) scale(0.81);
 }
 .prve{
     left: 10px;
@@ -101,8 +175,23 @@
 .slider_left {
     margin: 10px 0 0 12px;
     transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
 }
 .slider_right {
     margin: 10px 0 0 6px;
     transform: rotate(-135deg);
+    -webkit-transform: rotate(-135deg);
+}
+
+.maxlayer {
+    position: absolute;
+    top: 0px;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+}
+
+.light .maxlayer {
+    background-color: rgba(0, 0, 0, 0.1);
 }

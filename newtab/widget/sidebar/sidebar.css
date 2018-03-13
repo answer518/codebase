@@ -1,174 +1,390 @@
 
-/** 底部操作栏 */
+/** 侧边栏 */
 
 .siderbar {
 	position: fixed;
-	width: 100px;
-	bottom: 20px;
-	right:  0px;
-	height: 80px;
-	z-index: 4;
-}
-.siderbar > ul > li {
-	height: 40px;
-	width: 50px;
-	position: relative;
-	left: 40px;
-}
-.siderbar > ul > li.no {
-	visibility: hidden;
-}
-.siderbar li span {
-	position: absolute;
-	top: 2px;
-	right: 10px;
-	width: 34px;
-	height: 34px;
-	border-radius: 100px;
-	cursor: pointer;
-	background:#fff url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) no-repeat;
-}
-.siderbar li:hover span{
-	background-color: #f8f8f8;
-}
-.siderbar .download {
-	display: none;
-	position: absolute;
-	right: 54px;
-	width: 126px;
-	background: #fff;
-	height: 160px;
-	bottom: 8px;
-	text-align: center;
-	color: #666;
-	box-shadow: 0 2px 4px 0 rgba(0,0,0,.15);
-}
-.siderbar li:hover .download{
-	display: block;
-}
-.siderbar ins{
-	position: absolute;
-	right: -5px;
-	bottom: 10px;
-	width:0;
-	height:0;
-	border-top:6px solid transparent;
-	border-bottom: 6px solid transparent;
-	border-left: 6px solid #fff;
-}
-.siderbar .title{
-	margin: 8px 0 6px 0;
-}
-.siderbar .dev{
-	margin: 4px 0 0 0;
-	font-size: 12px;
-}
-
-#config-button {
-	bottom: 0px;
-	background-position: -156px 3px;
-}
-#qr-Code {
-	background-position: -234px 3px;
-}
-
-#config-layer {
-	position: fixed;
 	top: 0px;
-	right: -215px;
-	width: 192px;
+	right: -360px;
+	width: 360px;
 	height: 100%;
-	background-color: #363A3F;
+	background: #FFF;
+	box-shadow: 0 0 7px 0 rgba(0,0,0,0.20);
 	z-index: 999;
-	padding: 20px 2px 20px 20px;
 	transition: right 0.5s;
 }
 
-#config-layer h4 {
-	font-size: 14px;
-	margin-bottom: 10px;
+.siderbar .after {
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	content: "";
+	position: fixed;
+	z-index: -1;
+	visibility: hidden;
 }
-#config-layer span{
-	display: inline-block;
-	max-width: 120px;
-	color: #999;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
+
+.pl20 {
+	padding-left: 20px;
 }
-#config-layer i {
-	position: absolute;
+
+.pr20 {
+	padding-right: 20px;
+}
+
+.sb-header {
+	height: 36px;
+	background: #F2F2F2;
+}
+
+.sb-header-nav {
+	overflow: hidden;
+}
+
+.sb-header-nav li {
+	float: left;
+	max-width: 86px;
+}
+
+.sb-nav-link {
+	display: block;
+	font-size: 13px;
+	color: #666;
+	padding: 10px 15px;
 	cursor: pointer;
-	font-style: normal;
-	z-index: 1;
-}
-#config-layer .tips {
-	background:transparent url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) -208px -64px no-repeat;
-	width: 20px;
-	height: 20px;
-	top: 37px;
-}
-#config-layer .tips > p {
-	display: none;
-	position: absolute;
-	z-index: 9;
-	width: 155px;
-	background: #fff;
-	border: 1px solid rgba(0,0,0,0.15);
-	box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.20);
-	padding: 8px;
-	top: 20px;
-	right: -20px;
-	font-weight: 100;
-	word-break: break-all;
-	width: 180px;
-}
-#config-layer .tips:hover p{
-	display: block;
 }
 
-#config-layer .close-btn {
-    color: #666;
-    font-size: 26px;
-    font-weight: normal;
-    right: 18px;
-    top: 4px;
-}
-
-#config-layer .close-btn:hover{
-	color: #fff;
-}
-.a-upload {position: relative; cursor: pointer;height: 40px;line-height: 40px;width: 175px;margin-bottom: 10px;background-color: #575a60;}
-.a-upload a{display: block; text-align: center;font-size: 30px;line-height: 35px;color: #9a9ca0;}
-.a-upload a:hover{color: #fff;}
-.skin-img-list { overflow: auto;}
-.skin-img-item {margin-bottom: 10px; }
-.skin-img-item a {
-	display: block;
-	height: 70px;
-	width: 175px;
+.sb-header-nav li.current {
 	position: relative;
 }
 
-.skin-img-item img{
-	width: 175px;
-	height: 70px;
+.sb-header-nav li.current .sb-nav-link {
+	color: #0080FF;
 }
-.operate-button {
+
+.sb-header-nav li.current::after {
+	content: "";
+	position: absolute;
+    bottom: 0px;
+	left: 50%;
+	margin-left: -8px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #fff;
+    z-index: 2;
+}
+
+.sb-header .close {
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 36px;
+	width: 40px;
+	background: none;
+}
+
+.sb-header .close::before, .sb-header .close::after {
+	background: #333;
+	width: 30%;
+	left: 16px;
+}
+
+.sb-content {
+	padding: 10px 0px;
+}
+
+.sb-content h4, .sb-content h3 {
+	font-size: 15px;
+}
+
+.left-nav {
+	width: 100px;
+}
+
+.left-nav li {
+	height: 20px;
+	line-height: 20px;
+	margin: 10px 0;
+	color: #666;
+	font-size: 13px;
+	cursor: pointer;
+	position: relative;
+	transition: all .3s;
+	margin-bottom: 20px;
+}
+
+.left-nav li.current {
+	padding-left: 10px;
+	color: #2B82FF;
+}
+
+.left-nav li.current::before {
+	content: '';
+	position: absolute;
+	width: 2px;
+	height: 16px;
+	background: #2B82FF;
+	left: 2px;
+	top: 2px;
+}
+
+.right-content {
+	width: 220px;
+	overflow: auto;
+}
+
+.right-content > a {
+	margin: 10px 20px;
+	width: 60px;
+	position: relative;
+}
+
+.right-content > a.added::after {
+	content: "";
+	top: -6px;
+	right: -8px;
+	z-index: 2;
+	width: 20px;
+    height: 20px;
+	position: absolute;
+	border-radius: 20px;
+    background: #fff url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) no-repeat -5px -65px;
+}
+
+.right-content > a > img {
+	border-radius: 4px;
+	border: 1px solid rgba(0, 0, 0, .15);
+}
+
+.grid-title {
+	text-align: center;
+	color: #666;
+	font-size: 13px;
+	margin-top: 5px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.input-box {
+	border: 1px solid #e6e6e6;
+	height: 36px;
+	line-height: 36px;
+	color: #999;
+	border-radius: 2px;
+	margin-bottom: 10px;
+}
+
+.input-box-err {
+	border-color: #c00;
+}
+
+#errorInfo {
+	color:#c00;
+	text-align:center;
+	margin-top:10px;
+	border:none;
+	display:none;
+}
+
+.input-box .label {
+	width: 50px;
+	text-align: center;
+}
+
+.input-box input {
+	border: none;
+	border-left: 1px solid #e6e6e6;
+	padding-left: 10px;
+	outline: none;
+	width: 250px;
+	height: 36px;
+	line-height: 36px;
+}
+
+.sb-search-box {
+	margin: 10px 0;
+}
+
+.sb-search-box input {
+	border-radius: 4px;
+	border: none;
+	outline: none;
+	height: 26px;
+	padding-left: 30px;
+	color: #999;
+	width: 300px;
+	background: #F8F8F8 url(/static/img/icon/search.png) 8px 5px no-repeat;
+}
+.no-search {
+	text-align: center;
+	margin-top: 100px;
+}
+
+.no-search .word {
+	color: #c0c0c0;
+	margin-bottom: 20px;
+}
+
+.go-to-add {
+	background: #FFFFFF;
+    border: 1px solid #449EFB;
+    border-radius: 2px;
+    padding: 0 10px;
+	height: 26px;
+	color: #449EFB;
+}
+
+.go-to-add:hover {
+	background: #F0F9FF;
+}
+
+.preview-wrap {
+	overflow: hidden;
+	padding-bottom: 30px;
+}
+
+.preview {
+	margin-top: 10px;
+}
+
+.preview a, .preview button {
+	display: block;
+	margin: 0 auto;
+}
+
+.preview a {
+	width: 80px;
+	height: 80px;
+	border-radius: 10px;
+	background-repeat: no-repeat;
+	background-size: contain;
+	text-align: center;
+	color: #fff;
+	font-size: 40px;
+	line-height: 70px;
+	border:1px solid rgba(0, 0, 0, .15);
+	text-transform: capitalize;
+}
+
+.preview a.empty {
+	border-style: dashed;
+}
+
+.preview .upload {
+	border:1px solid #ddd;
+	background: #fff;
+	border-radius: 2px;
+	margin-top: 20px;
+	margin-bottom: 30px;
+	height: 28px;
+	padding: 0 12px;
+}
+
+.describe {
+	text-align: center;
+	margin-top: 10px;
+}
+
+.btn-group {
+	margin-top: 20px;
+}
+
+.preview .color-block {
+	text-align: center;
+	line-height: 80px;
+	color: #fff;
+	font-size: 30px;
+	background: #2E97FF;
+	border: 1px solid rgba(0,0,0,0.20);
+	border-radius: 13px;
+}
+
+.btn-group .btn {
+	color: #999;
+	background: #ececec;
+	border: 1px solid #ececec;
+	border-radius: 2px;
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	font-size: 14px;
+}
+
+.btn-group .save {
+	color: #fff;
+	border: 1px solid #0080FF;
+	background: #0080FF;
+	border: none;
+}
+
+.sb-bg {
+	overflow: auto;
+}
+
+.sb-bg-item {
+	margin-right: 20px;
+	margin-bottom: 20px;
+	width: 150px;
+	height: 100px;
+	cursor: pointer;
+	position: relative;
+}
+
+.sb-bg-item:nth-child(2n) {
+	margin-right: 0px;
+}
+
+.sb-bg-item img{
+	width: 100%;
+	height: auto;
+	border-radius: 2px;
+}
+
+.sb-bg-item.selected::after {
+	content: "";
+	top: 6px;
+	right: 6px;
+	z-index: 2;
+	width: 20px;
+    height: 20px;
+	position: absolute;
+	border-radius: 20px;
+    background: #fff url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) no-repeat -5px -65px;
+}
+
+.bg-btn {
+	content: "";
 	position: absolute;
 	display: none;
 	width: 50px;
-	height: 50px;
-	background: center no-repeat transparent;
+	height: 48px;
+	background: transparent url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) center no-repeat ;
 	left: 50%;
 	margin-left: -25px;
 	top: 50%;
 	margin-top: -25px;
-	background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830);
 }
-.operate-button.pause {background-position: -95px -85px;}
-.operate-button.start {background-position: -48px -85px;}
-.operate-button.loading {background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/loading.png);animation:turn 2s linear infinite;;}
+
+.disable-dynamic-btn {
+	visibility: hidden;
+}
+
+.bg-btn.play {
+	background-position: -45px -85px;
+}
+
+.bg-btn.pause {
+	background-position: -92px -85px;
+}
+
+.bg-btn.loading {
+	background-image: url(//pc-newtab.maxthonimg.com/static/img/icon/loading.png);
+	animation: turn 2s linear infinite;
+}
+
 @keyframes turn{
 	0%{
 		transform: rotateZ(0deg);
@@ -177,16 +393,135 @@
 		transform: rotateZ(360deg);
 	}
 }
-.skin-img-item.selected .operate-button { 
+
+.sb-bg-item.selected .bg-btn { 
 	display: block; 
 }
-.skin-img-item.selected > a::after {
-	content: "";
+
+#custome_upload_bg_btn {
+	background: #ececec url(/static/img/icon/plus.svg) center center no-repeat;
+	background-size: 16px;
+}
+
+.split-line {
+	border-bottom: 1px solid #EAEAEA;
+}
+
+.split-line p {
+	color: #999;
+    font-size: 13px;
+    padding-bottom: 20px;
+}
+
+.split-line .switch-btn {
+	margin-right: 40px;
+	cursor: pointer;
+}
+
+.split-line .disabled{
+	cursor: default;
+}
+
+.split-line .switch-txt {
+	margin-left: 5px;
+	vertical-align:middle;
+}
+
+.disabled .switch-txt {
+	color: #ccc;
+}
+
+.fixed-bar {
+	position: absolute;
 	bottom: 0;
 	right: 0;
-	z-index: 2;
-	width: 20px;
+	width: 360px;
+}
+
+.toggle-checkbox {
+	display: none;
+}
+
+.toggle-btn {
+	position: relative;
+	top: -34px;
+    width: 40px;
     height: 20px;
+	background: #a2a2a2;
+	border-radius: 20px;
+	float: right;
+}
+
+.toggle-btn:hover {
+	cursor: pointer;
+}
+
+.toggle-btn:before {
+	transition: all 250ms ease-in;
+	content: '';
+	display: block;
+}
+
+.toggle-btn::before {
+    position: absolute;
+    top: 50%;
+    left: 2px;
+	transform: translateY(-50%);
+	-webkit-transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #f1f1f1;
+}
+
+.toggle-checkbox:checked + .toggle-btn {
+	background: #0099FF;
+}
+
+.toggle-checkbox:checked + .toggle-btn:before {
+	left: 60%;
+}
+
+.help {
+	position: relative;
+}
+
+.help span {
+	padding-right: 26px;
+	background: url(/static/img/icon/help.svg) right center no-repeat;
+}
+
+.help p {
+	display: none;
 	position: absolute;
-    background: #fff url(//pc-newtab.maxthonimg.com/static/img/icon/union.png?v=20170830) no-repeat -5px -65px;
+	z-index: 9;
+	width: 155px;
+	background: #fff;
+	border: 1px solid rgba(0,0,0,0.15);
+	box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.20);
+	padding: 8px;
+	font-weight: 100;
+	word-break: break-all;
+	width: 180px;
+	font-size: 12px;
+}
+
+.help span:hover {
+	cursor: pointer;
+}
+
+.help span:hover + p {
+	display: block;
+}
+
+.reset-btn {
+	float: right;
+	position: relative;
+	top: -34px;
+	padding: 0 5px;
+	height: 20px;
+	color: #666;
+	background: #FFFFFF;
+	border: 1px solid #DDDDDD;
+	border-radius: 2px;
 }

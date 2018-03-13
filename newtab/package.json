@@ -1,5 +1,5 @@
 {
-  "name": "fis3-pure-php",
+  "name": "pc-newtab.maxthon.com",
   "version": "0.0.1",
   "description": "fis 3.0 DEMO",
   "scripts" : {
@@ -11,10 +11,10 @@
     "fis3-hook-module": "*"
   },
   "keywords": [
-    "fis3"
+    "pc-newtab.maxthon.com"
   ],
   "author": {
-    "name": "fis"
+    "name": "guotingjie@maxthon.net"
   },
-  "license": "BSD"
+  "license": "MIT"
 }

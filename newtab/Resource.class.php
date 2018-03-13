@@ -109,17 +109,16 @@ class FISResource {
             $arrMap = &self::$arrMap[$strNamespace];
             if (isset($arrMap['res'][$strName])) {
                 $arrRes = &$arrMap['res'][$strName];
-                if($arrRes['type'] == 'php'){
+                if($arrRes['type'] == 'php' || $arrRes['type'] == 'html'){
                     return self::$config['template_dir'] . $arrRes['uri'];
-                }else{
-                    if(!array_key_exists('fis_debug', $_GET) && isset($arrRes['pkg'])) {
-                        $arrPkg = &$arrMap['pkg'][$arrRes['pkg']];
-                        return $arrPkg['uri'];
-                    } else {
-                        return $arrRes['uri'];
-                    } 
                 }
-                
+
+                if(!array_key_exists('fis_debug', $_GET) && isset($arrRes['pkg'])) {
+                    $arrPkg = &$arrMap['pkg'][$arrRes['pkg']];
+                    return $arrPkg['uri'];
+                } else {
+                    return $arrRes['uri'];
+                }
             }
         }
     }
@@ -501,8 +500,64 @@ function display($id, $array) {
         include $path;
         $html = ob_get_clean();
         FISResource::load($id); //注意模板资源也要分析依赖，否则可能加载不全
+        
+        // $responseHtml = FISResource::renderResponse($html);
+        // file_put_contents(FISResource::$config['template_dir'] . 'page/index.html', $responseHtml);
         echo FISResource::renderResponse($html);
     } else {
         trigger_error($id . ' file not found!');
     }
+}
+
+/**
+ * 获取客户端平台
+ */
+function getClientPlatform() {
+    $user_agent = $_SERVER["HTTP_USER_AGENT"];
+    return (strpos($user_agent,'Macintosh; Intel Mac OS') == true) ? 'mac' : 'pc';
+}
+
+/**
+ * 比较两个版本号大小
+ * @param  [type] $cur    [description]
+ * @param  [type] $ver [description]
+ * @return [type]        [description]
+ */
+function mxVersionContrast($cur, $ver) {
+    if($cur === "1.5.50.3200") { // 笔记专版
+        return TRUE;
+    }
+    
+    if($cur and $ver){  
+        // 将两个版本号拆成数字
+        $arr1 = explode(".", $cur);
+        $arr2 = explode(".", $ver);
+        $minLength = min(count($arr1), count($arr2));
+        $position = 0;
+        $diff = 0;
+        // 依次比较版本号每一位大小，当对比得出结果后跳出循环（后文有简单介绍）
+        while($position < $minLength and (($diff=$arr1[$position]-$arr2[$position])==0)){  
+            $position++;  
+        }  
+        $diff = ($diff!=0) ? $diff : (count($arr1)-count($arr2));
+        // 若curV大于reqV，则返回true
+        return $diff >= 0 ? TRUE : FALSE;  
+    } else {
+        return FALSE;  
+    }
+}
+
+/**
+ * 判断版本是否在指定数组里
+ * @param  [type] $ver    [description]
+ * @return [type]        [description]
+ */
+function isInVersions($ver)
+{	
+	$oldVersion = array("5.0.0.2600","5.0.0.2700","5.0.0.2800","5.0.1.100","5.0.1.500","5.0.1.1200");
+
+	foreach ($oldVersion as $value) {
+		if($value === $ver) return TRUE;
+	}
+	return FALSE;
 }

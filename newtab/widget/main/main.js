@@ -4,24 +4,26 @@
  */
 var Api = require('static/js/api'),
     Language = require('static/js/language'),
+    dataCode = require('static/js/datacode.js'),
+    Siderbar = require('widget/sidebar/sidebar.js'),
     Tools = require('static/js/tools'),
     Menu = require('static/js/menu'),
-    Poup = require('widget/main/poup.js'),
     Dao = require('widget/main/dao'),
     helper = require('widget/main/helper');
 
 var $group_dialog,
-    $grid_container,
-    $top_container,
+    $grid_list,
+    $grid_body,
     $group_list,
+    $group_container,
     data_list,
+    fav_list = [],
     grid_ui_data = {},
     drag_drop_data = {},
-    map_list,
     current_col = 6,
     animation_time = 300;
 
-var top_container_width, drag_node, current_group, group_node, group_title, group_operate, grid_add;
+var drag_node, current_group, group_node, group_title, grid_add;
 
 function clearDragNode() {
     if (drag_node[0]) {
@@ -30,11 +32,36 @@ function clearDragNode() {
     }
 }
 
+// 背景放大，解决四周白边的问题
+function scalebg() {
+    if ($('#media').hasClass('show')) {
+        $('#media').removeClass('show');
+        $('#wallpapers').css({ 'background-image': 'url(' + $('#media').attr('poster') + ')' });
+    }
+    $('#wallpapers').css({ 'transform': 'scale(1.1)' });
+    $('body').addClass('mask');
+}
+
+// 背景还原
+function resetbg() {
+    if ($('#media').attr('poster')) {
+        $('#media').addClass('show');
+        $('#wallpapers').removeAttr('style');
+    } else {
+        $('#wallpapers').css({ 'transform': 'scale(1)' });
+    }
+    $('body').removeClass('mask');
+}
+
 function hideGroup(callback) {
     if (!current_group) return;
     current_group.addLastGridThumbnailNode();
     current_group.container.removeClass('show');
-    group_operate.trigger('dialog-close');
+
+    $group_dialog.removeClass('is-visible');
+    resetbg();
+
+    $group_dialog.find('#group_body').removeAttr('style');
     current_group = null;
     if (callback) {
         setTimeout(function () {
@@ -54,9 +81,13 @@ function Grid(data, uiindex) {
 
 function getScroll() {
     return {
-        top: document.body.scrollTop,
+        top: document.body.scrollTop + document.documentElement.scrollTop,
         left: document.body.scrollLeft
     }
+}
+
+function displayBgColor(data) {
+    return data.image && (data.image.match(/^https?:\/\//) || data.image.match(/^mx:\/\/newtab/));
 }
 
 Grid.prototype = (function () {
@@ -79,17 +110,13 @@ Grid.prototype = (function () {
         var self = this;
         var nodeHtml = '';
         data = helper.tranData(data); // 转换数据
-        if (data.image) {
-            if (data.image.slice(0, data.image.length) === 'mx://thumbs') {
-                nodeHtml += '<div class="thumbnail loading" url="' + data.url + '"></div>';
-            } else {
-                nodeHtml += '<div class="thumbnail" ';
-                nodeHtml += '   style="background-image: url(' + data.image + ')">';
-                nodeHtml += '</div>';
-            }
+        if (displayBgColor(data)) {
+            nodeHtml += '<div class="thumbnail"';
+            nodeHtml += '   style="background-image: url(' + data.image + ')">';
+            nodeHtml += '</div>';
         } else {
-            nodeHtml += '<div class="thumbnail ' + data.colorBlock + '">';
-            nodeHtml += '   <span>' + data.title + '</span>';
+            nodeHtml += '<div class="thumbnail" style="background-color: ' + (data.bgColor || '#458FF3') + ';">';
+            nodeHtml += '   <span>' + data.title.slice(0, 1) + '</span>';
             nodeHtml += '</div>';
         }
 
@@ -105,65 +132,43 @@ Grid.prototype = (function () {
             list = list || self.children,
             i, length = list.length;
         parentNode.innerHTML = '';
-        self.thumburls = [];
-        for (i = 0; i < (length > 4 ? 4 : length); i++) {
-            self.addGridThumbnailNode(list[i], parentNode);
-            self.thumburls.push(list[i].url);
-        }
 
-        if (self.thumburls.length === 0) return;
-        // 截图代码调整成异步执行
-        setTimeout(function () {
-            Api.useApi('quickaccess.isThumbExists', { 'urls': self.thumburls }, function (result) {
-                var childNodes = self.list_node.childNodes;
-                result.forEach(function (item, i) {
-                    var childNode = childNodes[i];
-                    if (item === true && childNode.className.indexOf('loading') !== -1) {
-                        var url = self.thumburls[i];
-                        childNode.className = 'thumbnail';
-                        childNode.style.cssText = 'background-image : url(' + newWin.getThumbsUrl(url, 0) + ')';
-                    }
-                });
-            });
-        }, 10);
+        for (i = 0; i < (length > 4 ? 4 : length); i++) {
+            var data = list[i];
+            var node = self.addGridThumbnailNode(data, parentNode);
+            // 自执行函数传参，利用闭包
+            if (!displayBgColor(data)) {
+                (function (node, data) {
+                    Api.getMeanColor(data.url, function (bgColor) {
+                        node.style.cssText = 'background-color:' + bgColor;
+                    });
+                })(node, data);
+            }
+        }
     }
 
     function getGridPosition(index) {
         var size = grid_ui_data,
             current_col, width, marginX, marginY, row, col, left, top;
-        if (this.isHot === true) {
-            current_col = 8;
-            index = index || this.topuiindex;
+
+        index = index || this.uiindex;
+        if (!this.children && this.group) {
+            width = 620 * 0.20;
+            current_col = 5;
             row = Math.floor(index / current_col);
             col = index % current_col;
-            width = size.top_container_width * 0.125;
-            left = width * col;
-            top = 0;
+            left = col * width + (width - grid_ui_data.grid_width) / 2;
+            top = row * 113 + 10;
         } else {
-            index = index || this.uiindex;
-            if (!this.children && this.group) {
-                width = 153, marginX = 938 * 0.012, marginY = 330 * 0.02;
-                current_col = 5;
-                row = Math.floor(index / current_col);
-                col = index % current_col;
-                left = (width + 2 * marginX) * col;
-                top = (width * 0.7 + marginY) * row;
-            } else {
-                var container_width = size.container_width;
-                if (container_width > 0) {
-                    current_col = 6;
-                    width = container_width * 0.15;
-                    marginX = container_width * 0.008;
-                    marginY = container_width * 0.01;
-                    row = Math.floor(index / current_col);
-                    col = index % current_col;
-                    grid_top = (width * 0.7 + marginY) * row;
-
-                    left = (width + 2 * marginX) * col;
-                    top = grid_top;
-                }
-            }
+            current_col = 7;
+            row = Math.floor(index / current_col);
+            col = index % current_col;
+            width = grid_ui_data.grid_width;
+            marginX = (grid_ui_data.container_width - 7 * width) / 6;
+            left = col * (marginX + width) + 20;
+            top = row * grid_ui_data.grid_height;
         }
+
         return {
             'left': left,
             'top': top
@@ -173,11 +178,6 @@ Grid.prototype = (function () {
     function locate(index) {
         var xy = this.getGridPosition(index);
         this.node.css({ 'left': xy.left + 'px', 'top': xy.top + 'px' });
-    }
-
-    function reload() {
-        this.node.find('.thumb').css({ 'background-image': 'url(' + Poup.getThumbsUrl(this.url, 0) + ')' });
-        this.node.removeClass('loading');
     }
 
     function showMenu(obj, l, t) {
@@ -197,61 +197,66 @@ Grid.prototype = (function () {
                 list.forEach(function (item, i) {
                     urls.push(item.url);
                 });
+                var ueip = { m: 'folderrightmenu' };
                 switch (data) {
                     case 'open-all-tab': //打开新标签
                         Api.useApi('openUrl', { 'urls': urls, 'mode': 'BackgroundTab' });
+                        ueip.n = 'openall';
                         break;
                     case 'delete-tab':
                         showDelete(obj);
+                        ueip.n = 'delete';
                         break;
                     case 'open-all-newwin-tab':
                         Api.useApi('openUrl', { 'urls': urls, 'mode': 'NewWindow' });
+                        ueip.n = 'openallinnewwindow';
                         break;
                     case 'open-all-invisible-tab':
                         Api.useApi('openUrl', { 'urls': urls, 'mode': 'NewPrivateWindow' });
+                        ueip.n = 'openallinprivatewindow';
                         break;
                 }
+                dataCode.statistic(ueip);
             });
         } else {
             menuList = [
                 { 'id': 'open-tab', 'label': Language.getLang('NewTabOpen') },
                 { 'id': 'edit-tab', 'label': Language.getLang('Edit') },
-                { 'id': 'delete-tab', 'label': Language.getLang('Delete') }
+                { 'id': 'delete-tab', 'label': Language.getLang('Delete') },
+                { 'type': true },
+                { 'id': 'open-newwin-tab', 'label': Language.getLang('NewWindowOpen') },
+                { 'id': 'open-invisible-tab', 'label': Language.getLang('NewInvisibleOpen') }
             ];
 
             Menu.showPopupMenu(l, t, menuList, function (data) {
+                var ueip = { m: 'sitesrightmenu' };
                 switch (data) {
                     case 'open-tab':
                         Api.useApi('newTabBackground', { 'url': obj.url });
+                        ueip.n = 'openinnewtab';
                         break;
                     case 'edit-tab':
                         showEdit(obj);
+                        ueip.n = 'edit';
                         break;
                     case 'delete-tab':
                         showDelete(obj);
+                        ueip.n = 'delete';
                         break;
                     case 'open-newwin-tab':
                         Api.useApi('openUrl', { 'url': obj.url, 'mode': 'NewWindow' });
                         current_group && hideGroup();
+                        ueip.n = 'openinnewwindow';
                         break;
                     case 'open-invisible-tab':
                         Api.useApi('openUrl', { 'url': obj.url, 'mode': 'NewPrivateWindow' });
                         current_group && hideGroup();
+                        ueip.n = 'openinprivatewindow';
                         break;
                 }
+                dataCode.statistic(ueip);
             });
         }
-    }
-
-    function gridClick(obj) {
-
-        setTimeout(function () {
-            Api.useApi('newTabUpground', { 'url': obj.url });
-        }, 10);
-
-        // 关闭文件夹弹框
-        current_group && hideGroup();
-        // return false;
     }
 
     function showGroup() {
@@ -259,82 +264,72 @@ Grid.prototype = (function () {
         if (!_this.container) return;
         current_group = _this;
         group_title.val(current_group.getGroupName());
+
         $group_list.find('.grid-list-container').removeClass('show');
         current_group.container.addClass('show');
-        group_operate = $group_dialog.Dialog({
-            close_btn: false,
-            start_fn_before: function () {
-                var urlList = [],
-                    nodeList = [];
-                current_group.children.forEach(function (item, i) {
-                    if (!item.node.hasClass('loading')) {
-                        return true;
-                    }
-                    urlList.push(item.url);
-                    nodeList.push(item);
-                });
-            },
-            close_fn_later: function () {
-                // 编辑状态
-                $group_dialog.attr('edit', false);
-                if (current_group) current_group = null;
-                return true;
-            }
-        });
+        scalebg();
+        $group_dialog.addClass('is-visible');
+        $group_dialog.find('#group_body').css({ 'margin': '0' });
     }
 
     // 删除文件夹对话框
     function showDelete(obj) {
         var _this = obj;
+
         if (!_this.children) {
             onRemoveGrid(_this.index);
             return;
         }
-        
-        var $dialog = $('#delete_folder');
-        $dialog.Dialog({
-            ajaxUrl: '/static/res/tpl/test.tpl',
-            start_fn_later: function () {
-                $dialog.on('click', '.button', function () {
-                    var $this = $(this);
-                    $dialog.trigger('dialog-close');
-                    if ($this.index() === 0) {
-                        // 删除文件夹
-                        onRemoveGrid(_this.index);
-                    }
-                });
+
+        scalebg();
+        var $delDialog = $('#del_dialog');
+        $delDialog.addClass('is-visible');
+
+        $delDialog.find('h3').html(Language.getLang('DeleteFolderTitle'));
+        $delDialog.find('h4').html(Language.getLang('DeleteFolderWarn'));
+        $delDialog.find('p').html(Language.getLang('DeleteFolderContent').replace('{name}', obj.title).replace('{count}', obj.children.length));
+        $delDialog.find('#ok_btn').html(Language.getLang('Confirm'));
+        $delDialog.find('#cancel_btn').html(Language.getLang('Cancel'));
+
+        $delDialog.off('click').on('click', function (e) {
+            var target = $(e.target);
+            if (/*target.is('#del_dialog') ||*/ target.is('#cancel_btn')) {
+                $delDialog.removeClass('is-visible');
+                resetbg();
+                return;
+            }
+
+            if (target.is('#ok_btn')) {
+                $delDialog.removeClass('is-visible');
+                resetbg();
+                onRemoveGrid(_this.index);
             }
         });
     }
 
     function showEdit(obj) {
-        var _this = obj,
-            dialogModel, _current_group = current_group;
+        var _this = obj;
 
-        if (obj.group && obj.group !== '') {
-            if (group_operate) {
-                group_operate.trigger('dialog-close');
-                $group_dialog.attr('edit', true);
-                dialogModel = true;
-                // fix:解决在文件夹打开状态下编辑后，把current_group置空导致交互异常的问题
-                current_group = _current_group;
-            }
+        var data = {
+            'index': _this.index,
+            'uiinde': _this.uiindex,
+            'title': _this.title,
+            'url': _this.url
+        };
+        
+        if (_this.image) {
+            data.image = _this.image;
+        } else {
+            data.bgColor = _this.bgColor;
+        }
+        if (_this.group) {
+            data.group = _this.group;
         }
 
-        Poup.showDialog({
-            'index': _this.index,
-            'uiinde': _this.topuiindex || _this.uiindex,
-            'title': _this.title,
-            'url': _this.url,
-            'image': _this.image,
-            'colorBlock': _this.colorBlock,
-            'group': _this.group
-        }, true, dialogModel);
-    }
-
-    function refresh(obj) {
-        obj.node.addClass('loading');
-        Tools.reflushThumb(obj.url);
+        Siderbar.showSider({
+            'type': 'custome', // 自定义
+            'data': data
+        });
     }
 
     function getGridFixed() {
@@ -374,13 +369,14 @@ Grid.prototype = (function () {
     function isOutGroup(xy) {
         var width = 0,
             height = 0;
-        var offset = $group_dialog.offset();
+        var os = $group_container.offset();
         var areaGroup = {
-            top: offset.top,
-            left: offset.left,
-            right: offset.left + $group_dialog.width(),
-            bottom: offset.top + $group_dialog.height()
+            top: os.top,
+            left: os.left,
+            right: os.left + $group_container.width(),
+            bottom: os.top + $group_container.height()
         }
+
         if (xy.left - areaGroup.right > width ||
             xy.right - areaGroup.left < width ||
             xy.top - areaGroup.bottom > height ||
@@ -482,12 +478,6 @@ Grid.prototype = (function () {
         }, animation_time);
     }
 
-    function getDropIndex(drag, drop) {
-        var drop_index, dropList;
-        drop_index = drop.index;
-        return drop_index;
-    }
-
     function forEachGrid(callback) {
         var i = 0,
             j, list;
@@ -509,20 +499,17 @@ Grid.prototype = (function () {
         }
     }
 
-    function isCross(current_drag, current_drop) {
-        return (current_drag.isHot === true && current_drop.isHot !== true) || (current_drag.isHot !== true && current_drop.isHot === true);
-    }
-
     // 移动碰撞
     function moveCollision(xy) {
         scrollBody(xy);
         if (ban_move) return;
         var children, area, item;
+
         // 拖动是文件夹
         if (current_drag.children) {
             children = current_drag.children;
             forEachGrid(function (item, i) {
-                if (i !== current_drag.uiindex && !isCross(current_drag, item)) {
+                if (i !== current_drag.uiindex) {
                     area = coverArea(xy, item.getGridFixed());
 
                     if (area > moveArea) {
@@ -534,24 +521,13 @@ Grid.prototype = (function () {
             });
         } else if (current_drop) { // 可操作状态（合并、交换、插入）
             area = coverArea(xy, current_drop.getGridFixed());
-            if (isCross(current_drag, current_drop)) {
-                if (area > moveArea) {
-                    drag_node.addClass('swap');
-                } else {
-                    drag_node.removeClass('swap');
-                    current_drop.removeClass('combo');
-                    current_drop.removeClass('current');
-                    current_drop = null;
-                }
-            } else {
-                if (area > moveArea) {
-                    moveAnimationTimer();
-                    onMovingGrid(current_drag.index, current_drop.index, current_drag.group);
-                }
-                if (area < addArea || area > moveArea) {
-                    current_drop.removeClass('combo');
-                    current_drop = null;
-                }
+            if (area > moveArea) {
+                moveAnimationTimer();
+                onMovingGrid(current_drag.index, current_drop.index, current_drag.group);
+            }
+            if (area < addArea || area > moveArea) {
+                current_drop.removeClass('combo');
+                current_drop = null;
             }
         } else if (current_group) {
 
@@ -576,16 +552,12 @@ Grid.prototype = (function () {
                     area = coverArea(xy, item.getGridFixed());
                     if (area > addArea) { // 合并文件夹
                         current_drop = item;
-                        if (isCross(current_drag, current_drop)) {
-                            current_drop.addClass('current');
-                        } else {
-                            if (area > moveArea) {
-                                moveAnimationTimer();
-                                onMovingGrid(current_drag.index, item.index, current_drag.group);
-                                return false;
-                            }
-                            current_drop.addClass('combo');
+                        if (area > moveArea) {
+                            moveAnimationTimer();
+                            onMovingGrid(current_drag.index, item.index, current_drag.group);
+                            return false;
                         }
+                        current_drop.addClass('combo');
                         return false;
                     }
                 }
@@ -594,12 +566,31 @@ Grid.prototype = (function () {
     }
 
     function html() {
-        return helper.render(this);
+        var _this = this;
+        var data = helper.tranData(_this);
+        var nodeHtml = '<li class="grid">';
+
+        if (data.image && (data.image.match(/^https?:\/\//) || data.image.match(/^mx:\/\/newtab/))) { //^https?:\/\/
+            nodeHtml += '<a href="' + data.url + '" title="" target="_blank">';
+            nodeHtml += '   <img src="' + data.image + '" alt="' + data.title + '" />';
+            nodeHtml += '</a>';
+        } else {
+            nodeHtml += '<a href="' + data.url + '" title="" target="_blank" style="background-color: ' + (data.bgColor || '#458FF3') + ';">';
+            nodeHtml += data.title.slice(0, 1);
+            nodeHtml += '</a>';
+        }
+
+        nodeHtml += '<div class="function">';
+        nodeHtml += '   <p class="title">' + data.title + '</p>';
+        nodeHtml += '   <button class="edit"></button>';
+        nodeHtml += '</div>';
+        nodeHtml += '</li>';
+        return nodeHtml;
     }
 
     function dom() {
         var _this = this;
-        var grid_node, function_node, list_node, beginX, beginY, mouse_beginX, mouse_beginY, dragState, moveTimer;
+        var grid_node, list_node, beginX, beginY, mouse_beginX, mouse_beginY, dragState, moveTimer;
 
         function startDrag(event) {
             if (event.button !== 0 || _this.node.hasClass('loading') || drag_node) return;
@@ -684,143 +675,148 @@ Grid.prototype = (function () {
                 current_drop.removeClass('combo');
                 cover_timer && clearTimeout(cover_timer);
 
-                // 上下互相交换
-                if (isCross(current_drag, current_drop)) {
-                    if (current_drag.children || current_drop.children) {
-                        rollback();
-                        current_drop.removeClass('current');
-                        current_drop = null;
-                        return;
-                    }
-                    onSwappingGrid(current_drag.index, getDropIndex(current_drag, current_drop));
+                // 直接移动至文件夹
+                if (current_drop.children) {
+                    var list = current_drop.children;
+                    onMovingInGroup(current_drag.index,
+                        list[list.length - (current_drag.uiindex > current_drop.uiindex ? 1 : 1)].index,
+                        current_drop.title);
                 } else {
-                    // fix: top8 不允许合并
-                    if (current_drag.isHot === true && current_drop.isHot === true) {
-                        rollback();
-                    } else {
-                        // 直接移动至文件夹
-                        if (current_drop.children) {
-                            var list = current_drop.children;
-                            onMovingInGroup(current_drag.index,
-                                list[list.length - (current_drag.uiindex > current_drop.uiindex ? 1 : 1)].index,
-                                current_drop.title);
-                        } else {
-                            // 首次合并
-                            onAddGroup(current_drag.index, current_drop.index, Language.getLang('NewFolder'));
-                        }
-                    }
+                    // 首次合并
+                    onAddGroup(current_drag.index, current_drop.index, Language.getLang('NewFolder'));
                 }
                 current_drop = null;
             }
         }
         // 添加按钮
         if (!_this.url && !_this.children) {
-            if (_this.isHot === true) {
-                if (_this.title === 'Add') {
-                    grid_node = $(helper.add_grid);
-                } else {
-                    grid_node = $(helper.empty_grid_html);
-                }
-            } else {
-                grid_node = $(helper.add_grid.replace('top', 'main add'));
-                // fixed: 用于定位从文件夹中脱出时追加的位置
-                grid_add = _this;
-            }
+            grid_node = $(`<li class="grid">
+                            <a class="add" href="javascript:void(0);">
+                                <i class="sprite sprite-circle"></i>
+                            </a>
+                            <div class="function">
+                                <p class="title">${Language.getLang('Add')}</p>
+                            </div>
+                        </li>`);
+            // fixed: 用于定位从文件夹中脱出时追加的位置
+            grid_add = _this;
             grid_node.on('click', '.add', function (event) {
-                Poup.showDialog({ index: _this.index, uiindex: _this.topuiindex || _this.uiindex }, false);
+                event.stopPropagation();
+                Siderbar.showSider();
             });
         } else {
             // 实体格子
             if (!_this.children) {
-                grid_node = $(_this.html());
-                grid_node.on('click', function (event) {
-                    event.stopPropagation();
-                    var target = $(event.target);
-                    if (target.is('button')) {
-                        var buttonType = target.prop('className');
-                        switch (buttonType) {
-                            case 'delete':
-                                showDelete(_this);
-                                break;
-                            case 'edit':
-                                showEdit(_this);
-                                break;
-                            case 'refresh':
-                                refresh(_this);
-                                break;
-                        }
-                        return false;
-                    }
 
-                    return true;
+                grid_node = $(_this.html());
+                if(_this.image && _this.image.match(/^mx:\/\/newtab/)) {
+                    var img = new Image();
+                    img.src = _this.image;
+                    img.onerror = function() {
+                        _this.bgColor = '#458FF3';
+                        delete _this.image;
+                        _this.node.find('>a').replaceWith('\
+                            <a href="' + _this.url + '" title="" target="_blank" style="background-color: #458FF3;">' + _this.title + '</a>\
+                        ');
+                    }
+                }
+                
+                grid_node.on('click', '.edit', function (event) {
+                    event.stopPropagation();
+                    showEdit(_this);
+                    // hover网址-编辑
+                    dataCode.statistic({ m: 'hoverMenu', n: 'hoverEdit' });
                 });
 
-                // 截图loading的问题
-                if (_this.image && _this.image.indexOf('mx://thumbs') === 0) {
-                    grid_node.addClass('loading');
-                    Api.useApi('quickaccess.isThumbExists', { 'urls': [_this.url] }, function (result) {
-                        result.forEach(function (item, i) {
-                            if (item === true) {
-                                _this.node.removeClass('loading');
+                grid_node.on('click', '>a', function (event) {
+                    event.preventDefault();
+                    // 根据用户配置打开网址
+                    Api.getUserProfile(function(userProfile) {
+                        if(userProfile['open-url-newtab'] === true) {
+                            Api.useApi('newTabUpground', { 'url': _this.url });
+                        } else {
+                            if(_this.url.match(/^file:\/\//)) {
+                                setTimeout(function () {
+                                    Api.useApi('newTabUpground', { 'url': _this.url });
+                                }, 0);
+                            } else {
+                                location.href = _this.url;
                             }
-                        });
+                        }
                     });
-                }
+
+                    clickStatictis(_this, 'leftClick');
+                    if(_this.isHot === true) {
+                        // 挖矿浏览器心跳上报
+                        Api.useApi('common.reportLVTAction', { 'action': 'p-mx5Newtab_addTop8'});
+                    }
+                });
             } else { // 文件夹
                 _this.group = _this.title;
 
-                grid_node = $('<li class="main grid group"></li>');
+                grid_node = $('<li class="grid group"></li>');
                 list_node = $('<div class="thumbnail-container"></div>');
-                function_node = $(['<div class="function">',
-                    '<strong class="title">', _this.group, '</strong>',
-                    '<button class="delete">×</button>',
-                    '</div>'
-                ].join(''));
                 // 文件夹缩略图
                 _this.addLastGridThumbnailNode(list_node[0], _this.children);
 
                 grid_node.append(list_node);
-                grid_node.append(function_node);
+                grid_node.append(`
+                    <div class="function">
+                        <p class="title">${_this.title}</p>
+                        <button class="del"></button>
+                    </div>
+                `);
                 _this.list_node = list_node[0];
-                _this.function_node = function_node[0];
-                _this.list_node.addEventListener('click', function (event) {
-                    event.button === 0 && _this.showGroup();
+
+                grid_node.on('click', '.del', function () {
+                    showDelete(_this);
                 });
 
-                _this.function_node.addEventListener('click', function (event) {
-                    var target = $(event.target);
-                    if (target.is('button')) {
-                        var buttonType = target.prop('className');
-                        switch (buttonType) {
-                            case 'delete':
-                                showDelete(_this);
-                                break;
-                            case 'edit':
-                                showEdit(_this);
-                                break;
-                            case 'refresh':
-                                refresh(_this);
-                                break;
-                        }
-                        return false;
-                    }
+                grid_node.on('click', '.thumbnail-container', function () {
+                    event.button === 0 && _this.showGroup();
                 });
             }
 
             grid_node.on('mousedown', function (event) {
+                event.stopPropagation();
+                event.preventDefault();
+                if (event.button === 1) {
+                    clickStatictis(_this, 'middleClick');
+                }
                 startDrag(event);
             });
 
             grid_node.on('contextmenu', function (event) {
-                showMenu(_this, event.clientX, event.clientY);
                 event.stopPropagation();
                 event.preventDefault();
+                showMenu(_this, event.clientX, event.clientY);
             });
         }
 
         _this.node = grid_node;
         _this.locate();
         return grid_node;
+    }
+
+    function clickStatictis(obj, key_type) {
+
+        var _location = obj.uiindex;
+        if (obj.group && obj.group !== '') { // 之前判断不严谨，undefined !== '' 也是true
+            data_list.forEach(function (item, i) {
+                if (item.group === obj.group) {
+                    _location = item.uiindex;
+                    return false;
+                }
+            });
+        }
+        var ueip = {
+            m: 'newmyfavoritesClick', n: key_type, data: {
+                location: _location,
+                url: obj.url,
+                title: obj.title
+            }
+        };
+        dataCode.statistic(ueip);
     }
 
     function addClass(className) {
@@ -846,7 +842,7 @@ Grid.prototype = (function () {
             });
 
             if (group_name !== '') {
-                _this.function_node.firstChild.textContent = group_name;
+                _this.node.find('.title')[0].textContent = group_name;
             }
         }
     }
@@ -855,7 +851,6 @@ Grid.prototype = (function () {
         dom: dom,
         html: html,
         locate: locate,
-        reload: reload,
         addClass: addClass,
         removeClass: removeClass,
         getGroupName: getGroupName,
@@ -870,34 +865,28 @@ Grid.prototype = (function () {
     }
 })();
 
-function getGridList(mapList, callback) {
-    map_list = mapList;
-    Dao.getGridList(function (data) {
-        readyInitUiData();
-        initData(data);
-        initGridDataList();
-        // 优化一下这个地方
-        resizeGridPositionAndIndex();
-        // addEventListeners
-        require('widget/main/listener').init(data_list);
-    });
-}
-
 function initData(data) {
-    var top_data_list = [],
-        topuiindex = 0;
-    data_list = [];
+    var top8_list = [], grid_list = [];
+    
     data.forEach(function (item, i) {
         if (item) {
             // 过滤无效数据： Add 增加按钮 Empty:占位格子
             if (item.title === 'Add' || item.title === 'Empty') {
                 return true;
             }
+
             if (item.group) delete item.group;
             if (item.uiindex) delete item.uiindex;
-            if (item.isHot === true) {
-                item.topuiindex = topuiindex++;
-                top_data_list.push(item);
+
+            // 从这个版本开始截图类型改为色块
+            if (item.image) {
+                if(item.image.match(/^mx:\/\/thumbs/)) {
+                    delete item.image;
+                }
+            }
+
+            if(item.isHot === true) {
+                top8_list.push(item);
             } else {
                 if (item.children) {
                     item.children.forEach(function (item2, j) {
@@ -907,39 +896,27 @@ function initData(data) {
                         }
                     });
                 }
-                data_list.push(item);
+                grid_list.push(item);
             }
         }
     });
-
-    data_list.push({ 'title': 'Add', 'type': 'button' });
-    data_list.push.apply(data_list, autoComplete(top_data_list));
+    // top8 追加到我的站点前面
+    grid_list = top8_list.concat(grid_list);
+    return grid_list;
 }
 
-// 自动补全Top8
-function autoComplete(list) {
-    var length = list.length;
+function initGridDataList(grid_list) {
+    var grid, index = 0;
+    data_list = [];
 
-    if (length < 8) {
-        list.push({ 'title': 'Add', isHot: true, topuiindex: length });
-        for (var i = 0; i < 8 - length; i++) {
-            list.push({ 'title': 'Empty', isHot: true, topuiindex: length + 1 + i });
-        }
-    } else {
-        list.splice(8);
-    }
-    return list;
-}
-
-function initGridDataList() {
-    var grid;
-    data_list.forEach(function (item, i) {
+    grid_list.forEach(function (item, i) {
         if (!item.children) { // 普通格子
             item = new Grid(item, i);
-            if (item.isHot === true) {
-                $top_container.append(item.dom());
-            } else {
-                $grid_container.append(item.dom());
+            $grid_list.append(item.dom());
+            if (!displayBgColor(item) && item.type !== 'button') {
+                Api.getMeanColor(item.url, function (bgColor) {
+                    item.node.find('>a').css({ 'background-color': bgColor });// = bgColor;
+                });
             }
         } else {
             grid = new Grid(item, i);
@@ -949,53 +926,29 @@ function initGridDataList() {
                 item2.group = grid.title;
                 item2 = new Grid(item2, j);
                 grid.container.append(item2.dom());
+                if (!displayBgColor(item2)) {
+                    Api.getMeanColor(item2.url, function (bgColor) {
+                        item2.node.find('>a').css({ 'background-color': bgColor });
+                    });
+                }
                 grid.children[j] = item2;
+                // 这里出现了文件夹拖出的bug
+                // item2.index = index++;
             });
             $group_list.append(grid.container);
-            $grid_container.append(grid.dom());
+            $grid_list.append(grid.dom());
             item = grid;
         }
         item.index = i;
         data_list[i] = item;
     });
-}
 
-/**
- * 重新定位
- */
-function resizeGridPositionAndIndex() {
-    var index = 0,
-        topindex = 0,
-        children;
-
-    data_list.forEach(function (item, i) {
-        item.uiindex = i;
-        if (item.isHot === true) {
-            if (topindex > 7) {
-                item.node.remove();
-                data_list.splice(i, 1);
-                return false;
-            }
-            item.topuiindex = topindex++;
-        }
-        item.locate();
-        children = item.children;
-        if (children) {
-            children.forEach(function (item2, j) {
-                item2.uiindex = j;
-                item2.locate(j);
-                if (item2.url) {
-                    item2.index = index++;
-                } else {
-                    item2.index = index;
-                }
-            });
-        }
-        item.index = index++;
-    });
-
-    $grid_container[0].style.height = data_list[data_list.length - 9].getGridPosition().top + grid_ui_data.height + 'px';
-    drag_drop_data.height = document.body.scrollHeight;
+    // 追加一个按钮
+    index = data_list.length;
+    var item = new Grid({ 'title': 'Add', 'type': 'button' }, index);
+    item.index = index;
+    data_list[index] = item;
+    $grid_list.append(item.dom());
 }
 
 /**
@@ -1003,15 +956,13 @@ function resizeGridPositionAndIndex() {
  */
 function readyInitUiData() {
     $grid_body = $('.nav-body');
-    $grid_container = $('#grid_list_container');
-    $group_dialog = $('#group'),
-    $top_container = $('#top'),
+    $grid_list = $('#grid_list');
     $group_list = $('#group_list');
+    $group_dialog = $('#group');
+    $group_container = $group_dialog.find('#group_container');
 
     // 清空元素
-    $grid_container.empty();
-    $top_container.empty();
-
+    $grid_list.empty();
     group_title = $('#group-title');
 
     group_title.on('click', function (e) {
@@ -1052,11 +1003,241 @@ function readyInitUiData() {
         group_title.removeClass('editable');
     });
 
-    grid_ui_data.top_container_width = $top_container.width();
-    grid_ui_data.container_width = $grid_body.width();
-    grid_ui_data.height = grid_ui_data.container_width * 0.15 * 0.7 + grid_ui_data.container_width * 0.01;
+    $group_dialog.on('click', function (e) {
+        var $target = $(event.target);
+        if ($(event.target).is('.dialog')) {
+            event.preventDefault();
+            $group_dialog.hide();
+            
+            resetbg();
+
+            $group_dialog.find('#group_body').removeAttr('style');
+            setTimeout(function () {
+                $group_dialog.removeClass('is-visible').show();
+                current_group = null;
+            }, 200);
+        }
+    });
+
+    resizeUIData();
 }
 
+function test(item) {
+    if (item.image && (item.image.match(/^https?:\/\//) || item.image.match(/^mx:\/\/newtab/))) {
+        return `<a href="${item.url}" title="" target="_blank">
+                    <img src="${item.image}" alt="${item.title}" />
+                </a>`;
+    } else {
+        // 在标题中过滤特殊字符
+        item.title = item.title.replace(/[^a-zA-Z0-9\u4e00-\u9fa5]*/, '');
+        return `<a href="${item.url}" title="" target="_blank">
+                    ${item.title.slice(0, 1)}
+                </a>`;
+    }
+}
+
+function getGridDataList(mapList, next) {
+    readyInitUiData();
+    Dao.getGridList().then(function (grid_list) {
+        var grid_list = initData(grid_list);
+        Dao.setGridList(grid_list);
+        initGridDataList(grid_list);
+        // 这里暂时不能优化，注释掉会有bug,后面分析
+        resizeGridPositionAndIndex();
+        // $grid_list[0].style.height = grid_ui_data.grid_height * 2 - 20 + 'px';
+        return Dao.getMyFavoriteList(grid_list);
+    }).then(function (favList) {
+        var $fav_list = $('#fav_list');
+        var container_width = grid_ui_data.container_width;
+        var grid_width = grid_ui_data.grid_width;
+        var grid_margin = (container_width - 7 * grid_width) / 6;
+        $fav_list.empty();
+
+        fav_list = favList;
+        fav_list.forEach(function (item, i) {
+            // if (i > 6) return false;
+            var left = i * (grid_margin + grid_width) + 20;
+            var grid_node = $(`
+                <li class="grid" style="top:20px;left:${left}px;">
+                    ${test(item)}
+                    <div class="function">
+                        <p class="title">${item.title}</p>
+                        <button class="new"></button>
+                    </div>
+                </li>
+            `);
+            if(!item.image) {
+                Api.getMeanColor(item.url, function (bgColor) {
+                    item.bgColor = bgColor;
+                    grid_node.find('>a').css({ 'background-color': bgColor });
+                });
+            }
+
+            $fav_list.append(grid_node);
+            grid_node.on('click', '.new', function () {
+                var p = grid_node.offset();
+                var clone_grid = grid_node.clone();
+                clone_grid.css({ 'margin-bottom': '0', 'left': p.left, 'top': p.top });
+                document.body.appendChild(clone_grid[0]);
+                var p2 = grid_add.getGridFixed();
+                var l2 = p2.left;
+                var t2 = p2.top + document.body.scrollTop;
+
+                grid_node.addClass('remove');
+                clone_grid.css({ "left": l2, "top": t2 });
+
+                var data = item;
+                onInsertGridItem(data, grid_add);
+                setTimeout(function () {
+                    if (clone_grid) {
+                        document.body.removeChild(clone_grid[0]);
+                        clone_grid = null;
+                    }
+                    var index = 0;
+                    for(var ii = 0; ii < fav_list.length; ii ++) {
+                        var iitem = fav_list[ii];
+                        if (iitem.url == data.url) {
+                            index = ii;
+                            break;
+                        }
+                    }
+
+                    fav_list.splice(index, 1);
+                    grid_node.remove();
+                    fav_list.forEach(function (item, i) {
+                        var node = item.node;
+                        var left = i * (grid_ui_data.grid_margin + grid_ui_data.grid_width) + 20;
+                        node.css({ 'left': left });
+                    });
+                    // 点击加号添加至快速拨号区
+                    dataCode.statistic({ m: 'hoverMenu', n: 'hoverAdd' });
+                }, animation_time);
+            });
+
+            grid_node.on('click', '>a', function (event) {
+                event.preventDefault();
+                location.href = $(this).attr('href');
+            });
+
+            grid_node.on('contextmenu', function (event) {
+                // event.stopPropagation();
+                event.preventDefault();
+                var menuList = [
+                    { 'id': 'open-tab', 'label': Language.getLang('NewTabOpen') },
+                    { 'id': 'delete-tab', 'label': Language.getLang('Delete') },
+                    { 'type': true },
+                    { 'id': 'open-newwin-tab', 'label': Language.getLang('NewWindowOpen') },
+                    { 'id': 'open-invisible-tab', 'label': Language.getLang('NewInvisibleOpen') }
+                ];
+                var obj = item;
+                Menu.showPopupMenu(event.clientX, event.clientY, menuList, function (data) {
+                    switch (data) {
+                        case 'open-tab':
+                            Api.useApi('newTabBackground', { 'url': obj.url });
+                            break;
+                        case 'delete-tab':
+                            grid_node.addClass('remove');
+                            setTimeout(function () {
+                                grid_node.remove();
+                                var index = 0;
+                                for(var ii = 0; ii < fav_list.length; ii ++) {
+                                    var iitem = fav_list[ii];
+                                    if (iitem.url == obj.url) {
+                                        index = ii;
+                                        break;
+                                    }
+                                }
+                                fav_list.splice(index, 1);
+                                Dao.addToBlackList(obj);
+                                resizeGridPositionForMostVisite();
+                            }, animation_time);
+                            break;
+                        case 'open-newwin-tab':
+                            Api.useApi('openUrl', { 'url': obj.url, 'mode': 'NewWindow' });
+                            break;
+                        case 'open-invisible-tab':
+                            Api.useApi('openUrl', { 'url': obj.url, 'mode': 'NewPrivateWindow' });
+                            break;
+                    }
+                });
+            });
+            fav_list[i].node = grid_node;
+        });
+    });
+
+    var $favListContainer = $('.fav-list-container');
+    $(document).on('click', '.fav-collapse', function () {
+        $favListContainer.toggleClass('collapse');
+        var $this = $(this);
+        $this.toggleClass('down');
+        var hideMostVisit = false;
+        if ($this.hasClass('down')) { // 收起
+            hideMostVisit = true;
+            $this.attr('title', Language.getLang('DisplayOftenVisit'));
+        } else {
+            $this.attr('title', Language.getLang('HideOftenVisit'));
+        }
+
+        Api.setUserProfile('hide-most-visit', hideMostVisit);
+        // 点击最常访问按钮
+        dataCode.statistic({ m: 'mostVisited' });
+    });
+}
+
+function resizeUIData() {
+    grid_ui_data.container_width = $grid_body.width() - (window.innerWidth >= 1680 ? 120 : 80);
+    grid_ui_data.grid_width = window.innerWidth >= 1680 ? 72 : 60;
+    grid_ui_data.grid_margin = (grid_ui_data.container_width - 7 * grid_ui_data.grid_width) / 6;
+    grid_ui_data.grid_height = window.innerWidth >= 1680 ? 130 : 120;
+}
+
+function windowResizeWidth() {
+    resizeUIData();
+    resizeGridPositionForMostVisite();
+    resizeGridPositionAndIndex();
+}
+
+var Tools = require('static/js/tools');
+window.addEventListener('resize', Tools.throttle(windowResizeWidth, 100, 300), false);
+
+/**
+ * 重新定位
+ */
+function resizeGridPositionAndIndex() {
+    var index = 0, children;
+
+    data_list.forEach(function (item, i) {
+        item.uiindex = i;
+        item.locate();
+        children = item.children;
+        if (children) {
+            children.forEach(function (item2, j) {
+                item2.uiindex = j;
+                item2.locate(j);
+                if (item2.url) {
+                    item2.index = index++;
+                } else {
+                    item2.index = index;
+                }
+            });
+        }
+        item.index = index++;
+    });
+ 
+    $grid_list[0].style.height = (Math.ceil(data_list.length / 7) * grid_ui_data.grid_height) + 'px';
+    drag_drop_data.height = document.body.scrollHeight;
+}
+
+/**
+ * 最常访问重新定位
+ */
+function resizeGridPositionForMostVisite() {
+    fav_list.forEach(function (item, i) {
+        var node = item.node;
+        var left = i * (grid_ui_data.grid_margin + grid_ui_data.grid_width) + 20;
+        node.css({ 'left': left });
+    });
+}
 
 function onMovingGrid(drag_index, drop_index, group_name) {
     var dragGroup, dropGroup, drag = getGridItem(drag_index),
@@ -1064,7 +1245,7 @@ function onMovingGrid(drag_index, drop_index, group_name) {
     var dragObj = drag.grid,
         dropObj = drop.grid,
         length;
-
+        
     if (drag.j >= 0) dragGroup = data_list[drag.i];
     if (drop.j >= 0) dropGroup = data_list[drop.i];
     if (dragObj.group && dragObj.group !== '') {
@@ -1081,13 +1262,16 @@ function onMovingGrid(drag_index, drop_index, group_name) {
                 dragGroup.container[0].removeChild(dragObj.node[0]);
                 dragGroup.addLastGridThumbnailNode();
             }
-            $grid_container.append(dragObj.node);
+            $grid_list.append(dragObj.node);
             hideGroup();
+            // 移出文件夹
+            dataCode.statistic({ m: 'event', n: 'dragOutFolder' });
         }
     } else {
         data_list.splice(drop.i, 0, data_list.splice(drag.i, 1)[0]);
+        // 站点移动埋码
+        dataCode.statistic({ m: 'event', n: 'change' });
     }
-
     // 持久化
     Dao.moveGridItem({ i: drag.i, j: drag.j }, { i: drop.i, j: drop.j });
     resizeGridPositionAndIndex();
@@ -1100,6 +1284,7 @@ function onMovingGroup(drag_index, drop_index, group_name) {
 
     if (drag.j >= 0) dragGroup = data_list[drag.i];
     if (drop.j >= 0) dropGroup = data_list[drop.i];
+
     current_group.children.splice(drop.j, 0, current_group.children.splice(drag.j, 1)[0]);
     dragGroup.addLastGridThumbnailNode();
     // 持久化
@@ -1108,7 +1293,6 @@ function onMovingGroup(drag_index, drop_index, group_name) {
 }
 
 var setGroupNameTimer;
-
 function onSetGroupName(first_index, last_index, group_name) {
     var obj = getGridItem(first_index),
         obj = data_list[obj.i];
@@ -1129,14 +1313,14 @@ function onMovingInGroup(drag_index, drop_index, group_name) {
     var dragObj = drag.grid,
         dropObj = drop.grid,
         length;
-
+    
     if (drag.j >= 0) dragGroup = data_list[drag.i];
     if (drop.j >= 0) dropGroup = data_list[drop.i];
 
     dragObj.setGroupName(group_name);
     dropGroup.children.splice(dropGroup.children.length, 0, data_list.splice(drag.i, 1)[0]);
     // 只能这么删，不然事件丢失了
-    $grid_container[0].removeChild(dragObj.node[0]);
+    $grid_list[0].removeChild(dragObj.node[0]);
     dropGroup.container.append(dragObj.node);
     if (drag_node && !current_group) {
         dragObj.removeClass('draging');
@@ -1152,6 +1336,9 @@ function onMovingInGroup(drag_index, drop_index, group_name) {
             Dao.insertGridItem(drag.i, drop.i);
             resizeGridPositionAndIndex();
             clearDragNode();
+
+            // 移入文件夹
+            dataCode.statistic({ m: 'event', n: 'dragInFolder' });
         }, animation_time);
     }
 }
@@ -1187,13 +1374,13 @@ function onAddGroup(drag_index, drop_index, group_name) {
 
     var group_node = group.dom();
     group_node.css({ 'z-index': '-100' });
-    $grid_container.append(group_node);
+    $grid_list.append(group_node);
     $group_list.append(group.container);
 
     data_list.splice(uiindex, 0, group);
     group.setGroupName(group_name);
-    $grid_container[0].removeChild(dropObj.node[0]);
-    $grid_container[0].removeChild(dragObj.node[0]);
+    $grid_list[0].removeChild(dropObj.node[0]);
+    $grid_list[0].removeChild(dragObj.node[0]);
     group.container.append(dropObj.node);
     group.container.append(dragObj.node);
 
@@ -1211,77 +1398,20 @@ function onAddGroup(drag_index, drop_index, group_name) {
             drop_node.remove();
         }, animation_time - 150);
     }
-}
 
-// 上下互换
-function onSwappingGrid(drag_index, drop_index) {
-    var drag = getGridItem(drag_index),
-        dragObj = drag.grid,
-        drop = getGridItem(drop_index),
-        dropObj = drop.grid,
-        sxy = getScroll(),
-        list, drop_node, drop_xy, drag_xy, dropItem, dragItem, dropData, dropData;
-
-    if (drag_node) {
-        drag_node.removeClass('notran');
-        drop_xy = dropObj.getGridFixed();
-        drop_node = dropObj.cloneGridNode();
-        drop_node.css({ padding: 0, margin: 0, overflow: 'hidden' });
-    }
-
-    drag_xy = dragObj.getGridFixed();
-    drop_node.css({ 'left': drag_xy.left + sxy.left, 'top': drag_xy.top + sxy.top });
-    drag_node.css({ 'left': drop_xy.left + sxy.left, 'top': drop_xy.top + sxy.top });
-
-    dropData = $.extend({}, dropObj);
-    dragData = $.extend({}, dragObj);
-    if (dragObj.isHot === true) {
-        dropData.isHot = true;
-        dropData.topuiindex = dragObj.topuiindex;
-        dragData.isHot = false;
-        delete dragData.topuiindex;
-        dragData.uiindex = dropObj.uiindex;
-    } else {
-        dragData.isHot = true;
-        dragData.topuiindex = dropObj.topuiindex;
-        dropData.isHot = false;
-        delete dropData.topuiindex;
-        dropData.uiindex = dragObj.uiindex;
-    }
-
-    dropItem = new Grid(dropData, dragObj.uiindex);
-    dragObj.node.replaceWith(dropItem.dom().addClass('draging'));
-    dragItem = new Grid(dragData, dropObj.uiindex);
-    dropObj.node.replaceWith(dragItem.dom().addClass('draging'));
-
-    data_list.splice(drag.i, 1, dropItem);
-    data_list.splice(drop.i, 1, dragItem);
-
-    dragObj.removeClass('draging');
-    dragObj.removeClass('notran');
-    if (drag_node) {
-        setTimeout(function () {
-            dragItem.node.removeClass('draging');
-            dropItem.node.removeClass('draging');
-            // 持久化
-            Dao.swapGridItem(drag.i, clearExtraAttr(dropData), drop.i, clearExtraAttr(dragData));
-            resizeGridPositionAndIndex();
-            clearDragNode();
-            drop_node.remove();
-        }, animation_time);
-    }
+    dataCode.createFolder({});
 }
 
 function clearExtraAttr(data) {
     var obj = {
         title: data.title,
         image: data.image,
-        url: data.url,
-        isHot: data.isHot
+        url: data.url
     }
     if (!obj.image) {
         delete obj.image;
-        obj.colorBlock = data.colorBlock;
+        delete obj.colorBlock;
+        obj.bgColor = data.bgColor;
     }
     return obj;
 }
@@ -1290,10 +1420,6 @@ function onInsertGridItem(data, targetObj) { // 确保targetObj 存在
     var dataindex, container, list, grid, group, obj = targetObj || grid_add;
     list = data_list;
     dataindex = obj.uiindex;
-    if (obj.isHot === true) {
-        data.topuiindex = obj.topuiindex;
-    }
-
     data.uiindex = dataindex;
     grid = new Grid(data, dataindex);
     list.splice(dataindex, 0, grid);
@@ -1308,10 +1434,8 @@ function onUpdateGridItem(data) {
         i = obj.i,
         j = obj.j,
         parentNode, grid;
+
     if (j < 0) {
-        if (data.isHot === true) {
-            data.topuiindex = obj.grid.topuiindex;
-        }
         grid = new Grid(data, i);
         parentNode = data_list[i].node.parent();
         data_list[i] = grid;
@@ -1345,19 +1469,6 @@ function onRemoveGrid(index) {
         grid.node.remove();
         if (j < 0) {
             data_list.splice(i, 1);
-            if (grid.isHot === true) {
-                var item;
-                var uiindex = data_list.length;
-                var lastGrid = data_list[uiindex - 1];
-                if (!lastGrid.url && (lastGrid.title === 'Add' || lastGrid.title === 'Empty')) {
-                    item = new Grid({ 'title': 'Empty', 'isHot': true }, uiindex);
-                } else {
-                    item = new Grid({ 'title': 'Add', 'isHot': true }, uiindex);
-                }
-                item.topuiindex = grid.topuiindex;
-                data_list.splice(uiindex, 0, item);
-                $top_container.append(item.dom());
-            }
         } else {
             group = data_list[i];
             group.children.splice(j, 1);
@@ -1371,20 +1482,21 @@ function onRemoveGrid(index) {
         }
         // 持久化
         Dao.removeGridItem(i, j);
+        // 
+        dataCode.removeGrid(grid);
         resizeGridPositionAndIndex();
     }, animation_time);
 }
 
 function setGroupGirdNodeSize(node, index, xy) {
-
-    var top = 8,
-        left = 12,
+    var top = 3,
+        left = 3,
         sxy = getScroll();
     if (index > 1) {
-        top += 50;
+        top += 24;
     }
     if (index % 2 == 1) {
-        left += 72;
+        left += 24;
     }
     top += xy.top + sxy.top;
     left += xy.left + sxy.left;
@@ -1443,9 +1555,14 @@ function getGridItem(index) {
     }
 }
 
+function getDataList() {
+    return data_list || [];
+}
+
 module.exports = {
-    getGridList: getGridList,
     getGridItem: getGridItem,
+    getDataList: getDataList,
+    getGridDataList: getGridDataList,
     onUpdateGridItem: onUpdateGridItem,
     onInsertGridItem: onInsertGridItem
 }
