@@ -13,7 +13,7 @@ export default class MostVisite extends React.Component {
     }
 
     dialog = () => {
-        
+
         Dialog.confirm({
             title: '添加站点',
             content: '',
@@ -30,7 +30,7 @@ export default class MostVisite extends React.Component {
 
     render() {
 
-        let list = [1,2,3,4,5,6,7,8].map((data,index)=>(
+        let list = [1,2,3,4].map((data,index)=>(
             <a key={index} className="mv-empty-tile" onClick={this.dialog}></a>
         ));
 

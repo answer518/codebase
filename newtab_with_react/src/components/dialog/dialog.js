@@ -62,10 +62,12 @@ export default class Dialog extends Component {
             cancelText,
             onOk,
             onCancel,
+            onClose,
             maskClosable,
             type
         } = this.props;
-        return ( <div className={`modal-container ${className}`} onClick={maskClosable ? this.close : () => {}}>
+
+        return ( <div className={`modal-container ${className}`} onClick={maskClosable ? () => {this.close(); onClose(); }: () => {}}>
                 <div className="modal-body" >
                     <div className={ `modal-title ${type}` }> { title } </div>
                     <div className="modal-content"> { children } </div> 
