@@ -1,0 +1,113 @@
+@charset "UTF-8";
+@import "normalize.css";
+
+.contents{
+	text-align: -webkit-center;
+}
+
+#logo {
+    background-image: url(//pc-newtab.maxthonimg.com/static/img/search_logo/_light/baidu.svg);
+    background-repeat: no-repeat;
+    height: 52px;
+    margin-bottom: 24px;
+    margin-top: 15px;
+    width: 184px;
+}
+
+#fakebox {
+    -webkit-transform: translate3d(0, 0, 0);
+    -webkit-transition: -webkit-transform 100ms linear, border-color 100ms linear;
+    background-color: #fff;
+    border: 1px solid rgb(185, 185, 185);
+    border-radius: 1px;
+    border-top-color: rgb(160, 160, 160);
+    cursor: text;
+    font-size: 18px;
+    height: 36px;
+    line-height: 36px;
+    max-width: 672px;
+    position: relative;
+    width: 663px;
+}
+
+#fakebox-text {
+    bottom: 0;
+    color: #bbb;
+    font-family: arial, sans-serif;
+    font-size: 16px;
+    left: 9px;
+    margin-top: 1px;
+    overflow: hidden;
+    position: absolute;
+    right: 9px;
+    text-align: initial;
+    text-overflow: ellipsis;
+    top: 0;
+    vertical-align: middle;
+    visibility: inherit;
+    white-space: nowrap;
+}
+
+#fakebox > input {
+    bottom: 0;
+    box-sizing: border-box;
+    left: 0;
+    margin: 0;
+    opacity: 0;
+    padding-left: 8px;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+#cursor {
+    background: #333;
+    bottom: 5px;
+    left: 9px;
+    position: absolute;
+    top: 5px;
+    visibility: hidden;
+    width: 1px;
+}
+
+#most-visited {
+    margin-top: 50px;
+    text-align: -webkit-center;
+}
+
+#mv-tiles {
+    -webkit-user-select: none;
+    font-size: 0;
+    margin: 0;
+    text-align: -webkit-auto;
+    transition: opacity 1s;
+    height: calc(146px + 130px);
+    line-height: 146px;
+}
+
+.mv-tile {
+    cursor: pointer;    
+}
+
+.mv-tile, .mv-empty-tile {
+    box-sizing: border-box;
+    display: inline-block;
+    font-family: arial, sans-serif;
+    font-size: 12px;
+    opacity: 1;
+    outline: 0;
+    overflow: hidden;
+    position: relative;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+.thumb-ntp .mv-tile, .thumb-ntp .mv-empty-tile {
+    background: rgb(242,242,242);
+    border: 1px solid transparent;
+    border-radius: 2px;
+    height: calc(130px - 2px);
+    line-height: 100%;
+    margin: 0 8px;
+    width: calc(156px - 2px);
+}
