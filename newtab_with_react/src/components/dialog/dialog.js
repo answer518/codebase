@@ -1,6 +1,18 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import util from './util';
 import './dialog.scss';
+
+const modalOpenClass = 'modal-open';
+
+const toggleBodyClass = isOpen => {
+    const body = document.body;
+    if(isOpen) {
+        body.classList.add(modalOpenClass);
+    } else {
+        body.classList.remove(modalOpenClass);
+    }
+}
 
 export default class Dialog extends Component {
     constructor(props) {
@@ -8,7 +20,12 @@ export default class Dialog extends Component {
         this.state = {
             isOpen: props.isOpen || false
         };
+
+        toggleBodyClass(props.isOpen);
+        // 这一步实现了弹框关闭
+        util.bindMethods(['onCancelClick', 'onOkClick', 'close'], this);
     }
+
     componentWillReceiveProps(nextProps) {
         if ('isOpen' in nextProps) {
             this.setState({
@@ -16,6 +33,26 @@ export default class Dialog extends Component {
             });
         }
     }
+
+    close() {
+        this.state = {
+            isOpen: false
+        };
+
+        toggleBodyClass(false);
+    }
+
+     // 点击确认回调函数
+    onOkClick() {
+        this.props.onOk();
+        this.close();
+    }
+    // 点击取消的回调函数
+    onCancelClick() {
+        this.props.onCancel();
+        this.close();
+    }
+
     render() {
         const {
             title,
@@ -28,7 +65,7 @@ export default class Dialog extends Component {
             maskClosable,
             type
         } = this.props;
-        return ( <div className = { `modal-container ${className}` }>
+        return ( <div className={`modal-container ${className}`} onClick={maskClosable ? this.close : () => {}}>
                 <div className="modal-body" >
                     <div className={ `modal-title ${type}` }> { title } </div>
                     <div className="modal-content"> { children } </div> 

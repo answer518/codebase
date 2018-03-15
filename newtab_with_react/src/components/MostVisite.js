@@ -13,7 +13,7 @@ export default class MostVisite extends React.Component {
     }
 
     dialog = () => {
-        // Tooltip.show('the tooltip autoHide after 3s', 3000);
+        
         Dialog.confirm({
             title: '添加站点',
             content: '',
