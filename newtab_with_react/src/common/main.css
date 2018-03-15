@@ -1,16 +1,15 @@
 @charset "UTF-8";
-
-.contents{
-	text-align: -webkit-center;
+.contents {
+    text-align: -webkit-center;
 }
 
 #logo {
     background-image: url(//pc-newtab.maxthonimg.com/static/img/search_logo/_light/baidu.svg);
     background-repeat: no-repeat;
     height: 52px;
-    margin-bottom: 24px;
-    margin-top: 15px;
+    margin: 15px auto 24px;
     width: 184px;
+    opacity: 0;
 }
 
 #fakebox {
@@ -26,7 +25,8 @@
     line-height: 36px;
     max-width: 672px;
     position: relative;
-    width: 663px;
+    width: 660px;
+    margin: 0 auto;
 }
 
 #fakebox-text {
@@ -85,10 +85,11 @@
 }
 
 .mv-tile {
-    cursor: pointer;    
+    cursor: pointer;
 }
 
-.mv-tile, .mv-empty-tile {
+.mv-tile,
+.mv-empty-tile {
     box-sizing: border-box;
     display: inline-block;
     font-family: arial, sans-serif;
@@ -101,12 +102,22 @@
     white-space: nowrap;
 }
 
-.thumb-ntp .mv-tile, .thumb-ntp .mv-empty-tile {
-    background: rgb(242,242,242);
+.thumb-ntp .mv-tile,
+.thumb-ntp .mv-empty-tile {
+    background: rgb(242, 242, 242);
     border: 1px solid transparent;
     border-radius: 2px;
     height: calc(130px - 2px);
     line-height: 100%;
     margin: 0 8px;
     width: calc(156px - 2px);
+    cursor: pointer;
+}
+
+.thumb-ntp .mv-tile:hover {
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
+}
+
+.thumb-ntp .mv-empty-tile:hover {
+    background: rgb(242, 242, 242) url(/images/add.svg) center no-repeat;
 }
