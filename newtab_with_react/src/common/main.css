@@ -1,4 +1,9 @@
 @charset "UTF-8";
+body {
+    font-family: Roboto, 'Segoe UI',Arial,'Microsoft Yahei',sans-serif;
+    font-size: 81.25%;
+}
+
 .contents {
     text-align: -webkit-center;
 }

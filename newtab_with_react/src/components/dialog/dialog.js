@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import util from './util';
+// import util from './util';
 import './dialog.scss';
 
 const modalOpenClass = 'modal-open';
@@ -23,7 +23,7 @@ export default class Dialog extends Component {
 
         toggleBodyClass(props.isOpen);
         // 这一步实现了弹框关闭
-        util.bindMethods(['onCancelClick', 'onOkClick', 'close'], this);
+        // util.bindMethods(['onCancelClick', 'onOkClick', 'close'], this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -34,12 +34,17 @@ export default class Dialog extends Component {
         }
     }
 
-    close() {
+    close(e) {
+        // e.nativeEvent.stopImmediatePropagation();
+        var target = e.nativeEvent.target;
+
+        if(target !== this.refs.modal_container) return;
         this.state = {
             isOpen: false
         };
 
         toggleBodyClass(false);
+        this.props.onClose();
     }
 
      // 点击确认回调函数
@@ -56,24 +61,39 @@ export default class Dialog extends Component {
     render() {
         const {
             title,
-            children,
             className,
             okText,
             cancelText,
             onOk,
             onCancel,
-            onClose,
             maskClosable,
             type
         } = this.props;
 
-        return ( <div className={`modal-container ${className}`} onClick={maskClosable ? () => {this.close(); onClose(); }: () => {}}>
+        return ( <div ref="modal_container" className={`modal-container ${className}`} onClick={maskClosable ? (e) => { this.close(e); }: () => {}}>
                 <div className="modal-body" >
-                    <div className={ `modal-title ${type}` }> { title } </div>
-                    <div className="modal-content"> { children } </div> 
+                    <div className={ `modal-title` }> { title } </div>
+                    <div className="modal-content">
+                        <div className="modal-input">
+                            <label id="paper-input-label-1" htmlFor="name">名称</label>
+                            <input type="input" name="name" id="name"/>
+                            <div className="underline">
+                                <div className="unfocused-line"></div>
+                                <div className="focused-line"></div>
+                            </div>
+                        </div>
+                        <div className="modal-input">
+                            <label id="paper-input-label-2" htmlFor="url">网址</label>
+                            <input type="input" name="url" id="url"/>
+                            <div className="underline">
+                                <div className="unfocused-line"></div>
+                                <div className="focused-line"></div>
+                            </div>
+                        </div>
+                    </div> 
                     <div className="modal-footer">
-                        <button className="ok-btn" onClick={ onOk }> { okText } </button>
                         <button className="cancel-btn" onClick={ onCancel }> { cancelText } </button>
+                        <button className="ok-btn" onClick={ onOk }> { okText } </button>
                     </div> 
                 </div>
             </div>
