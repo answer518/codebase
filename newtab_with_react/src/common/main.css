@@ -126,3 +126,54 @@ body {
 .thumb-ntp .mv-empty-tile:hover {
     background: rgb(242, 242, 242) url(/images/add.svg) center no-repeat;
 }
+
+.mv-favicon {
+    background-size: 16px;
+    height: 16px;
+    left: 7px;
+    margin: 0;
+    pointer-events: none;
+    position: absolute;
+    top: 8px;
+    width: 16px;
+}
+
+.mv-favicon img {
+    height: 100%;
+    width: 100%;
+}
+
+.mv-title {
+    height: 15px;
+    left: 31px;
+    line-height: 14px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    text-overflow: ellipsis;
+    top: 9px;
+    width: 120px;
+}
+
+.mv-thumb {
+    border-radius: 0 0 2px 2px;
+    cursor: pointer;
+    display: block;
+    height: 96px;
+    overflow: hidden;
+    position: absolute;
+    top: 32px;
+    width: 154px;
+}
+.mv-x {
+    background: linear-gradient(to left, rgb(250,250,250) 60%, transparent);
+    border: none;
+    cursor: pointer;
+    height: 32px;
+    opacity: 0;
+    padding: 0;
+    position: absolute;
+    right: 0;
+    transition: opacity 150ms;
+    width: 40px;
+}

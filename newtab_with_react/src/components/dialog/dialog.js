@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-// import util from './util';
 import './dialog.scss';
 
 const modalOpenClass = 'modal-open';
@@ -23,7 +22,12 @@ export default class Dialog extends Component {
 
         toggleBodyClass(props.isOpen);
         // 这一步实现了弹框关闭
-        // util.bindMethods(['onCancelClick', 'onOkClick'], this);
+
+        this.close = this.close.bind(this);
+        this.onClose = this.onClose.bind(this);
+        this.onOkClick = this.onOkClick.bind(this);
+        this.onCancelClick = this.onCancelClick.bind(this);
+        this.onChangeEvent = this.onChangeEvent.bind(this);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -47,8 +51,8 @@ export default class Dialog extends Component {
     onClose(e) {
         // e.nativeEvent.stopImmediatePropagation();
        var target = e && e.nativeEvent.target;
-
        if(target !== this.refs.modal_container) return;
+
        this.close();
     }
 
@@ -65,8 +69,10 @@ export default class Dialog extends Component {
 
     onChangeEvent(e) {
       var value = e.target.value.replace(/\s+/, '');
-      console.log(value.length);
       if(value.length === 0) {
+        // this.setState({
+        //     errorClassName: 'error'
+        // });
         console.log('error');
         return;
       }
@@ -87,13 +93,13 @@ export default class Dialog extends Component {
             type
         } = this.props;
 
-        return ( <div ref="modal_container" className={`modal-container ${className}`} onClick={maskClosable ? (e) => { this.onClose(e); }: () => {}}>
+        return ( <div ref="modal_container" className={`modal-container ${className}`} onClick={maskClosable ? this.onClose : () => {}}>
                 <div className="modal-body">
                     <div className={ `modal-title` }> { title } </div>
                     <div className="modal-content">
                         <div className="modal-input">
                             <label id="paper-input-label-1" htmlFor="name">名称</label>
-                            <input type="input" name="name" id="name" onChange={ (e) => { this.onChangeEvent(e) }}/>
+                            <input type="input" name="name" id="name" onChange={ this.onChangeEvent }/>
                             <div className="underline">
                                 <div className="unfocused-line"></div>
                                 <div className="focused-line"></div>
@@ -101,16 +107,16 @@ export default class Dialog extends Component {
                         </div>
                         <div className="modal-input">
                             <label id="paper-input-label-2" htmlFor="url">网址</label>
-                            <input type="input" name="url" id="url" onChange={ (e) => { this.onChangeEvent(e) }}/>
-                            <div className="underline">
+                            <input type="input" name="url" id="url" onChange={ this.onChangeEvent }/>
+                            <div className={`underline ${this.state.errorClassName}`}>
                                 <div className="unfocused-line"></div>
                                 <div className="focused-line"></div>
                             </div>
                         </div>
                     </div> 
                     <div className="modal-footer">
-                        <button className="cancel-btn" onClick={ () => { this.onCancelClick() } }> { cancelText } </button>
-                        <button className="ok-btn" onClick={ () => { this.onOkClick() } }> { okText } </button>
+                        <button className="cancel-btn" onClick={ this.onCancelClick }> { cancelText } </button>
+                        <button className="ok-btn" onClick={ this.onOkClick }> { okText } </button>
                     </div> 
                 </div>
             </div>
