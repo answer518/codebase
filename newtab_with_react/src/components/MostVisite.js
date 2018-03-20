@@ -3,17 +3,31 @@
  */
 import React from 'react';
 import Dialog from './dialog/DialogBox';
+import Api from '../common/Api';
 
 export default class MostVisite extends React.Component {
     constructor(arg) {
         super(arg);
         this.state = {
-            list: [1,2,3,4]
+            list: []
         }
+
     }
 
-    componentWillMount = ()=> {
-        
+
+    componentWillMount() {
+
+    }
+
+    componentDidMount() {
+        // 取后台接口
+        new Api().get().then((data) => {
+            this.setState({
+                list: data
+            })
+        }).catch(function(error) {
+
+        });
     }
 
     dialog = () => {
@@ -36,6 +50,7 @@ export default class MostVisite extends React.Component {
         })
     }
 
+    
     render() {
 
         return (
@@ -44,13 +59,13 @@ export default class MostVisite extends React.Component {
                     {
                         this.state.list.map((data,index) => {
                             if(data.url) {
-                                return (<a key={index} className="mv-tile" onClick={ this.dialog }>
+                                return (<a key={index} className="mv-tile" href={data.url} target="_blank">
                                     <div className="mv-favicon">
-                                        <img src="chrome-search://favicon/size/16@2x/2/3" title="" alt="" />
+                                        <img src={'http://localhost:8080/images/icon/' + data.logo + '.ico'} title={data.title} />
                                     </div>
                                     <div className="mv-title">{data.title || data.url}</div>
                                     <div className="mv-thumb">
-                                        <img title={data.title || data.url} src="chrome-search://thumb/2/3" />
+                                        <img title={data.title} src={'http://localhost:8080/images/logo/' + data.logo + '.png'}/>
                                     </div>
                                     <button className="mv-x" title="不要在本页上显示"></button>
                                 </a>)
