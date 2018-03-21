@@ -3,28 +3,54 @@
  */
 import React from 'react';
 import Dialog from './dialog/DialogBox';
-import Api from '../common/Api';
+import ApiHandle from '../common/ApiHandle';
+import CLASSES from '../common/Classes';
+import Grid from './Grid';
+
+
+/**
+ * The last blacklisted tile rid if any, which by definition should not be
+ * filler.
+ * @type {?number}
+ */
+var lastBlacklistedTile = null;
+
+/**
+ * The browser embeddedSearch.newTabPage object.
+ * @type {Object}
+ */
+var ntpApiHandle;
+
+/** @type {number} @const */
+var MAX_NUM_TILES_TO_SHOW = 4;
 
 export default class MostVisite extends React.Component {
     constructor(arg) {
         super(arg);
+        
+        this.apiHandle = new ApiHandle();
+        var list = this.apiHandle.mostVisited;
+
+        list = this.apiHandle.mostVisited.splice(0, Math.min(MAX_NUM_TILES_TO_SHOW, list.length));
+
         this.state = {
-            list: [],
-            mv_notice_hide: 'mv-notice-hide'
+            list: list
         }
+
+        this.showNotification = this.showNotification.bind(this);
+        this.hideNotification = this.hideNotification.bind(this);
     }
 
     componentWillMount() {}
 
     componentDidMount() {
         // 取后台接口
-        new Api().get().then((data) => {
-            this.setState({
-                list: data
-            })
-        }).catch(function(error) {
-
-        });
+        // new Api().get().then((data) => {
+        //     this.setState({
+        //         list: data
+        //     })
+        // }).catch(function(error) {
+        // });
     }
 
     dialog = () => {
@@ -46,34 +72,44 @@ export default class MostVisite extends React.Component {
         })
     }
 
-    xdelete(index) {
+    onDelete(index) {
         
+
+
         var list = this.state.list;
         list.splice(index);
 
         this.setState({
-            list: list,
-            mv_notice_hide: ''
+            list: list
         });
 
-        this.timer = setTimeout(() => {
-            this.setState({
-                mv_notice_hide: 'mv-notice-hide'
-            });
-        }, 3000);
+        // 可以考虑用css3动画实现
+        this.showNotification();
     }
 
-    mouseOver() {
-        this.timer && clearTimeout(this.timer)
+    onUndo() {
+        this.hideNotification();
+        if(lastBlacklistedTile != null) {
+
+        }
+    }
+ 
+    onRestoreAll() {
+        this.hideNotification();
     }
 
-    mouseOut() {
-        this.timer && clearTimeout(this.timer)
-        this.timer = setTimeout(() => {
-            this.setState({
-                mv_notice_hide: 'mv-notice-hide'
-            });
-        }, 3000);
+    showNotification() {
+        var notification = this.refs.notification;
+        notification.classList.remove(CLASSES.HIDE_NOTIFICATION);
+        notification.classList.remove(CLASSES.DELAYED_HIDE_NOTIFICATION);
+        notification.scrollTop;
+        notification.classList.add(CLASSES.DELAYED_HIDE_NOTIFICATION);
+    }
+
+    hideNotification() {
+        var notification = this.refs.notification;
+        notification.classList.add(CLASSES.HIDE_NOTIFICATION);
+        notification.classList.remove(CLASSES.DELAYED_HIDE_NOTIFICATION);
     }
     
     render() {
@@ -83,28 +119,19 @@ export default class MostVisite extends React.Component {
                 <div id="mv-tiles" style={{width:680}}>
                     {
                         this.state.list.map((data,index) => {
-                            if(data.url) {
-                                return (<a key={index} className="mv-tile">
-                                    <div className="mv-favicon">
-                                        <img src={'http://localhost:8080/images/icon/' + data.logo + '.ico'} title={data.title} />
-                                    </div>
-                                    <div className="mv-title">{data.title || data.url}</div>
-                                    <div className="mv-thumb">
-                                        <img title={data.title} src={'http://localhost:8080/images/logo/' + data.logo + '.png'}/>
-                                    </div>
-                                    <button className="mv-x" title="不要在本页上显示" onClick={ this.xdelete.bind(this, index) }>X</button>
-                                </a>)
+                            if(data) {
+                                return <Grid key={index} onDeleteClick={ this.onDelete.bind(this, index) } item={data}/>
                             } else {
                                 return (<a key={index} className="mv-empty-tile" onClick={ this.dialog }></a>)
                             }
                         })
                     }
                 </div>
-                <div id="mv-notice" className={this.state.mv_notice_hide} onMouseOver={ this.mouseOver.bind(this) } onMouseOut={ this.mouseOut.bind(this) }>
+                <div id="mv-notice" className="mv-notice-hide" ref="notification">
                     <span id="mv-msg">已删除缩略图。</span>
                     <span id="mv-notice-links">
-                      <span id="mv-undo" tabIndex="0">撤消</span>
-                      <span id="mv-restore" tabIndex="0">全部恢复</span>
+                      <span id="mv-undo" tabIndex="0" onClick={ this.onUndo.bind(this) }>撤消</span>
+                      <span id="mv-restore" tabIndex="0" onClick={ this.onRestoreAll.bind(this) }>全部恢复</span>
                       <div id="mv-notice-x" tabIndex="0"></div>
                     </span>
                 </div>

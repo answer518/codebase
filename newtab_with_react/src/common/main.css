@@ -31,7 +31,7 @@ body {
     max-width: 672px;
     position: relative;
     width: 660px;
-    margin: 0 auto;
+    margin: 52px auto 0;
 }
 
 #fakebox-text {
@@ -90,7 +90,11 @@ body {
 }
 
 .mv-tile {
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
     cursor: pointer;
+    transition-duration: 200ms;
+    transition-property: transform, box-shadow, margin, opacity, width;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .mv-tile,
@@ -125,6 +129,12 @@ body {
 
 .thumb-ntp .mv-empty-tile:hover {
     background: rgb(242, 242, 242) url(/images/add.svg) center no-repeat;
+}
+
+.mv-tile.removed {
+    margin: 0;
+    transform: scale(0, 0);
+    width: 0;
 }
 
 .mv-favicon {
@@ -238,7 +248,7 @@ body {
     -webkit-mask-position: 3px 3px;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-size: 10px 10px;
-    background-color: rgba(90,90,90,0.7);
+    background-color: rgba(90, 90, 90, 0.7);
     cursor: pointer;
     display: inline-block;
     filter: var(--theme-filter, 'none');
@@ -251,4 +261,10 @@ body {
 
 #mv-notice.mv-notice-hide {
     display: none;
+}
+
+#mv-notice.mv-notice-delayed-hide:not(:focus-within) {
+    opacity: 0;
+    transition-delay: 10s;
+    transition-property: opacity;
 }

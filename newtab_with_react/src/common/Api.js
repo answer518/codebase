@@ -16,10 +16,14 @@ export default class Api {
             try {
                 setTimeout(() => {
                     resolve(this.data[navigator.language.toLocaleLowerCase()]);
-                }, 1000);
+                }, 100);
             } catch (e) {
                 reject(e);
             }
         })
+    }
+
+    set() {
+    	
     }
 }
