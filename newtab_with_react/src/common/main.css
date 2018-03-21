@@ -182,7 +182,7 @@ body {
 }
 
 .mv-x {
-    background: linear-gradient(to left, rgb(250, 250, 250) 60%, transparent);
+    background: transparent;
     border: none;
     cursor: pointer;
     height: 32px;
@@ -192,22 +192,25 @@ body {
     right: 0;
     transition: opacity 150ms;
     width: 40px;
+    outline: none;
+}
+
+.mv-x::after, .mv-x::before{
+    background-color: rgba(90, 90, 90, 0.7);
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 12px;
+    top: 13px;
+    left: 19px;
 }
 
 .mv-x::after {
-    --mask-width: 10px;
-    /*-webkit-mask-image: -webkit-image-set( url(chrome-search://local-ntp/images/close_3_mask.png) 1x, url(chrome-search://local-ntp/images/close_3_mask.png@2x) 2x);*/
-    -webkit-mask-position: 0;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: 10px;
-    background-color: rgba(90, 90, 90, 0.7);
-    content: '';
-    display: block;
-    height: 32px;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 32px;
+    transform: rotate(-45deg);
+}
+
+.mv-x::before {
+    transform: rotate(45deg);
 }
 
 .mv-tile:hover .mv-x,
@@ -244,19 +247,36 @@ body {
 }
 
 #mv-notice-x {
-    /*-webkit-mask-image: -webkit-image-set( url(chrome-search://local-ntp/images/close_3_mask.png) 1x, url(chrome-search://local-ntp/images/close_3_mask.png@2x) 2x);*/
-    -webkit-mask-position: 3px 3px;
-    -webkit-mask-repeat: no-repeat;
-    -webkit-mask-size: 10px 10px;
-    background-color: rgba(90, 90, 90, 0.7);
     cursor: pointer;
     display: inline-block;
-    filter: var(--theme-filter, 'none');
+    /*filter: var(--theme-filter, 'none');*/
     height: 16px;
     margin-left: 20px;
     outline: none;
-    vertical-align: middle;
     width: 16px;
+    position: relative;
+}
+
+#mv-notice-x::after, #mv-notice-x::before {
+    content: '';
+    position: absolute;
+    height: 2px;
+    width: 12px;
+    top: 7px;
+    left: 2px;
+    background: rgba(90,90,90,.7);
+}
+
+#mv-notice-x::after {
+    transform: rotate(-45deg);
+}
+
+#mv-notice-x::before {
+    transform: rotate(45deg);
+}
+
+#mv-notice-x:hover::after, #mv-notice-x:hover::before {
+    background: rgba(90,90,90,.9);
 }
 
 #mv-notice.mv-notice-hide {

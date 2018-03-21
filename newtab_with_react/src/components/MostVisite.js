@@ -41,16 +41,8 @@ export default class MostVisite extends React.Component {
         this.hideNotification = this.hideNotification.bind(this);
     }
 
-    componentWillMount() {}
-
     componentDidMount() {
-        // 取后台接口
-        // new Api().get().then((data) => {
-        //     this.setState({
-        //         list: data
-        //     })
-        // }).catch(function(error) {
-        // });
+
     }
 
     dialog = () => {
@@ -73,11 +65,7 @@ export default class MostVisite extends React.Component {
     }
 
     onDelete(index) {
-        
-
-
         var list = this.state.list;
-        list.splice(index);
 
         this.setState({
             list: list
@@ -118,12 +106,8 @@ export default class MostVisite extends React.Component {
             <div id="most-visited" className="thumb-ntp">
                 <div id="mv-tiles" style={{width:680}}>
                     {
-                        this.state.list.map((data,index) => {
-                            if(data) {
-                                return <Grid key={index} onDeleteClick={ this.onDelete.bind(this, index) } item={data}/>
-                            } else {
-                                return (<a key={index} className="mv-empty-tile" onClick={ this.dialog }></a>)
-                            }
+                        this.state.list.map((item,index) => {
+                            return <Grid key={index} onDeleteClick={ this.onDelete.bind(this, index) } item={item} onAddClick={ this.dialog }/>
                         })
                     }
                 </div>

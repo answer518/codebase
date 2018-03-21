@@ -31,7 +31,9 @@ export default class Grid extends React.Component {
             item,
             index
         } = this.props;
+        //
         return (
+            item ? 
             <a key={index} className="mv-tile" ref="mv_tile">
                 <div className="mv-favicon">
                     <img src={'/images/icon/' + item.logo + '.ico'} title={item.title} />
@@ -40,8 +42,8 @@ export default class Grid extends React.Component {
                 <div className="mv-thumb">
                     <img title={item.title} src={'/images/logo/' + item.logo + '.png'}/>
                 </div>
-                <button className="mv-x" title="不要在本页上显示" onClick={ this.onDeleteClick }>X</button>
-            </a>
+                <button className="mv-x" title="不要在本页上显示" onClick={ this.onDeleteClick }></button>
+            </a> : <a key={index} className="mv-empty-tile" onClick={ this.props.onAddClick }></a>
         )
     }
 }
