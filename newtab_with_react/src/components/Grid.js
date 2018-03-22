@@ -11,18 +11,21 @@ export default class Grid extends React.Component {
     }
 
     componentDidMount = () => {
+
     }
 
     onDeleteClick() {
         
         var thiz = this;
         var tile = thiz.refs.mv_tile;
+
+        thiz.props.onDeleteClick(thiz.props.item.rid);
+
         tile.classList.add(CLASSES.GRID_MOVED);
         tile.addEventListener('transitionend', function(ev) {
             if (ev.propertyName != 'width')
               return;
-            
-            thiz.props.onDeleteClick();
+            this.remove();
         });
     }
 

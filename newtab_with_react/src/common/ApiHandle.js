@@ -2,10 +2,10 @@ export default class ApiHandle {
     constructor(arg) {
         var data =  {
             'zh-cn': [
-                { 'title': '百度', url: 'http://www.baidu.com/', logo: 'baidu'},
-                { 'title': '天猫', url: 'http://www.tmall.com/', logo: 'tmall' },
-                { 'title': '京东', url: 'http://www.jd.com/', logo: 'jd' },
-                { 'title': '新浪网', url: 'http://www.sina.com/', logo: 'sina' }
+                { 'rid': 11, 'title': '百度', url: 'http://www.baidu.com/', logo: 'baidu'},
+                { 'rid': 21, 'title': '天猫', url: 'http://www.tmall.com/', logo: 'tmall' },
+                { 'rid': 33, 'title': '京东', url: 'http://www.jd.com/', logo: 'jd' },
+                { 'rid': 41,'title': '新浪网', url: 'http://www.sina.com/', logo: 'sina' }
             ],
             'en-us': [1, 2]
         }

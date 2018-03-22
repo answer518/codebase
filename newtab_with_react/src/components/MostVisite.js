@@ -37,12 +37,14 @@ export default class MostVisite extends React.Component {
             list: list
         }
 
+        this.onDelete = this.onDelete.bind(this);
+        this.onUndo = this.onUndo.bind(this);
+        this.onRestoreAll = this.onRestoreAll.bind(this);
         this.showNotification = this.showNotification.bind(this);
         this.hideNotification = this.hideNotification.bind(this);
     }
 
     componentDidMount() {
-
     }
 
     dialog = () => {
@@ -64,11 +66,11 @@ export default class MostVisite extends React.Component {
         })
     }
 
-    onDelete(index) {
-        var list = this.state.list;
+    onDelete(rid) {
+        var thiz = this;
 
-        this.setState({
-            list: list
+        thiz.state.list = thiz.state.list.filter(function(item) {
+            return item.rid !== rid;
         });
 
         // 可以考虑用css3动画实现
@@ -77,11 +79,11 @@ export default class MostVisite extends React.Component {
 
     onUndo() {
         this.hideNotification();
-        if(lastBlacklistedTile != null) {
+        if (lastBlacklistedTile != null) {
 
         }
     }
- 
+
     onRestoreAll() {
         this.hideNotification();
     }
@@ -102,20 +104,19 @@ export default class MostVisite extends React.Component {
     
     render() {
 
+        const grids = this.state.list.map((item,index) => {
+                        return <Grid key={index} onDeleteClick={ this.onDelete } item={item} onAddClick={ this.dialog }/>
+                    })
         return (
             <div id="most-visited" className="thumb-ntp">
                 <div id="mv-tiles" style={{width:680}}>
-                    {
-                        this.state.list.map((item,index) => {
-                            return <Grid key={index} onDeleteClick={ this.onDelete.bind(this, index) } item={item} onAddClick={ this.dialog }/>
-                        })
-                    }
+                    {grids}
                 </div>
                 <div id="mv-notice" className="mv-notice-hide" ref="notification">
                     <span id="mv-msg">已删除缩略图。</span>
                     <span id="mv-notice-links">
-                      <span id="mv-undo" tabIndex="0" onClick={ this.onUndo.bind(this) }>撤消</span>
-                      <span id="mv-restore" tabIndex="0" onClick={ this.onRestoreAll.bind(this) }>全部恢复</span>
+                      <span id="mv-undo" tabIndex="0" onClick={ this.onUndo }>撤消</span>
+                      <span id="mv-restore" tabIndex="0" onClick={ this.onRestoreAll }>全部恢复</span>
                       <div id="mv-notice-x" tabIndex="0"></div>
                     </span>
                 </div>
