@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>pretty-tab</title>
+	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
+	<link rel="stylesheet" href="css/index.css">
+</head>
+<body class="grey style_1">
+	<div id="app">
+    	<div class="home">
+    		<div id="fakebox">
+                <div id="fakebox-text">搜索Google或输入网址</div>
+                <input id="fakebox-input" autoComplete="off" tabindex="-1" type="url" />
+                <div id="cursor"></div>
+            </div>
+            <div id="most-visited" class="thumb-ntp">
+                <div id="mv-tiles" style="width: 680px;">
+                    
+                </div>
+                <div id="mv-notice" class="mv-notice-hide">
+                    <span id="mv-msg">已删除缩略图。</span>
+                    <span id="mv-notice-links">
+                      <span id="mv-undo" tabindex="0">撤消</span>
+                      <span id="mv-restore" tabindex="0">全部恢复</span>
+                      <div id="mv-notice-x" tabindex="0"></div>
+                    </span>
+                </div>
+            </div>
+    	</div>
+    </div>
+	<script src="js/index.js"></script>
+</body>
+</html>
