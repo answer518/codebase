@@ -10,23 +10,12 @@
         "history",
         "topSites",
         "management",
-        "http://*.baidu.com/",
-        "https://*.baidu.com/",
-        "http://*.bing.com/",
-        "https://*.bing.com/",
+        "chrome://favicon/",
         "contextMenus",
         "tabs",
         "activeTab"
     ],
     "chrome_url_overrides": {
         "newtab": "index.html"
-    },
-    "browser_action": {
-        "default_icon": "./asset/tab.png"
-    },
-    "icons": {
-        "16": "./asset/tab16x16.png",
-        "48": "./asset/tab48x48.png",
-        "128": "./asset/tab.png"
     }
 }
