@@ -1,4 +1,4 @@
-.modal-open {
+
     .modal-container {
         background-color: rgba(0, 0, 0, 0.6);
         position: fixed;
@@ -22,11 +22,39 @@
                 line-height: 1;
                 padding: 16px 0px;
             }
+            .modal-close {
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                height: 32px;
+                padding: 0;
+                position: absolute;
+                right: 5px;
+                top: 5px;
+                width: 40px;
+                outline: none;
+            }
+            .modal-close::after, .modal-close::before {
+                background-color: rgba(90, 90, 90, 0.7);
+                content: '';
+                position: absolute;
+                height: 2px;
+                width: 12px;
+                top: 13px;
+                left: 19px;
+            }
+            .modal-close::before {
+                transform: rotate(45deg);
+            }
+            .modal-close::after {
+                transform: rotate(-45deg);
+            }
             .modal-content {
                 min-height: 100px;
             }
             .modal-input {
                 padding: 8px 0;
+                position: relative;
                 label {
                     display:block;
                 }
@@ -43,6 +71,12 @@
                     color: #000;
                     font-family: 'Microsoft Yahei';
                 }
+                .paper-input-error {
+                    position: absolute;
+                    color: #dd2400;
+                    bottom: -10px;
+                    left: 0;
+                }
                 .underline {
                     height: 2px;
                     position: relative;
@@ -54,6 +88,27 @@
                     top: 0px;
                     bottom: 0px;
                     border-bottom: 1px solid #757575;
+                }
+                .focused-line {
+                    position: absolute;
+                    left: 0px;
+                    right: 0px;
+                    top: 0px;
+                    bottom: 0px;
+                    border-bottom: 2px solid #4285f4;
+                    transform-origin: center center;
+                    transform: scale3d(0,1,1);
+                }
+
+                .underline.is-highlighted .focused-line {
+                    transform: none;
+                    transition: transform 0.25s;
+                }
+
+                .underline.is-invalid .focused-line {
+                    transform: none;
+                    transition: transform 0.25s;
+                    border-color: #dd2400;
                 }
             }
             .modal-footer {
@@ -84,4 +139,3 @@
             }
         }
     }
-}
