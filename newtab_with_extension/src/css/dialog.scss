@@ -53,11 +53,8 @@
                 min-height: 100px;
             }
             .modal-input {
-                padding: 8px 0;
+                padding: 10px 0;
                 position: relative;
-                label {
-                    display:block;
-                }
                 input {
                     border: none;
                     outline: none;
@@ -71,9 +68,11 @@
                     color: #000;
                     font-family: 'Microsoft Yahei';
                 }
+                .is-invalid label, .is-invalid span {
+                    color: #dd2400;
+                }
                 .paper-input-error {
                     position: absolute;
-                    color: #dd2400;
                     bottom: -10px;
                     left: 0;
                 }
