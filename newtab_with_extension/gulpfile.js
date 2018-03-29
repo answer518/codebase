@@ -1,5 +1,4 @@
 var gulp = require('gulp'),
-    babel = require("gulp-babel"),
     $ = require('gulp-load-plugins')(),
     del = require('del');
 
@@ -9,7 +8,7 @@ gulp.task('htmls', function() {
         htmlDst = './dist';
     return gulp.src(htmlSrc)
         .pipe(gulp.dest(htmlDst))
-        .pipe($.notify({ message: 'Htmls task complete' }));
+        // .pipe($.notify({ message: 'Htmls task complete' }));
 });
 
 // 样式处理
@@ -24,7 +23,7 @@ gulp.task('styles', function() {
         .pipe($.rename({ suffix: '.min' }))
         .pipe($.minifyCss())
         .pipe(gulp.dest(cssDst))
-        .pipe($.notify({ message: 'Styles task complete' }));
+        // .pipe($.notify({ message: 'Styles task complete' }));
 });
 
 // 图片处理
@@ -34,23 +33,30 @@ gulp.task('images', function() {
     return gulp.src(imgSrc)
         // .pipe($.cache($.imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
         .pipe(gulp.dest(imgDst))
-        .pipe($.notify({ message: 'Images task complete' }));
+        // .pipe($.notify({ message: 'Images task complete' }));
 })
 
 // js处理
 gulp.task('scripts', function() {
-    var jsSrc = './src/js/*.js',
-        jsDst = './dist/js';
+    var jsSrc = ['./src/js/common.js',
+                    './src/js/const.js',
+                    './src/js/dialog.js', 
+                    './src/js/notification.js', 
+                    './src/js/grid.js', 
+                    './src/js/index.js'
+                ],
+                jsDst = './dist/js';
+                
     return gulp.src(jsSrc)
         // .pipe($.jshint())
         // .pipe($.jshint.reporter('default'))
-        .pipe(babel())
+        .pipe($.babel())
         .pipe($.concat('main.js'))
         .pipe(gulp.dest(jsDst))
         .pipe($.rename({ suffix: '.min' }))
         .pipe($.uglify())
         .pipe(gulp.dest(jsDst))
-        .pipe($.notify({ message: 'Scripts task complete' }));
+        // .pipe($.notify({ message: 'Scripts task complete' }));
 });
 
 // 清空图片、样式、js
@@ -68,7 +74,7 @@ gulp.task('watch', function() {
     gulp.watch('./*.html', function(event) {
         gulp.run('htmls');
     });
-        // 监听css
+    // 监听css
     gulp.watch(['./src/css/*.scss', './src/css/*.css'], function() {
         gulp.run('styles');
     });
