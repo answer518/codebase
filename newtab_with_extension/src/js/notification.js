@@ -1,29 +1,44 @@
-const notification = $('#mv-notice');
+ class Notification {
 
-const mv_notice_x = notification.querySelector('#mv-notice-x'),
-    mv_undo = notification.querySelector('#mv-undo'),
-    mv_restore = notification.querySelector('#mv-restore');
+    constructor() {
+        let notification = $('#mv-notice');
+        let h = {
+            notification: notification,
+            mv_notice_x: notification.querySelector('#mv-notice-x'),
+            mv_undo: notification.querySelector('#mv-undo'),
+            mv_restore: notification.querySelector('#mv-restore')
+        }
 
-mv_notice_x.on('click', function() {
-    hideNotification();
-})
+        Object.assign(this, h)
+    }
 
-mv_undo.on('click', function() {
-    hideNotification();
-})
+    init() {
+        let _this = this;
 
-mv_restore.on('click', function() {
-    hideNotification();
-})
+        _this.mv_notice_x.on('click', function() {
+            _this.hideNotification();
+        })
 
-function showNotification() {
-    notification.classList.remove(CLASSES.HIDE_NOTIFICATION);
-    notification.classList.remove(CLASSES.DELAYED_HIDE_NOTIFICATION);
-    notification.scrollTop;
-    notification.classList.add(CLASSES.DELAYED_HIDE_NOTIFICATION);
-}
+        _this.mv_undo.on('click', function() {
+            _this.hideNotification();
+        })
 
-function hideNotification() {
-    notification.classList.add(CLASSES.HIDE_NOTIFICATION);
-    notification.classList.remove(CLASSES.DELAYED_HIDE_NOTIFICATION);
+        _this.mv_restore.on('click', function() {
+            _this.hideNotification();
+        })
+    }
+
+    showNotification() {
+        let _this = this;
+        _this.notification.classList.remove(CLASSES.HIDE_NOTIFICATION);
+        _this.notification.classList.remove(CLASSES.DELAYED_HIDE_NOTIFICATION);
+        _this.notification.scrollTop;
+        _this.notification.classList.add(CLASSES.DELAYED_HIDE_NOTIFICATION);
+    }
+
+    hideNotification() {
+        let _this = this;
+        _this.notification.classList.add(CLASSES.HIDE_NOTIFICATION);
+        _this.notification.classList.remove(CLASSES.DELAYED_HIDE_NOTIFICATION);
+    }
 }

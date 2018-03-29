@@ -1,11 +1,5 @@
 const $ = selector => document.querySelector(selector) || null;
 
-const log = {
-    i: console.log,
-    e: console.error,
-    w: console.warn
-}
-
 Element.prototype.addClass = function(classStr) {
 
     if (this.classList.contains(classStr)) {
