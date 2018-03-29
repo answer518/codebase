@@ -11,9 +11,7 @@
         "topSites",
         "management",
         "chrome://favicon/",
-        "contextMenus",
-        "tabs",
-        "activeTab"
+        "contextMenus"
     ],
     "chrome_url_overrides": {
         "newtab": "index.html"
