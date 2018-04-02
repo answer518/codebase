@@ -17,3 +17,4 @@ Element.prototype.hasClass = function(classStr) {
 }
 
 Element.prototype.on = Element.prototype.addEventListener
+Element.prototype.off = Element.prototype.removeEventListener

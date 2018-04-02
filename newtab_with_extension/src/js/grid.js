@@ -11,7 +11,7 @@ class Grid {
     	let _this = this;
         let link = document.createElement('a');
         
-        if(_this.title&& _this.url) {
+        if(_this.title && _this.url) {
         	link.setAttribute('href', _this.url);
         	link.setAttribute('title', _this.title)
         	link.setAttribute('class', 'mv-tile');
@@ -28,8 +28,8 @@ class Grid {
         } else {
         	link.setAttribute('class', 'mv-empty-tile');
         }
-        
-        link.on('click', function(event) {
+
+        let handle = (event) => {
             var target = event.target;
             if (target.className === 'mv-x') {
                 event.preventDefault();
@@ -39,6 +39,8 @@ class Grid {
                 parent.addEventListener('transitionend', function(ev) {
                     if (ev.propertyName != 'width')
                         return;
+                    // off event click
+                    link.off('click', handle);
                     parent.remove();
 
                     storage_reco.del(_this.index, (value) => {
@@ -49,8 +51,15 @@ class Grid {
 
             if(target.className === 'mv-empty-tile') {
                 let dialog = new Modal();
+                dialog.onSuccess = function(obj) {
+                    storage_reco.add(_this.index, obj, () => {
+                        getRecoSites();
+                    });
+                }
             }
-        })
+        }
+        
+        link.on('click', handle);
         return link
     }
 }

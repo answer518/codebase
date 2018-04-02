@@ -40,6 +40,7 @@ gulp.task('images', function() {
 gulp.task('scripts', function() {
     var jsSrc = ['./src/js/common.js',
                     './src/js/const.js',
+                    './src/js/storage.js',
                     './src/js/dialog.js', 
                     './src/js/notification.js', 
                     './src/js/grid.js', 

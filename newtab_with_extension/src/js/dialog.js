@@ -38,8 +38,8 @@ class Modal {
             <div class="modal-content">
                 <div class="modal-input">
                     <div class="input-content">
-                        <label id="paper-input-label-1" htmlfor="name">名称</label>
-                        <input type="input" name="name" id="name"/>
+                        <label id="paper-input-label-1" htmlfor="title">名称</label>
+                        <input type="input" name="title" id="title"/>
                         <span class="paper-input-error"></span>
                     </div>
                     <div class="underline">
@@ -81,7 +81,7 @@ class Modal {
             let target = e.target
 
             if (target === ok_btn) {
-                let name = modal.querySelector('#name').value.replace(/\s/, ''),
+                let title = modal.querySelector('#title').value.replace(/\s/, ''),
                     url = modal.querySelector('#url').value.replace(/\s/, '');
 
                 if (url.length === 0) {
@@ -96,7 +96,7 @@ class Modal {
                     return;
                 }
 
-                if (name.length > 10) {
+                if (title.length > 10) {
                     let next = inputs[0].nextSibling;
                     next = next.nextSibling;
                     next.innerHTML = '标题过长';
@@ -109,18 +109,20 @@ class Modal {
                     return;
                 }
 
-                if (name.length === 0) {
-                    name = url;
+                if (title.length === 0) {
+                    title = url;
                 }
 
                 if (url.indexOf('http://') !== 0) {
                     url = 'http://' + url;
                 }
-
-                console.log({
+                
+                _this.onSuccess && _this.onSuccess({
                     url: url,
-                    name: name
+                    title: title
                 })
+
+                _this.close();
             }
 
             if (target !== modal_close && target !== cancel_btn) 
