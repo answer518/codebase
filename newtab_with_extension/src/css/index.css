@@ -171,6 +171,28 @@ body {
     width: 154px;
 }
 
+@keyframes k-loadingD {
+    0 {
+        transform:rotate(0deg)
+    }
+    50% {
+        transform:rotate(180deg)
+    }
+    100% {
+        transform:rotate(360deg)
+    }
+}
+
+.loading .ring {
+    width: 10px;
+    height: 10px;
+    margin: 20px auto;
+    padding: 10px;
+    border: 7px dashed #ccc;
+    border-radius: 100%;
+    animation:k-loadingD 1.5s .3s cubic-bezier(.17,.37,.43,.67) infinite;
+}
+
 .mv-thumb img {
     width: 100%;
     height: 100%;
