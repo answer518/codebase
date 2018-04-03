@@ -10,9 +10,9 @@ class Storage {
 
         return new Promise((resolve, reject) => {
             chrome.storage.sync.get(['reco_sites'], (result) => {
-                let data = result[key];
-                console.log(data)
-                if (Object.keys(data).length === 0) {
+                let data = result[key] || {};
+                
+                if (data && Object.keys(data).length === 0) {
                     data = default_data[navigator.language.toLocaleLowerCase()];
                     _this.set(data);
                 }

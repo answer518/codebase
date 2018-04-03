@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>pretty-tab</title>
+	<title>新标签页</title>
 	<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0">
 	<link rel="stylesheet" href="css/index.css">
 </head>
-<body class="grey style_1">
+<body class="grey">
 	<div id="app">
     	<div class="home">
-    		<div id="fakebox">
-                <div id="fakebox-text">搜索Google或输入网址</div>
-                <input id="fakebox-input" autoComplete="off" tabindex="-1" type="url" />
-                <div id="cursor"></div>
-            </div>
+            <form action="#" id="f" method="get">
+                <div id="fakebox">
+                    <div id="fakebox-text">搜索Google或输入网址</div>
+                    <input id="fakebox-input" autoComplete="off" tabindex="-1" type="text" />
+                    <div id="cursor"></div>
+                    <input style="display: none;" type="text" />
+                </div>
+            </form>
             <div id="most-visited" class="thumb-ntp">
                 <div id="mv-recos" style="width: 680px;">
                 </div>

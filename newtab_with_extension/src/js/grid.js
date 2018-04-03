@@ -1,17 +1,6 @@
 /**
  * 格子类
  */
-let chrome = chrome || {}
-
-chrome.mx = {
-    snap : (url, options, callback) => {
-        setTimeout(() => {
-            callback && callback(true, '/img/logo/sina.png');
-        }, 1000);
-    }
-}
-
-
 class Grid {
 
     constructor(data) {
@@ -43,10 +32,10 @@ class Grid {
         let thumb = link.querySelector('.mv-thumb')
         // 开始截图
         if(!_this.snapurl) {
-            chrome.mx.snap(_this.url, {}, (success, data_url) => {
-                if(success && thumb) {
-                     thumb.innerHTML = `<img alt="${_this.title}" src="${data_url}"/>`;
-                     _this.snapurl = data_url;
+            chrome.livesone.snap(_this.url, {}, (result) => {
+                if(result.success && thumb) {
+                    _this.snapurl = result.data_url;
+                    thumb.innerHTML = `<img alt="${_this.title}" src="${_this.snapurl}"/>`;
                 }
             });
         } else {

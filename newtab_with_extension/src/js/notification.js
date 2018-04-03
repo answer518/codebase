@@ -42,3 +42,6 @@
         _this.notification.classList.remove(CLASSES.DELAYED_HIDE_NOTIFICATION);
     }
 }
+
+const notification = new Notification();
+notification.init();

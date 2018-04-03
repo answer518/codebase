@@ -43,6 +43,7 @@ gulp.task('scripts', function() {
                     './src/js/storage.js',
                     './src/js/dialog.js', 
                     './src/js/notification.js', 
+                    './src/js/search.js',
                     './src/js/grid.js', 
                     './src/js/index.js'
                 ],

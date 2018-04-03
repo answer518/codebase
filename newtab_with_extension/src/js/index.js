@@ -7,9 +7,8 @@ let getTopSites = function() {
         topSites = result;
 
         //当elem下还存在子节点时 循环继续 
-        while(mv_tiles.lastChild)  
-        {  
-            mv_tiles.removeChild(mv_tiles.firstChild);  
+        while (mv_tiles.lastChild) {
+            mv_tiles.removeChild(mv_tiles.firstChild);
         }
 
         result.forEach((item, i) => {
@@ -40,15 +39,14 @@ let default_data = {
     'en-us': []
 }
 
-let storage_reco = new Storage({key : 'reco_sites'});
+let storage_reco = new Storage({ key: 'reco_sites' });
 let getRecoSites = function() {
 
     storage_reco.get().then((result) => {
 
         //当elem下还存在子节点时 循环继续 
-        while(mv_recos.lastChild)  
-        {  
-            mv_recos.removeChild(mv_recos.firstChild);  
+        while (mv_recos.lastChild) {
+            mv_recos.removeChild(mv_recos.firstChild);
         }
 
         result.forEach((item, i) => {
@@ -72,6 +70,3 @@ let getRecoSites = function() {
 
 getTopSites();
 getRecoSites();
-
-const notification = new Notification();
-notification.init();
