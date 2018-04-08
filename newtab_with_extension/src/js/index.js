@@ -1,15 +1,12 @@
-var mv_recos = $('#mv-recos'),
-    mv_tiles = $('#mv-tiles');
+var mv_recos = $(IDS.RECOS),
+    mv_tiles = $(IDS.TILES);
 
 let topSites = [];
 let getTopSites = function() {
     chrome.topSites.get(result => {
         topSites = result;
 
-        //当elem下还存在子节点时 循环继续 
-        while (mv_tiles.lastChild) {
-            mv_tiles.removeChild(mv_tiles.firstChild);
-        }
+        mv_tiles.empty()
 
         result.forEach((item, i) => {
             item.index = i;
@@ -21,7 +18,7 @@ let getTopSites = function() {
             mv_tiles.append(grid.dom());
         })
 
-        // Create empty tiles until we have NUMBER_OF_TILES.
+        // countLoad();
         while (mv_tiles.childNodes.length < 8) {
             var grid = new Grid({});
             mv_tiles.append(grid.dom());
@@ -39,30 +36,25 @@ let default_data = {
     'en-us': []
 }
 
+let loadedCounter = 1;
 let storage_reco = new Storage({ key: 'reco_sites' });
 let getRecoSites = function() {
 
     storage_reco.get().then((result) => {
 
-        //当elem下还存在子节点时 循环继续 
-        while (mv_recos.lastChild) {
-            mv_recos.removeChild(mv_recos.firstChild);
-        }
-
+        mv_recos.empty()
         result.forEach((item, i) => {
-            item.index = i;
-            var grid = new Grid(item);
+            // item.index = i;
+            var grid = new Grid(item, i);
             grid.onSuccess = function(index) {
-                storage_reco.del(index, (value) => {
-                    // getRecoSites();
-                })
+                storage_reco.del(index)
             }
             mv_recos.append(grid.dom());
         })
 
         // Create empty tiles until we have NUMBER_OF_TILES.
         while (mv_recos.childNodes.length < 4) {
-            var grid = new Grid({});
+            var grid = new Grid({}, mv_recos.childNodes.length);
             mv_recos.append(grid.dom());
         }
     });
