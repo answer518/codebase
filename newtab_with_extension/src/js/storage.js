@@ -11,7 +11,9 @@ class Storage {
         return new Promise((resolve, reject) => {
             chrome.storage.sync.get(['reco_sites'], (result) => {
                 let data = result[key] || {};
-                
+                if(typeof data === 'string') {
+                    data = JSON.parse(data);
+                }
                 if (data && Object.keys(data).length === 0) {
                     data = default_data[navigator.language.toLocaleLowerCase()];
                     _this.set(data);
