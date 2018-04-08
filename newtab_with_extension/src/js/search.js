@@ -1,9 +1,8 @@
-
 /**
  * @param {boolean} focus True to focus the fakebox.
  */
 function setFakeboxFocus(focus) {
-  document.body.toggleClass(CLASSES.FAKEBOX_FOCUS, focus);
+    document.body.toggleClass(CLASSES.FAKEBOX_FOCUS, focus);
 }
 
 
@@ -11,13 +10,13 @@ function setFakeboxFocus(focus) {
  * @return {boolean} True if the fakebox has focus.
  */
 function isFakeboxFocused() {
-  return document.body.hasClass(CLASSES.FAKEBOX_FOCUS);
+    return document.body.hasClass(CLASSES.FAKEBOX_FOCUS);
 }
 
 let inputbox = $(IDS.FAKEBOX_INPUT)
 
 inputbox.on('focus', function() {
-    if (!isFakeboxFocused()) { 
+    if (!isFakeboxFocused()) {
         setFakeboxFocus(false);
     }
 })
@@ -25,7 +24,7 @@ inputbox.on('focus', function() {
 let searchForm = $('f')
 
 function setEngine(data) {
-	var arrTmp = data.url.split('?');
+    var arrTmp = data.url.split('?');
     var action = arrTmp[0];
     if (arrTmp[1]) {
         var nameParam = arrTmp[1].match(/[\w\-]+=%[\w\-]+/g);
@@ -46,7 +45,10 @@ function setEngine(data) {
             var value = arr[i].substring(n + 1);
             tmpl += '<input type="hidden" name="' + key + '" value="' + value + '">';
         }
-        searchForm.querySelector('.extra-param').remove();
+
+        if (searchForm.querySelector('.extra-param')) {
+            searchForm.querySelector('.extra-param').remove();
+        }
         searchForm.appendChild(extraParam);
         extraParam.innerHTML = tmpl
     }
@@ -59,8 +61,14 @@ setEngine({
     'url': 'https://www.baidu.com/?ie=utf-8&wd=%s'
 });
 
-// inputbox.on('blur', function() {
-//     if (isFakeboxFocused()) { 
-//         setFakeboxFocus(true);
-//     }
-// })
+let inputsearch = $(IDS.FAKEBOX_SPCH)
+
+document.body.on('click', function(e) {
+    let target = e.target
+
+    if (target === inputbox || target === inputsearch) return
+
+    if (isFakeboxFocused()) {
+        setFakeboxFocus(true);
+    }
+})

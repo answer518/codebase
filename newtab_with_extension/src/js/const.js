@@ -23,6 +23,7 @@ const IDS = {
     FAKEBOX: 'fakebox',
     FAKEBOX_INPUT: 'fakebox-input',
     FAKEBOX_TEXT: 'fakebox-text',
+    FAKEBOX_SPCH: 'fkbx-spch',
     NOTIFICATION: 'mv-notice',
     NOTIFICATION_CLOSE_BUTTON: 'mv-notice-x',
     NOTIFICATION_MESSAGE: 'mv-msg',
