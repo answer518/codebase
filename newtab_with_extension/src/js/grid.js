@@ -1,31 +1,11 @@
 /**
  * 格子类
  */
-
-function countLoad() {
-    loadedCounter -= 1;
-
-    if (loadedCounter <= 0) {
-        // Create empty tiles until we have NUMBER_OF_TILES.
-        while (mv_tiles.childNodes.length < 8) {
-            var grid = new Grid({});
-            mv_tiles.append(grid.dom());
-        }
-
-        while (mv_recos.childNodes.length < 4) {
-            var grid = new Grid({});
-            mv_recos.append(grid.dom());
-        }
-        loadedCounter = 1;
-    }
-}
-
 class Grid {
 
     constructor(data, index) {
         this.data = data
         this.index = index
-        // Object.assign(this, data)
     }
 
     dom() {
@@ -44,12 +24,9 @@ class Grid {
             fi.src = `chrome://favicon/${_data.url}`
             fi.title = fi.alt = `${_data.title}`
 
-            loadedCounter += 1
-            fi.on('load', countLoad)
-
+            fi.on('load', _this.countLoad)
             fi.on('error', () => {
                 favicon.addClass('failed-favicon')
-                countLoad()
             })
 
             favicon.appendChild(fi)
@@ -66,7 +43,7 @@ class Grid {
             ring.className = 'ring'
             thumb.appendChild(ring)
             link.appendChild(thumb)
-                // 开始截图
+            // 开始截图
             if (!_data.thumbnailUrl) {
                 thumb.addClass('loading')
                 chrome.livesone.snap(_data.url, { thumb_width: 154, thumb_height: 128}, (result) => {
@@ -75,13 +52,12 @@ class Grid {
                         thumb.innerHTML = `<img alt="${_data.title}" src="${_data.thumbnailUrl}"/>`;
                         thumb.removeClass('loading')
 
-                        storage_reco.update(_this.index, _data);
+                        _this.onUpdate && _this.onUpdate(_data);
                         // important
-                        countLoad();
+                        _this.countLoad && _this.countLoad();
                     }
                 });
 
-                loadedCounter += 1;
             } else {
                 var img = document.createElement('img');
                 img.title = _data.title;
@@ -105,8 +81,6 @@ class Grid {
             link.className = 'mv-empty-tile'
         }
 
-        link.setAttribute('rid', _this.index)
-
         let handle = (event) => {
             let target = event.target,
                 parent = target.parentNode;
@@ -121,27 +95,14 @@ class Grid {
                     // off event click
                     link.off('click', handle);
                     parent.remove();
-                    countLoad()
-                    _this.onSuccess && _this.onSuccess(link.getAttribute('rid'));
+                    _this.countLoad && _this.countLoad()
+                    _this.onDelete && _this.onDelete(link.getAttribute('rid'));
                 });
-            }
 
-            if (target.className === 'mv-empty-tile') {
-                // condition is true then return.
-                if (parent === mv_tiles) return;
-                let dialog = new Modal();
-                dialog.onSuccess = function(obj) {
-                    let index = link.getAttribute('rid')
-                    let newLink = new Grid(obj, index)
-                    newLink.onSuccess = function(index) {
-                        storage_reco.del(index)
-                    }
-                    parent.replaceChild(newLink.dom(), link);
-                    storage_reco.add(index, obj, () => {
-                        // getRecoSites()
-                    });
-                }
+                return;
             }
+            // condition is true then return.
+            _this.onAdd && _this.onAdd()
         }
 
         link.on('click', handle);

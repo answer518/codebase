@@ -177,6 +177,7 @@ body {
   position: relative;
   vertical-align: top;
   white-space: nowrap;
+  cursor: pointer;
   width: var(--tile-width);
 }
 

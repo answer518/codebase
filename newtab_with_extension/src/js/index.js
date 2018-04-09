@@ -3,6 +3,7 @@ var mv_recos = $(IDS.RECOS),
 
 let topSites = [];
 let getTopSites = function() {
+    let loadedCounter = 1;
     chrome.topSites.get(result => {
         topSites = result;
 
@@ -10,16 +11,29 @@ let getTopSites = function() {
 
         result.forEach((item, i) => {
             var grid = new Grid(item, i);
-            grid.onSuccess = function(index) {
+
+            loadedCounter += 1;
+            grid.countLoad = function() {
+                loadedCounter -= 1;
+                if (loadedCounter <= 0) {
+                    // Create empty tiles until we have NUMBER_OF_TILES.
+                    while (mv_tiles.childNodes.length < 8) {
+                        var grid = new Grid({});
+                        mv_tiles.append(grid.dom());
+                    }
+                    loadedCounter = 1;
+                }
+            }
+            grid.onDelete = function(index) {
                 topSites.splice(index, 1);
                 notification.showNotification();
             }
             mv_tiles.append(grid.dom());
         })
 
-        // countLoad();
+        // init;
         while (mv_tiles.childNodes.length < 8) {
-            var grid = new Grid({}, mv_tiles.childNodes.length);
+            var grid = new Grid({});
             mv_tiles.append(grid.dom());
         }
     })
@@ -35,29 +49,60 @@ let default_data = {
     'en-us': [
         { 'title': 'Google', url: 'https://www.google.com' },
         { 'title': 'Facebook', url: 'https://www.facebook.com/' },
-        { 'title': '京东', url: 'https://www.youtube.com/' },
-        { 'title': '新浪网', url: 'https://www.amazon.cn/' }
+        { 'title': 'YouTube', url: 'https://www.youtube.com/' },
+        { 'title': 'Amazon', url: 'https://www.amazon.cn/' }
     ]
 }
 
-let loadedCounter = 1;
 let storage_reco = new Storage({ key: 'reco_sites' });
 let getRecoSites = function() {
-
+    let loadedCounter = 1;
     storage_reco.get().then((result) => {
 
         mv_recos.empty()
         result.forEach((item, i) => {
             var grid = new Grid(item, i);
-            grid.onSuccess = function(index) {
-                storage_reco.del(index)
+            loadedCounter += 1;
+
+            grid.countLoad = function() {
+                loadedCounter -= 1;
+                if (loadedCounter <= 0) {
+                    // Create empty tiles until we have NUMBER_OF_TILES.
+                    while (mv_recos.childNodes.length < 4) {
+                        var grid = new Grid({});
+                        mv_recos.append(grid.dom());
+                    }
+                    loadedCounter = 1;
+                }
+            }
+            grid.onUpdate = function(data) {
+                storage_reco.update(i, data);
+            }
+            grid.onDelete = function() {
+                storage_reco.del(i)
             }
             mv_recos.append(grid.dom());
         })
 
         // Create empty tiles until we have NUMBER_OF_TILES.
         while (mv_recos.childNodes.length < 4) {
-            var grid = new Grid({}, mv_recos.childNodes.length);
+            let i = mv_recos.childNodes.length
+            var grid = new Grid({}, i);
+            grid.onAdd = function() {
+                let dialog = new Modal();
+                dialog.onSuccess = function(obj) {
+
+                    grid = new Grid(obj, i)
+                    grid.onDelete = function() {
+                        storage_reco.del(i)
+                    }
+                    grid.onUpdate = function(data) {
+                        storage_reco.update(i, data);
+                    }
+                    mv_recos.replaceChild(grid.dom(), mv_recos.childNodes[i]);
+                    storage_reco.add(i, obj);
+                }
+            }
             mv_recos.append(grid.dom());
         }
     });

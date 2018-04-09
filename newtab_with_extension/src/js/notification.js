@@ -1,7 +1,10 @@
  class Notification {
 
-     constructor() {
-         // Object.assign(this, h)
+     constructor() {}
+
+     init() {
+         let _this = this
+         _this.notification = $(IDS.NOTIFICATION)
          $(IDS.NOTIFICATION_CLOSE_BUTTON).on('click', function() {
              _this.hideNotification();
          })
@@ -14,8 +17,6 @@
              _this.hideNotification();
          })
      }
-
-     init() {}
 
      showNotification() {
          let _this = this;
