@@ -9,8 +9,7 @@ let getTopSites = function() {
         mv_tiles.empty()
 
         result.forEach((item, i) => {
-            item.index = i;
-            var grid = new Grid(item);
+            var grid = new Grid(item, i);
             grid.onSuccess = function(index) {
                 topSites.splice(index, 1);
                 notification.showNotification();
@@ -20,7 +19,7 @@ let getTopSites = function() {
 
         // countLoad();
         while (mv_tiles.childNodes.length < 8) {
-            var grid = new Grid({});
+            var grid = new Grid({}, mv_tiles.childNodes.length);
             mv_tiles.append(grid.dom());
         }
     })
@@ -28,12 +27,17 @@ let getTopSites = function() {
 
 let default_data = {
     'zh-cn': [
-        { 'title': '百度', url: 'http://www.baidu.com/' },
-        { 'title': '天猫', url: 'http://www.tmall.com/' },
-        { 'title': '京东', url: 'http://www.jd.com/' },
-        { 'title': '新浪网', url: 'http://www.sina.com/' }
+        { 'title': '百度', url: 'https://www.baidu.com/index.php?tn=maxthon2&ch=12' },
+        { 'title': '淘宝', url: 'https://www.taobao.com/' },
+        { 'title': '微博', url: 'https://weibo.com/' },
+        { 'title': 'hao123', url: 'http://www.hao123.com/?tn=55020201_2_hao_pg' }
     ],
-    'en-us': []
+    'en-us': [
+        { 'title': 'Google', url: 'https://www.google.com' },
+        { 'title': 'Facebook', url: 'https://www.facebook.com/' },
+        { 'title': '京东', url: 'https://www.youtube.com/' },
+        { 'title': '新浪网', url: 'https://www.amazon.cn/' }
+    ]
 }
 
 let loadedCounter = 1;
@@ -44,7 +48,6 @@ let getRecoSites = function() {
 
         mv_recos.empty()
         result.forEach((item, i) => {
-            // item.index = i;
             var grid = new Grid(item, i);
             grid.onSuccess = function(index) {
                 storage_reco.del(index)

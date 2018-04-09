@@ -23,24 +23,26 @@ function countLoad() {
 class Grid {
 
     constructor(data, index) {
-        data.index = index
-        Object.assign(this, data)
+        this.data = data
+        this.index = index
+        // Object.assign(this, data)
     }
 
     dom() {
-        let _this = this;
-        let link = document.createElement('a');
+        let _this = this,
+            _data = _this.data,
+            link = document.createElement('a');
 
-        if (_this.title && _this.url) {
-            link.setAttribute('href', _this.url);
-            link.setAttribute('title', _this.title)
+        if (_data.title && _data.url) {
+            link.setAttribute('href', _data.url);
+            link.setAttribute('title', _data.title)
             link.setAttribute('class', 'mv-tile');
 
             let favicon = document.createElement('div')
             favicon.className = 'mv-favicon'
             let fi = document.createElement('img')
-            fi.src = `chrome://favicon/${_this.url}`
-            fi.title = fi.alt = `${_this.title}`
+            fi.src = `chrome://favicon/${_data.url}`
+            fi.title = fi.alt = `${_data.title}`
 
             loadedCounter += 1
             fi.on('load', countLoad)
@@ -55,7 +57,7 @@ class Grid {
 
             let title = document.createElement('div');
             title.className = 'mv-title';
-            title.innerText = _this.title;
+            title.innerText = _data.title;
             link.appendChild(title)
 
             let thumb = document.createElement('div');
@@ -65,13 +67,15 @@ class Grid {
             thumb.appendChild(ring)
             link.appendChild(thumb)
                 // 开始截图
-            if (!_this.thumbnailUrl) {
+            if (!_data.thumbnailUrl) {
                 thumb.addClass('loading')
-                chrome.livesone.snap(_this.url, { thumb_width: 154, thumb_height: 128}, (result) => {
+                chrome.livesone.snap(_data.url, { thumb_width: 154, thumb_height: 128}, (result) => {
                     if (result.success && thumb) {
-                        _this.thumbnailUrl = result.data_url;
-                        thumb.innerHTML = `<img alt="${_this.title}" src="${_this.thumbnailUrl}"/>`;
+                        _data.thumbnailUrl = result.data_url;
+                        thumb.innerHTML = `<img alt="${_data.title}" src="${_data.thumbnailUrl}"/>`;
                         thumb.removeClass('loading')
+
+                        storage_reco.update(_this.index, _data);
                         // important
                         countLoad();
                     }
@@ -80,8 +84,8 @@ class Grid {
                 loadedCounter += 1;
             } else {
                 var img = document.createElement('img');
-                img.title = _this.title;
-                img.src = _this.thumbnailUrl;
+                img.title = _data.title;
+                img.src = _data.thumbnailUrl;
 
                 thumb.empty()
                 thumb.appendChild(img)
