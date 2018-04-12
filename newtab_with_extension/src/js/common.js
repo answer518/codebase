@@ -43,10 +43,12 @@ Element.prototype.off = Element.prototype.removeEventListener
 let chrome = chrome || {}
 
 // chrome.livesone = {
-//     snap: (url, options, callback) => {
-//         setTimeout(() => {
-//             callback && callback({ success: true, data_url: '/img/logo/sina.png' });
-//         }, 1000);
+//     thumb: {
+//         snap: (url, options, callback) => {
+//             setTimeout(() => {
+//                 callback && callback({ success: true, data_url: '/img/logo/sina.png' });
+//             }, 1000);
+//         }
 //     },
 //     search_engine: {
 //         'default': function() {

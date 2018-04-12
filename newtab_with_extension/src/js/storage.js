@@ -4,13 +4,11 @@ class Storage {
         this.onChange();
     }
 
-    get() {
-        let _this = this,
-            key = _this.key;
-
+    getRecoSites() {
+        let _this = this
         return new Promise((resolve, reject) => {
             chrome.storage.local.get(['reco_sites'], (result) => {
-                let data = result[key] || {};
+                let data = result['reco_sites'] || {};
                 if(typeof data === 'string') {
                     data = JSON.parse(data);
                 }
@@ -45,10 +43,30 @@ class Storage {
     }
 
     set(value) {
-        let _this = this,
-            key = _this.key;
         return new Promise((resolve, reject) => {
             chrome.storage.local.set({'reco_sites': value}, () => {
+                resolve(value)
+            })
+        });
+    }
+
+    getTopsites() {
+        let _this = this;
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get('top_sites', (result) => {
+                if(result['top_sites']) {
+                    resolve(result['top_sites'])
+                } else {
+                    reject()
+                }
+            })
+        });
+    }
+
+    setTopsites(value) {
+        let _this = this;
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.set({'top_sites': value}, () => {
                 resolve(value)
             })
         });

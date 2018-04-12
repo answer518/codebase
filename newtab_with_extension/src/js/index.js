@@ -1,41 +1,67 @@
-var mv_recos = $(IDS.RECOS),
+let mv_recos = $(IDS.RECOS),
     mv_tiles = $(IDS.TILES);
 
-let topSites = [];
+/**
+ * The last blacklisted tile rid if any, which by definition should not be
+ * filler.
+ * @type {?number}
+ */
+let lastBlacklistedTile = null;
+let storage = new Storage();
 let getTopSites = function() {
     let loadedCounter = 1;
-    chrome.topSites.get(result => {
-        topSites = result;
 
-        mv_tiles.empty()
+    let countLoad = () => {
+        loadedCounter -= 1;
+        if (loadedCounter <= 0) {
+            show()
+            loadedCounter = 1;
+        }
+    }
 
-        result.forEach((item, i) => {
-            var grid = new Grid(item, i);
-
-            loadedCounter += 1;
-            grid.countLoad = function() {
-                loadedCounter -= 1;
-                if (loadedCounter <= 0) {
-                    // Create empty tiles until we have NUMBER_OF_TILES.
-                    while (mv_tiles.childNodes.length < 8) {
-                        var grid = new Grid({});
-                        mv_tiles.append(grid.dom());
-                    }
-                    loadedCounter = 1;
-                }
-            }
-            grid.onDelete = function(index) {
-                topSites.splice(index, 1);
-                notification.showNotification();
-            }
-            mv_tiles.append(grid.dom());
-        })
-
-        // init;
+    let show = () => {
+        // Create empty tiles until we have NUMBER_OF_TILES.
         while (mv_tiles.childNodes.length < 8) {
             var grid = new Grid({});
             mv_tiles.append(grid.dom());
         }
+    }
+    chrome.livesone.topSites.getAll(result => {
+        mv_tiles.empty()
+        result.forEach((item, i) => {
+            var grid = new Grid(item, i);
+
+            loadedCounter += 1;
+            grid.onDelete = function() {
+                lastBlacklistedTile = item;
+                chrome.livesone.topSites.addBlacklistedUrl(item.url)
+
+                countLoad();
+                notification.showNotification();
+            }
+
+            grid.onHandleImage = function(el, _data) {
+                storage.getTopsites().then((result) => {
+                    el.removeClass('loading')
+                    el.innerHTML = `<img alt="" src="${result[_data.url]}"/>`;
+                }, () => {
+                    chrome.livesone.thumb.snap(_data.url, { thumb_width: 154, thumb_height: 128 }, (result) => {
+                        if (result.success && el) {
+                            // _data.thumbnailUrl = result.data_url;
+                            el.innerHTML = `<img alt="" src="${result.data_url}"/>`;
+                            el.removeClass('loading')
+                        }
+                    });
+                }).then(() => {
+                    // important
+                    countLoad()
+                })
+            }
+
+            mv_tiles.append(grid.dom());
+        })
+
+        show()
     })
 }
 
@@ -54,36 +80,18 @@ let default_data = {
     ]
 }
 
-let storage_reco = new Storage({ key: 'reco_sites' });
+// let storage_reco = new Storage({ key: 'reco_sites' });
 let getRecoSites = function() {
     let loadedCounter = 1;
-    storage_reco.get().then((result) => {
+    let countLoad = () => {
+        loadedCounter -= 1;
+        if (loadedCounter <= 0) {
+            show()
+            loadedCounter = 1;
+        }
+    }
 
-        mv_recos.empty()
-        result.forEach((item, i) => {
-            var grid = new Grid(item, i);
-            loadedCounter += 1;
-
-            grid.countLoad = function() {
-                loadedCounter -= 1;
-                if (loadedCounter <= 0) {
-                    // Create empty tiles until we have NUMBER_OF_TILES.
-                    while (mv_recos.childNodes.length < 4) {
-                        var grid = new Grid({});
-                        mv_recos.append(grid.dom());
-                    }
-                    loadedCounter = 1;
-                }
-            }
-            grid.onUpdate = function(data) {
-                storage_reco.update(i, data);
-            }
-            grid.onDelete = function() {
-                storage_reco.del(i)
-            }
-            mv_recos.append(grid.dom());
-        })
-
+    let show = () => {
         // Create empty tiles until we have NUMBER_OF_TILES.
         while (mv_recos.childNodes.length < 4) {
             let i = mv_recos.childNodes.length
@@ -94,17 +102,47 @@ let getRecoSites = function() {
 
                     grid = new Grid(obj, i)
                     grid.onDelete = function() {
-                        storage_reco.del(i)
+                        storage.del(i)
                     }
                     grid.onUpdate = function(data) {
-                        storage_reco.update(i, data);
+                        storage.update(i, data);
                     }
                     mv_recos.replaceChild(grid.dom(), mv_recos.childNodes[i]);
-                    storage_reco.add(i, obj);
+                    storage.add(i, obj);
                 }
             }
             mv_recos.append(grid.dom());
         }
+    }
+    storage.getRecoSites().then((result) => {
+
+        mv_recos.empty()
+        result.forEach((item, i) => {
+            var grid = new Grid(item, i);
+
+            grid.onHandleImage = function(el, _data) {
+                chrome.livesone.thumb.snap(_data.url, { thumb_width: 154, thumb_height: 128 }, (result) => {
+                    if (result.success && el) {
+                        el.innerHTML = `<img alt="" src="${result.data_url}"/>`;
+                        el.removeClass('loading')
+
+                        _data.thumbnailUrl = result.data_url;
+                        storage.update(i, _data);
+                    }
+                });
+
+                loadedCounter += 1;
+                countLoad()
+            }
+
+            grid.onDelete = function() {
+                storage.del(i)
+                countLoad()
+            }
+            mv_recos.append(grid.dom());
+        })
+
+        show();
     });
 }
 

@@ -6,11 +6,11 @@
     "author": "YingWu Zhang",
     "permissions": [
         "storage",
-        "history",
         "unlimitedStorage",
         "topSites",
         "management",
-        "livesone",
+        "livesone.thumb",
+        "livesone.topSites",
         "chrome://favicon/",
         "contextMenus"
     ],

@@ -43,21 +43,11 @@ class Grid {
             ring.className = 'ring'
             thumb.appendChild(ring)
             link.appendChild(thumb)
+
             // 开始截图
             if (!_data.thumbnailUrl) {
                 thumb.addClass('loading')
-                chrome.livesone.snap(_data.url, { thumb_width: 154, thumb_height: 128}, (result) => {
-                    if (result.success && thumb) {
-                        _data.thumbnailUrl = result.data_url;
-                        thumb.innerHTML = `<img alt="${_data.title}" src="${_data.thumbnailUrl}"/>`;
-                        thumb.removeClass('loading')
-
-                        _this.onUpdate && _this.onUpdate(_data);
-                        // important
-                        _this.countLoad && _this.countLoad();
-                    }
-                });
-
+                _this.onHandleImage && _this.onHandleImage(thumb, _data)
             } else {
                 var img = document.createElement('img');
                 img.title = _data.title;
@@ -95,8 +85,7 @@ class Grid {
                     // off event click
                     link.off('click', handle);
                     parent.remove();
-                    _this.countLoad && _this.countLoad()
-                    _this.onDelete && _this.onDelete(link.getAttribute('rid'));
+                    _this.onDelete && _this.onDelete();
                 });
 
                 return;
