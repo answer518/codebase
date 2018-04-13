@@ -39,6 +39,7 @@ gulp.task('images', function() {
 // js处理
 gulp.task('scripts', function() {
     var jsSrc = ['./src/js/common.js',
+                    './src/js/language.js',
                     './src/js/const.js',
                     './src/js/storage.js',
                     './src/js/dialog.js', 
