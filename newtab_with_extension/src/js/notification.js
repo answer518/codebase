@@ -4,10 +4,26 @@
 
      init() {
 
-         $(IDS.NOTIFICATION).addEventListener('transitionend', this.hideNotification.bind(this));
-         $(IDS.NOTIFICATION_CLOSE_BUTTON).on('click', this.hideNotification.bind(this))
-         $(IDS.UNDO_LINK).on('click', this.onUndo.bind(this))
-         $(IDS.RESTORE_ALL_LINK).on('click', this.onRestoreAll.bind(this))
+         let undoLink = $(IDS.UNDO_LINK),
+             restoreAllLink = $(IDS.RESTORE_ALL_LINK);
+
+         $(IDS.NOTIFICATION_MESSAGE).textContent = language.getLang('thumbnailRemovedNotification');
+         undoLink.textContent = language.getLang('undoThumbnailRemove');
+         restoreAllLink.textContent = language.getLang('restoreThumbnailsShort');
+
+         let hideNotification = this.hideNotification.bind(this)
+         $(IDS.NOTIFICATION).addEventListener('transitionend', hideNotification);
+         $(IDS.NOTIFICATION_CLOSE_BUTTON).on('click', hideNotification)
+
+         let onUndo = this.onUndo.bind(this)
+         undoLink.on('click', onUndo)
+         this.registerKeyHandler(undoLink, KEYCODE.ENTER, onUndo);
+         this.registerKeyHandler(undoLink, KEYCODE.SPACE, onUndo);
+
+         let onRestoreAll = this.onRestoreAll.bind(this)
+         restoreAllLink.on('click', onRestoreAll)
+         this.registerKeyHandler(restoreAllLink, KEYCODE.ENTER, onRestoreAll);
+         this.registerKeyHandler(restoreAllLink, KEYCODE.SPACE, onRestoreAll);
      }
 
      showNotification() {
@@ -37,6 +53,13 @@
          chrome.livesone.topSites.clearBlacklistedUrls()
 
          getTopSites()
+     }
+
+     registerKeyHandler(element, keycode, handler) {
+         element.addEventListener('keydown', function(event) {
+             if (event.keyCode == keycode)
+                 handler(event);
+         });
      }
  }
 

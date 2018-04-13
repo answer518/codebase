@@ -20,6 +20,7 @@ const CLASSES = {
  * @const
  */
 const IDS = {
+    SEARCH_FORM: 'f',
     FAKEBOX: 'fakebox',
     FAKEBOX_INPUT: 'fakebox-input',
     FAKEBOX_TEXT: 'fakebox-text',
@@ -32,3 +33,10 @@ const IDS = {
     TILES: 'mv-tiles',
     RECOS:'mv-recos'
 }
+
+/**
+ * Enum for keycodes.
+ * @enum {number}
+ * @const
+ */
+var KEYCODE = {ENTER: 13, SPACE: 32};

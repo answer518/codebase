@@ -1,74 +1,77 @@
-/**
- * @param {boolean} focus True to focus the fakebox.
- */
-function setFakeboxFocus(focus) {
-    document.body.toggleClass(CLASSES.FAKEBOX_FOCUS, focus);
-}
+// chrome.livesone.searchEngine.getDefault((suc, res) => {
+//     if (suc === true) {
+//     }
+// })
 
-
-/**
- * @return {boolean} True if the fakebox has focus.
- */
-function isFakeboxFocused() {
-    return document.body.hasClass(CLASSES.FAKEBOX_FOCUS);
-}
-
-let inputbox = $(IDS.FAKEBOX_INPUT)
-
-inputbox.on('focus', function() {
-    if (!isFakeboxFocused()) {
-        setFakeboxFocus(false);
+class Search {
+    constructor() {
+        let opts = {}
+        Object.assign(this, opts)
     }
-})
 
-let searchForm = $('f')
+    init() {
 
-function setEngine(data) {
-    var arrTmp = data.url.split('?');
-    var action = arrTmp[0];
-    if (arrTmp[1]) {
-        var nameParam = arrTmp[1].match(/[\w\-]+=%[\w\-]+/g);
-        var keywordName = nameParam[0].split('=')[0];
-        var reg = new RegExp('&*' + nameParam + '&*', 'g');
-        var param = arrTmp[1].replace(reg, '&').replace(/^&+|&+$/g, '');
+        this.registerKeyHandler($(IDS.SEARCH_FORM), KEYCODE.ENTER, this.submit.bind(this))
 
-        inputbox.setAttribute('name', keywordName);
-        // 添加搜索额外参数
-        param = param.replace(/^&+|&+$/g, ''); // 矫正首尾无效值
-        var arr = param.split('&');
-        var extraParam = document.createElement('div');
-        extraParam.className = 'extra-param'
-        var tmpl = '';
-        for (var i = 0; i < arr.length; i++) {
-            var n = arr[i].indexOf('=');
-            var key = arr[i].substring(0, n);
-            var value = arr[i].substring(n + 1);
-            tmpl += '<input type="hidden" name="' + key + '" value="' + value + '">';
+        $(IDS.FAKEBOX_INPUT).on('focus', this.onInputStart.bind(this))
+        $(IDS.FAKEBOX_INPUT).on('input', this.generateSearchUrl.bind(this))
+        document.body.on('click', this.onInputCancel.bind(this))
+        this.generateSearchUrl()
+    }
+
+    generateSearchUrl() {
+        let searchForm = $(IDS.SEARCH_FORM),
+            key = $(IDS.FAKEBOX_INPUT).value;
+        chrome.livesone.searchEngine.generateSearchUrl(key, (suc, url) => {
+            if (suc === true) {
+                searchForm.action = url
+            }
+        })
+    }
+
+    onInputStart() {
+        if (!this.isFakeboxFocused()) {
+            this.setFakeboxFocus(false);
         }
+    }
 
-        if (searchForm.querySelector('.extra-param')) {
-            searchForm.querySelector('.extra-param').remove();
+    onInputCancel(e) {
+        let target = e.target,
+            inputbox = $(IDS.FAKEBOX_INPUT),
+            inputsearch = $(IDS.FAKEBOX_SPCH)
+
+        if (target === inputbox || target === inputsearch) return
+        if (this.isFakeboxFocused()) {
+            this.setFakeboxFocus(true);
         }
-        searchForm.appendChild(extraParam);
-        extraParam.innerHTML = tmpl
+    }
+
+    registerKeyHandler(element, keycode, handler) {
+         element.addEventListener('keydown', function(event) {
+             if (event.keyCode == keycode)
+                 handler(event);
+         });
+     }
+
+    submit(element) {
+        $(IDS.SEARCH_FORM).submit();
+    }
+
+    /**
+     * @param {boolean} focus True to focus the fakebox.
+     */
+    setFakeboxFocus(focus) {
+        document.body.toggleClass(CLASSES.FAKEBOX_FOCUS, focus);
+    }
+
+
+    /**
+     * @return {boolean} True if the fakebox has focus.
+     */
+    isFakeboxFocused() {
+        return document.body.hasClass(CLASSES.FAKEBOX_FOCUS);
     }
 }
 
-// 默认搜索引擎
-setEngine({
-    'name': '百度',
-    'key': 'baidu.com',
-    'url': 'https://www.baidu.com/?ie=utf-8&wd=%s'
-});
-
-let inputsearch = $(IDS.FAKEBOX_SPCH)
-
-document.body.on('click', function(e) {
-    let target = e.target
-
-    if (target === inputbox || target === inputsearch) return
-
-    if (isFakeboxFocused()) {
-        setFakeboxFocus(true);
-    }
-})
+let search = new Search()
+search.init()
