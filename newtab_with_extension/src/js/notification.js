@@ -3,7 +3,6 @@
      constructor() {}
 
      init() {
-         let _this = this
 
          $(IDS.NOTIFICATION).addEventListener('transitionend', this.hideNotification.bind(this));
          $(IDS.NOTIFICATION_CLOSE_BUTTON).on('click', this.hideNotification.bind(this))

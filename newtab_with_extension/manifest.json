@@ -11,6 +11,7 @@
         "management",
         "livesone.thumb",
         "livesone.topSites",
+        "livesone.searchEngine",
         "chrome://favicon/",
         "contextMenus"
     ],

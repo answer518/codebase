@@ -41,15 +41,17 @@ let getTopSites = function() {
             }
 
             grid.onHandleImage = function(el, _data) {
-                storage.getTopsites().then((result) => {
+                storage.getTopsites(_data.url).then((result) => {
                     el.removeClass('loading')
-                    el.innerHTML = `<img alt="" src="${result[_data.url]}"/>`;
+                    el.innerHTML = `<img alt="" src="${result}"/>`;
                 }, () => {
                     chrome.livesone.thumb.snap(_data.url, { thumb_width: 154, thumb_height: 128 }, (result) => {
                         if (result.success && el) {
                             // _data.thumbnailUrl = result.data_url;
                             el.innerHTML = `<img alt="" src="${result.data_url}"/>`;
                             el.removeClass('loading')
+                            //
+                            storage.setTopsites(_data.url, result.data_url);
                         }
                     });
                 }).then(() => {
@@ -64,6 +66,8 @@ let getTopSites = function() {
         show()
     })
 }
+
+getTopSites();
 
 let default_data = {
     'zh-cn': [
@@ -146,5 +150,4 @@ let getRecoSites = function() {
     });
 }
 
-getTopSites();
 getRecoSites();

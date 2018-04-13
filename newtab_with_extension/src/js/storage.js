@@ -18,7 +18,7 @@ class Storage {
                     _this.set(data);
                 }
 
-                _this.result = data;
+                _this['reco_sites'] = data;
                 resolve(data)
             })
         });
@@ -26,20 +26,20 @@ class Storage {
 
     del(index, callback) {
         let _this = this
-        _this.result.splice(index, 1);
-        _this.set(_this.result);
+        _this['reco_sites'].splice(index, 1);
+        _this.set(_this['reco_sites']);
     }
 
     add(index, item, callback) {
         let _this = this
-        _this.result.push(item);
-        _this.set(_this.result);
+        _this['reco_sites'].push(item);
+        _this.set(_this['reco_sites']);
     }
 
     update(index, item, callback) {
         let _this = this
-        _this.result[index] = item
-        _this.set(_this.result);
+        _this['reco_sites'][index] = item
+        _this.set(_this['reco_sites']);
     }
 
     set(value) {
@@ -50,12 +50,14 @@ class Storage {
         });
     }
 
-    getTopsites() {
+    getTopsites(key) {
         let _this = this;
         return new Promise((resolve, reject) => {
             chrome.storage.local.get('top_sites', (result) => {
-                if(result['top_sites']) {
-                    resolve(result['top_sites'])
+                _this['top_sites'] = result['top_sites'] || {};
+
+                if(_this['top_sites'][key]) {
+                    resolve(_this['top_sites'][key])
                 } else {
                     reject()
                 }
@@ -63,10 +65,11 @@ class Storage {
         });
     }
 
-    setTopsites(value) {
+    setTopsites(key, value) {
         let _this = this;
         return new Promise((resolve, reject) => {
-            chrome.storage.local.set({'top_sites': value}, () => {
+            _this['top_sites'][key] = value
+            chrome.storage.local.set({'top_sites': _this['top_sites']}, () => {
                 resolve(value)
             })
         });

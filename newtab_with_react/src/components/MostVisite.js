@@ -5,6 +5,7 @@ import React from 'react';
 import Dialog from './dialog/DialogBox';
 import ApiHandle from '../common/ApiHandle';
 import CLASSES from '../common/Classes';
+import Constant from '../common/Constant';
 import Grid from './Grid';
 
 
@@ -21,17 +22,13 @@ var lastBlacklistedTile = null;
  */
 var ntpApiHandle;
 
-/** @type {number} @const */
-var MAX_NUM_TILES_TO_SHOW = 4;
-
 export default class MostVisite extends React.Component {
     constructor(arg) {
         super(arg);
         
         this.apiHandle = new ApiHandle();
         var list = this.apiHandle.mostVisited;
-
-        list = this.apiHandle.mostVisited.splice(0, Math.min(MAX_NUM_TILES_TO_SHOW, list.length));
+        list = this.apiHandle.mostVisited.splice(0, Math.min(Constant.MAX_NUM_TILES_TO_SHOW, list.length));
 
         this.state = {
             list: list
@@ -69,12 +66,22 @@ export default class MostVisite extends React.Component {
     onDelete(rid) {
         var thiz = this;
 
-        thiz.state.list = thiz.state.list.filter(function(item) {
-            return item.rid !== rid;
-        });
-
         // 可以考虑用css3动画实现
         this.showNotification();
+        lastBlacklistedTile = rid;
+
+        this.apiHandle.deleteMostVisitedItem(rid);
+
+        // 重新
+        setTimeout(() => {
+            const list = thiz.state.list.filter(function(item) {
+                return item.rid !== rid;
+            });
+
+            thiz.setState({
+                list: list
+            });
+        }, 500);
     }
 
     onUndo() {
