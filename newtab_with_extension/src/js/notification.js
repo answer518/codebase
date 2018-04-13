@@ -44,15 +44,14 @@
          this.hideNotification();
          if (lastBlacklistedTile != null) {
              chrome.livesone.topSites.removeBlacklistedUrl(lastBlacklistedTile.url)
-             getTopSites()
+             _main.getTopSites()
          }
      }
 
      onRestoreAll() {
          this.hideNotification();
          chrome.livesone.topSites.clearBlacklistedUrls()
-
-         getTopSites()
+         _main.getTopSites()
      }
 
      registerKeyHandler(element, keycode, handler) {

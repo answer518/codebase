@@ -65,7 +65,7 @@ class Grid {
 
             var mvx = document.createElement('button');
             mvx.className = 'mv-x';
-            mvx.title = '%E4%B8%8D%E8%A6%81%E5%9C%A8%E6%9C%AC%E9%A1%B5%E4%B8%8A%E6%98%BE%E7%A4%BA'
+            mvx.title = language.getLang('removeTooltip')
             link.appendChild(mvx)
         } else {
             link.className = 'mv-empty-tile'

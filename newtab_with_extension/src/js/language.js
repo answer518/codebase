@@ -13,9 +13,22 @@ class Language {
                 'thumbnailRemovedNotification': {
                     'zh-cn': '已删除缩略图。',
                     'en-us': 'Thumbnail removed.'
+                },
+                'removeTooltip': {
+                    'zh-cn': '不要在本页上显示',
+                    'en-us': 'Don\'t show on this page'
+                },
+                'searchText': {
+                    'zh-cn': '请在这里输入搜索内容',
+                    'en-us': 'Please enter the search content here'
+                },
+                'DocumentTitle': {
+                    'zh-cn': '新标签页',
+                    'en-us': 'New tab'
                 }
             }
         })
+        document.title = this.getLang('DocumentTitle')
     }
 
     getLang(key) {

@@ -14,7 +14,7 @@ class Storage {
                 }
                 
                 if (data && Object.keys(data).length === 0) {
-                    data = default_data[navigator.language.toLocaleLowerCase()];
+                    data = DEFAULT_DATA[navigator.language.toLocaleLowerCase()];
                     _this.set(data);
                 }
 

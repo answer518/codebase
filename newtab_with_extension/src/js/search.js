@@ -16,6 +16,8 @@ class Search {
         $(IDS.FAKEBOX_INPUT).on('focus', this.onInputStart.bind(this))
         $(IDS.FAKEBOX_INPUT).on('input', this.generateSearchUrl.bind(this))
         document.body.on('click', this.onInputCancel.bind(this))
+
+        $(IDS.FAKEBOX_TEXT).textContent = language.getLang('searchText')
         this.generateSearchUrl()
     }
 
