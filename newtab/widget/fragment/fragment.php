@@ -14,7 +14,7 @@
 
 <script id="pageTpl" type="text/template">
     <div id="main">
-        <!-- <div class="nav-header clearfix">
+         <div class="nav-header clearfix">
             <ul class="nav-header-menu">
                 <li class="active">
                     <a href="javascript:void(0);" title="<%= this.getLang('MyFavorites') %>"><%= this.getLang('MyFavorites') %></a>
@@ -23,7 +23,7 @@
                     <a href="javascript:void(0);" title="<%= this.getLang('LastSession') %>"><%= this.getLang('LastSession') %></a>
                 </li>
             </ul>
-        </div> -->
+        </div>
         <div class="nav-body">
             <div id="quickaccess" class="quickaccess">
                 <div class="fav-list-warp">

@@ -1,7 +1,7 @@
 {
   "name": "pc-newtab.maxthon.com",
   "version": "0.0.1",
-  "description": "mx5-newtab",
+  "description": "pc-newtab.maxthon.com",
   "scripts": {
     "test": "",
     "release": "fis3 release dist -d /Library/WebServer/Documents",
@@ -14,7 +14,7 @@
     "pc-newtab.maxthon.com"
   ],
   "author": {
-    "name": "guotingjie"
+    "name": "guotingjie@maxthon.net"
   },
   "license": "MIT"
 }

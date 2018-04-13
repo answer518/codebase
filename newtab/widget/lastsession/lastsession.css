@@ -1,0 +1,113 @@
+#lastsession {
+    background-color: #fff;
+    height: 460px;
+    max-width: 1160px;
+    margin: 0 auto;
+    overflow: hidden;
+    border: 1px solid #e9e9e9;
+    border-radius: 2px;
+}
+
+.ls-nav {
+    background: #f8f8f8;
+    height: 40px;
+    line-height: 40px;
+    border-bottom: 1px solid #e9e9e9;
+}
+
+.ls-nav input,.ls-nav label {
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.ls-nav input {
+    vertical-align: top;
+    width: 14px;
+    height: 14px;
+    margin-top: 13px;
+    margin-left: 13px;
+    margin-right: 13px;
+}
+
+.ls-list {
+    border-radius: 4px;
+    height: 370px;
+    overflow: auto;
+}
+
+.ls-list li {
+    height: 40px;
+    line-height: 40px;
+    padding-left: 14px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.ls-list li:hover {
+    /* opacity: 0.6; */
+    background-color: rgba(0,0,0,0.06);
+}
+
+.ls-list input {
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.ls-list a {
+    display: inline-block;
+}
+
+.ls-list button {
+    float: right;
+    width: 34px;
+    height: 40px;
+    text-indent: -99px;
+    overflow: hidden;
+    background: transparent center center no-repeat;
+    background-size: 16px;
+}
+.ls-list button:hover {
+    background-color:  rgba(0,0,0,0.06) ;
+}
+
+.ls-list li:hover button.list-add {
+    background-image: url(/static/img/icon/list-add.svg);
+}
+
+.ls-list li:hover button.list-del {
+    background-image: url(/static/img/icon/list-del.svg);
+}
+
+.nav-icon {
+    width: 16px;
+    height: 16px;
+    margin: 10px 8px;
+    vertical-align: middle;
+}
+
+.ls-list-text {
+    margin-right: 20px;
+}
+
+.ls-list-link {
+    color: #999;
+}
+
+.ls-menu {
+    padding: 10px 0 0 16px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.ls-menu button {
+    background: #fff;
+    border: 1px solid #ddd;
+    padding: 0 15px;
+    height: 28px;
+    margin-right: 10px;
+}
+
+.ls-menu button:hover {
+    background: #E6F4FF;
+    border-color: #469FFB;
+}

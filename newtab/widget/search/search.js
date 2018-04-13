@@ -206,10 +206,7 @@ function buildEngineList(ele, list) {
 
 function initEngineList() {
     Api.useApi('config.getMultiValues', { keys: "['browser.general.search_engine_list2', 'browser.general.default_search_engine2']" }, function (data) {
-        if(typeof data === 'string') {
-            data = JSON.parse(data);
-        }
-        
+        data = JSON.parse(data);
         var searchEngineList = JSON.parse(data[0] || []);
         var defaultSearchEngin = JSON.parse(data[1] || {});
         // 初始化搜索框
