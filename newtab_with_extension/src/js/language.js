@@ -22,6 +22,34 @@ class Language {
                     'zh-cn': '请在这里输入搜索内容',
                     'en-us': 'Please enter the search content here'
                 },
+                'Confirm': {
+                    'zh-cn': '确定',
+                    'en-us': 'Confirm'
+                },
+                'Cancel': {
+                    'zh-cn': '取消',
+                    'en-us': 'Cancel'
+                },
+                'Title': {
+                    'zh-cn': '标题',
+                    'en-us': 'Title'
+                },
+                'Url': {
+                    'zh-cn': '网址',
+                    'en-us': 'Url'
+                },
+                'EnterUrl': {
+                    'zh-cn': '请输入网址',
+                    'en-us': 'Enter the URL'
+                },
+                'TitleTooLong': {
+                    'zh-cn': '标题过长',
+                    'en-us': 'The title is too long'
+                },
+                'AddSite': {
+                    'zh-cn': '添加站点',
+                    'en-us': 'Add Site'
+                },
                 'DocumentTitle': {
                     'zh-cn': '新标签页',
                     'en-us': 'New tab'

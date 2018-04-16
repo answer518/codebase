@@ -16,10 +16,9 @@ let merge = function(target) {
 class Modal {
     constructor(option) {
         let opt = {
-            type: 0,
-            title: '添加站点',
-            okText: '确认',
-            cancelText: '取消',
+            title: language.getLang("AddSite"),
+            okText: language.getLang("Confirm"),
+            cancelText: language.getLang("Cancel"),
             time: 0
         }
         this.modal = null
@@ -38,7 +37,7 @@ class Modal {
             <div class="modal-content">
                 <div class="modal-input">
                     <div class="input-content">
-                        <label id="paper-input-label-1" htmlfor="title">名称</label>
+                        <label id="paper-input-label-1" htmlfor="title">${language.getLang("Title")}</label>
                         <input type="input" name="title" id="title"/>
                         <span class="paper-input-error"></span>
                     </div>
@@ -49,7 +48,7 @@ class Modal {
                 </div>
                 <div class="modal-input">
                     <div class="input-content">
-                        <label id="paper-input-label-2" htmlfor="url">网址</label>
+                        <label id="paper-input-label-2" htmlfor="url">${language.getLang("Url")}</label>
                         <input type="input" name="url" id="url"/>
                         <span class="paper-input-error"></span>
                     </div>
@@ -60,8 +59,8 @@ class Modal {
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="cancel-btn">取消</button>
-                <button class="ok-btn">确定</button>
+                <button class="cancel-btn">${opt.cancelText}</button>
+                <button class="ok-btn">${opt.okText}</button>
             </div> 
         </div>`
         modal.innerHTML = inner
@@ -87,7 +86,7 @@ class Modal {
                 if (url.length === 0) {
                     let next = inputs[1].nextSibling;
                     next = next.nextSibling;
-                    next.innerHTML = '请输入网址';
+                    next.innerHTML = language.getLang("EnterUrl");
                     let parent = inputs[1].parentNode;
                     parent.classList.add(CLASSES.IS_INVALID);
                     parent = parent.parentNode;
@@ -99,7 +98,7 @@ class Modal {
                 if (title.length > 10) {
                     let next = inputs[0].nextSibling;
                     next = next.nextSibling;
-                    next.innerHTML = '标题过长';
+                    next.innerHTML = language.getLang("TitleTooLong");
                     
                     let parent = inputs[0].parentNode;
                     parent.classList.add(CLASSES.IS_INVALID);

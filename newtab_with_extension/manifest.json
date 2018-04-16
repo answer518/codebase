@@ -7,11 +7,8 @@
     "permissions": [
         "storage",
         "unlimitedStorage",
-        "topSites",
         "management",
-        "livesone.thumb",
-        "livesone.topSites",
-        "livesone.searchEngine",
+        "livesone",
         "chrome://favicon/",
         "contextMenus"
     ],

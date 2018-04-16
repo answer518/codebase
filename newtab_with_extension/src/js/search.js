@@ -19,6 +19,7 @@ class Search {
 
         $(IDS.FAKEBOX_TEXT).textContent = language.getLang('searchText')
         this.generateSearchUrl()
+        this.onDefaultChanged()
     }
 
     generateSearchUrl() {
@@ -46,6 +47,13 @@ class Search {
         if (this.isFakeboxFocused()) {
             this.setFakeboxFocus(true);
         }
+    }
+
+    onDefaultChanged() {
+        let _this = this;
+        chrome.livesone.searchEngine.onDefaultChanged.addListener(() => {
+            _this.generateSearchUrl()
+        });
     }
 
     registerKeyHandler(element, keycode, handler) {

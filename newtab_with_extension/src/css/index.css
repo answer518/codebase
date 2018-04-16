@@ -331,26 +331,59 @@ body {
     width: 0;
 }
 
-@keyframes k-loadingD {
-    0 {
-        transform: rotate(0deg)
-    }
-    50% {
-        transform: rotate(180deg)
-    }
-    100% {
-        transform: rotate(360deg)
-    }
+@-webkit-keyframes loader9g{
+    0%{ left: -15px; background-color: rgba(204, 204, 204, .8); }
+    50%{ left: 0px; background-color: rgba(204, 204, 204, .1);}
+    100%{ left:-15px; background-color: rgba(204, 204, 204, .8); }
+}
+@keyframes loader9g{
+    0%{ left: -15px; background-color: rgba(204, 204, 204, .8); }
+    50%{ left: 0px; background-color: rgba(204, 204, 204, .1);}
+    100%{ left:-15px; background-color: rgba(204, 204, 204, .8); }
 }
 
-.loading .ring {
+
+@-webkit-keyframes loader9d{
+    0%{ left: 15px; background-color: rgba(204, 204, 204, .8); }
+    50%{ left: 0px; background-color: rgba(204, 204, 204, .1);}
+    100%{ left:15px; background-color: rgba(204, 204, 204, .8); }
+}
+@keyframes loader9d{
+    0%{ left: 15px; background-color: rgba(204, 204, 204, .8); }
+    50%{ left: 0px; background-color: rgba(204, 204, 204, .1);}
+    100%{ left:15px; background-color: rgba(204, 204, 204, .8); }
+}
+
+.loading {
+    overflow: visible;
     width: 10px;
     height: 10px;
-    margin: 20px auto;
-    padding: 10px;
-    border: 7px dashed #ccc;
-    border-radius: 100%;
-    animation: k-loadingD 1.5s .3s cubic-bezier(.17, .37, .43, .67) infinite;
+    top: 54%;
+    left: 46%;
+    border-radius: 10px;
+    background-color: #ccc;
+}
+
+.loading:before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    height: 10px;
+    width: 10px;
+    border-radius: 10px;
+    -webkit-animation: loader9g 3s ease-in-out infinite;
+    animation: loader9g 3s ease-in-out infinite;
+}
+
+.loading:after {
+    content: "";
+    position: absolute;
+    top: 0px;
+    height: 10px;
+    width: 10px;
+    border-radius: 10px;
+    -webkit-animation: loader9d 3s ease-in-out infinite;
+    animation: loader9d 3s ease-in-out infinite;
 }
 
 .mv-x {

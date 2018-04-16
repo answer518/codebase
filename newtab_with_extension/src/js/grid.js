@@ -39,9 +39,9 @@ class Grid {
 
             let thumb = document.createElement('div');
             thumb.className = 'mv-thumb';
-            let ring = document.createElement('div');
-            ring.className = 'ring'
-            thumb.appendChild(ring)
+            // let ring = document.createElement('div');
+            // ring.className = 'ring'
+            // thumb.appendChild(ring)
             link.appendChild(thumb)
 
             // 开始截图
