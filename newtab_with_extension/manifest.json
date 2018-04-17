@@ -3,7 +3,8 @@
     "name": "pretty-tab",
     "description": "pretty new tab",
     "version": "1.0",
-    "author": "YingWu Zhang",
+    "author": "guotingjie@maxthon.net",
+    "default_locale": "_lcoales",
     "permissions": [
         "storage",
         "unlimitedStorage",
