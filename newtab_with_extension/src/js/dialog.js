@@ -9,16 +9,19 @@ class Modal {
         }
         this.modal = null
         this.opt = Object.assign(opt, option)
-        this.init(opt)
+        this.init()
+
+        this.registerKeyHandler(KEYCODE.ENTER, this.onOk.bind(this));
+        this.registerKeyHandler(KEYCODE.ESC, this.onHide.bind(this));
     }
 
-    init(opt) {
-        let modal = this.modal = document.createElement('div')
-        let that = this
+    init() {
+        let modal = this.modal = document.createElement('div'),
+            opt = this.opt
         modal.className = 'modal-container'
 
         let inner = `<div class="modal-body">
-            <div class="modal-title"> ${opt.title} </div>
+            <div class="modal-title">${opt.title}</div>
             <span class="modal-close"></span>
             <div class="modal-content">
                 <div class="modal-input">
@@ -51,7 +54,6 @@ class Modal {
         </div>`
         modal.innerHTML = inner
         document.body.appendChild(modal)
-
         this.bindEvent();
     }
 
@@ -62,21 +64,21 @@ class Modal {
             ok_btn = modal.querySelector('.ok-btn'),
             cancel_btn = modal.querySelector('.cancel-btn')
 
-        modal.on('click', this.onClose.bind(this), false);
+        // modal.on('click', this.onClose.bind(this), false);
         modal_close.on('click', this.onHide.bind(this), false);
         cancel_btn.on('click', this.onHide.bind(this), false);
         ok_btn.on('click', this.onOk.bind(this), false);
 
         let inputs = modal.querySelectorAll('input');
         inputs.forEach((node, i) => {
-            node.addEventListener('focus', function () {
+            node.on('focus', function () {
                 let parent = this.parentNode;
                 parent = parent.parentNode;
                 let underline = parent.querySelector('.' + CLASSES.UNDERLINE);
                 underline.classList.add(CLASSES.IS_HIGHLIGHTED);
             }, false);
 
-            node.addEventListener('blur', function () {
+            node.on('blur', function () {
                 let next = this.nextSibling;
                 next = next.nextSibling;
                 next.innerHTML = '';// clear erro message
@@ -89,9 +91,6 @@ class Modal {
                 underline.classList.remove(CLASSES.IS_INVALID);
             }, false);
         });
-
-        this.registerKeyHandler(KEYCODE.ENTER, this.onOk.bind(this));
-        this.registerKeyHandler(KEYCODE.ESC, this.onHide.bind(this));
     }
 
     show() {
@@ -147,18 +146,18 @@ class Modal {
 
     onClose(event) {
         event.stopPropagation();
-        let target = event.target
-
-        if(target !== this.modal) return;
+        // let target = event.target
+        // if(target === this.modal) return;
         this.onHide()
     }
 
     onHide() {
         // this.modal.addClass('move-out')
         // this.modal.on('animationend', e => {
-        // document.body.removeChild(this.modal)
+        document.body.removeChild(this.modal)
         // }, false)
         this.modal.style = '';
+        this.init()
     }
 
     registerKeyHandler(keycode, handler) {
