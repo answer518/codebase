@@ -15,5 +15,6 @@
     ],
     "chrome_url_overrides": {
         "newtab": "index.html"
-    }
+    },
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2p9J051Ep1vQOj7EnLr4I88rF+vWlxDCRUr+s8IIh8FnSZtffNDSysWDMtrF2FtfChqCSVLfnWhntiWnQdPQ8Qv2Qb5r4rUmy2574n6pqgkrJRCwusXhiXam6E7adRyYmjA3hW2Trvc2Euo/rXTL760Zo3OEUostUeA6PQyj0gVQhAfFjXdQ1dzxDdfwXTiU7HETLJWtG2zzIFG1sz2rpWlfhAtreEIex9F7JnZBEOuiF1ojoZiXS+srW1AizTMJfNITz1wWbmHbPvkHJ1meee6HPpZ77UcSYr3wkk94Psu7iPY9gjJEEJHe15xBzE2uiQ1365U5WAiirb7vrOueDQIDAQAB"    
 }

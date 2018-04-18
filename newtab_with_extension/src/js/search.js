@@ -1,7 +1,3 @@
-// chrome.livesone.searchEngine.getDefault((suc, res) => {
-//     if (suc === true) {
-//     }
-// })
 
 class Search {
     constructor() {
@@ -11,25 +7,31 @@ class Search {
 
     init() {
 
-        this.registerKeyHandler($(IDS.SEARCH_FORM), KEYCODE.ENTER, this.submit.bind(this))
+        this.registerKeyHandler($(IDS.SEARCH_FORM), KEYCODE.ENTER, this.onSubmit.bind(this))
 
         $(IDS.FAKEBOX_INPUT).on('focus', this.onInputStart.bind(this))
         $(IDS.FAKEBOX_INPUT).on('input', this.generateSearchUrl.bind(this))
-        document.body.on('click', this.onInputCancel.bind(this))
+        $(IDS.FAKEBOX_INPUT).on('blur', this.onInputCancel.bind(this))
 
-        $(IDS.FAKEBOX_TEXT).textContent = language.getLang('searchText')
+        this.setFakeBoxText()
         this.generateSearchUrl()
         this.onDefaultChanged()
     }
 
     generateSearchUrl() {
-        let searchForm = $(IDS.SEARCH_FORM),
-            key = $(IDS.FAKEBOX_INPUT).value;
-        chrome.livesone.searchEngine.generateSearchUrl(key, (suc, url) => {
-            if (suc === true) {
-                searchForm.action = url
-            }
-        })
+        // clear time
+        if (this.inputTimer) {
+            clearTimeout(this.inputTimer)
+        }
+        this.inputTimer = setTimeout(function () {
+            let searchForm = $(IDS.SEARCH_FORM),
+                key = $(IDS.FAKEBOX_INPUT).value;
+            chrome.livesone.searchEngine.generateSearchUrl(key, (suc, url) => {
+                if (suc === true) {
+                    searchForm.action = url
+                }
+            })
+        }, 300);
     }
 
     onInputStart() {
@@ -39,14 +41,18 @@ class Search {
     }
 
     onInputCancel(e) {
-        let target = e.target,
-            inputbox = $(IDS.FAKEBOX_INPUT),
-            inputsearch = $(IDS.FAKEBOX_SPCH)
-
-        if (target === inputbox || target === inputsearch) return
         if (this.isFakeboxFocused()) {
             this.setFakeboxFocus(true);
+            this.setFakeBoxText()
         }
+    }
+
+    setFakeBoxText() {
+        let inputText = $(IDS.FAKEBOX_INPUT).value.replace(/\s+/, '');
+        if(inputText.length === 0) {
+            inputText = language.getLang('searchText')
+        }
+        $(IDS.FAKEBOX_TEXT).textContent = inputText
     }
 
     onDefaultChanged() {
@@ -57,13 +63,13 @@ class Search {
     }
 
     registerKeyHandler(element, keycode, handler) {
-         element.addEventListener('keydown', function(event) {
-             if (event.keyCode == keycode)
-                 handler(event);
-         });
-     }
+        element.addEventListener('keydown', function (event) {
+            if (event.keyCode == keycode)
+                handler(event);
+        });
+    }
 
-    submit(element) {
+    onSubmit(element) {
         $(IDS.SEARCH_FORM).submit();
     }
 

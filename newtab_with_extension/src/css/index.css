@@ -82,10 +82,9 @@ body {
     bottom: 4px;
     color: rgba(0, 0, 0, 0.42);
     font-family: arial, sans-serif;
-    left: 13px;
+    left: 8px;
     font-size: 16px;
-    right: 13px;
-    margin-top: 1px;
+    right: 12px;
     overflow: hidden;
     position: absolute;
     text-overflow: ellipsis;
@@ -99,7 +98,7 @@ body {
     box-sizing: border-box;
     left: 0;
     margin: 0;
-    padding-left: 8px;
+    padding: 0 40px 0 8px;
     position: absolute;
     top: 0;
     width: 100%;
@@ -121,12 +120,12 @@ body {
 
 #fkbx-spch {
     padding: 22px 12px 0;
-    cursor: pointer;
     height: 21px;
     width: 17px;
     position: absolute;
     right: 0;
     background: url(../img/search.svg) no-repeat center;
+    outline: none;
 }
 
 #most-visited {
