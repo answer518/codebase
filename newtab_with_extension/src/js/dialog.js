@@ -1,17 +1,3 @@
-let merge = function(target) {
-    for (var i = 1, j = arguments.length; i < j; i++) {
-        var source = arguments[i];
-        for (var prop in source) {
-            if (source.hasOwnProperty(prop)) {
-                var value = source[prop];
-                if (value !== undefined) {
-                    target[prop] = value;
-                }
-            }
-        }
-    }
-    return target;
-};
 
 class Modal {
     constructor(option) {
@@ -19,10 +5,10 @@ class Modal {
             title: language.getLang("AddSite"),
             okText: language.getLang("Confirm"),
             cancelText: language.getLang("Cancel"),
-            time: 0
+            onSuccess: function() {}
         }
         this.modal = null
-        this.opt = merge(opt, option)
+        this.opt = Object.assign(opt, option)
         this.init(opt)
     }
 
@@ -71,76 +57,26 @@ class Modal {
 
     bindEvent() {
         let _this = this,
-            modal = _this.modal,
+            modal = this.modal,
             modal_close = modal.querySelector('.modal-close'),
             ok_btn = modal.querySelector('.ok-btn'),
-            cancel_btn = modal.querySelector('.cancel-btn');
+            cancel_btn = modal.querySelector('.cancel-btn')
 
-        modal.on('click', e => {
-            let target = e.target
-
-            if (target === ok_btn) {
-                let title = modal.querySelector('#title').value.replace(/\s/, ''),
-                    url = modal.querySelector('#url').value.replace(/\s/, '');
-
-                if (url.length === 0) {
-                    let next = inputs[1].nextSibling;
-                    next = next.nextSibling;
-                    next.innerHTML = language.getLang("EnterUrl");
-                    let parent = inputs[1].parentNode;
-                    parent.classList.add(CLASSES.IS_INVALID);
-                    parent = parent.parentNode;
-                    let underline = parent.querySelector('.' + CLASSES.UNDERLINE);
-                    underline.classList.add(CLASSES.IS_INVALID);
-                    return;
-                }
-
-                if (title.length > 10) {
-                    let next = inputs[0].nextSibling;
-                    next = next.nextSibling;
-                    next.innerHTML = language.getLang("TitleTooLong");
-                    
-                    let parent = inputs[0].parentNode;
-                    parent.classList.add(CLASSES.IS_INVALID);
-                    parent = parent.parentNode;
-                    let underline = parent.querySelector('.' + CLASSES.UNDERLINE);
-                    underline.classList.add(CLASSES.IS_INVALID);
-                    return;
-                }
-
-                if (title.length === 0) {
-                    title = url;
-                }
-
-                if (url.indexOf('http://') !== 0) {
-                    url = 'http://' + url;
-                }
-                
-                _this.onSuccess && _this.onSuccess({
-                    url: url,
-                    title: title
-                })
-
-                _this.close();
-            }
-
-            if (target !== modal_close && target !== cancel_btn) 
-                return;
-
-            _this.close();
-        }, false);
+        modal.on('click', this.onClose.bind(this), false);
+        modal_close.on('click', this.onHide.bind(this), false);
+        cancel_btn.on('click', this.onHide.bind(this), false);
+        ok_btn.on('click', this.onOk.bind(this), false);
 
         let inputs = modal.querySelectorAll('input');
         inputs.forEach((node, i) => {
-
-            node.addEventListener('focus', function() {
+            node.addEventListener('focus', function () {
                 let parent = this.parentNode;
                 parent = parent.parentNode;
                 let underline = parent.querySelector('.' + CLASSES.UNDERLINE);
                 underline.classList.add(CLASSES.IS_HIGHLIGHTED);
             }, false);
 
-            node.addEventListener('blur', function() {
+            node.addEventListener('blur', function () {
                 let next = this.nextSibling;
                 next = next.nextSibling;
                 next.innerHTML = '';// clear erro message
@@ -152,14 +88,86 @@ class Modal {
                 underline.classList.remove(CLASSES.IS_HIGHLIGHTED);
                 underline.classList.remove(CLASSES.IS_INVALID);
             }, false);
-        })
+        });
+
+        this.registerKeyHandler(KEYCODE.ENTER, this.onOk.bind(this));
+        this.registerKeyHandler(KEYCODE.ESC, this.onHide.bind(this));
     }
 
-    close() {
+    show() {
+        this.modal.style = 'display:block';
+    }
+
+    onOk(event) {
+        event.stopPropagation()
+        let inputs = this.modal.querySelectorAll('input'),
+            title = this.modal.querySelector('#title').value.replace(/\s/, ''),
+            url = this.modal.querySelector('#url').value.replace(/\s/, '');
+
+        if (url.length === 0) {
+            let next = inputs[1].nextSibling;
+            next = next.nextSibling;
+            next.innerHTML = language.getLang("EnterUrl");
+            let parent = inputs[1].parentNode;
+            parent.classList.add(CLASSES.IS_INVALID);
+            parent = parent.parentNode;
+            let underline = parent.querySelector('.' + CLASSES.UNDERLINE);
+            underline.classList.add(CLASSES.IS_INVALID);
+            return;
+        }
+
+        if (title.length > 10) {
+            let next = inputs[0].nextSibling;
+            next = next.nextSibling;
+            next.innerHTML = language.getLang("TitleTooLong");
+
+            let parent = inputs[0].parentNode;
+            parent.classList.add(CLASSES.IS_INVALID);
+            parent = parent.parentNode;
+            let underline = parent.querySelector('.' + CLASSES.UNDERLINE);
+            underline.classList.add(CLASSES.IS_INVALID);
+            return;
+        }
+
+        if (title.length === 0) {
+            title = url;
+        }
+
+        if (url.indexOf('http://') !== 0) {
+            url = 'http://' + url;
+        }
+
+        this.onSuccess && this.onSuccess({
+            url: url,
+            title: title
+        })
+
+        this.onHide();
+    }
+
+    onClose(event) {
+        event.stopPropagation();
+        let target = event.target
+
+        if(target !== this.modal) return;
+        this.onHide()
+    }
+
+    onHide() {
         // this.modal.addClass('move-out')
-        this.opt.destroy && this.opt.destroy()
-            // this.modal.on('animationend', e => {
-        document.body.removeChild(this.modal)
-            // }, false)
+        // this.modal.on('animationend', e => {
+        // document.body.removeChild(this.modal)
+        // }, false)
+        this.modal.style = '';
+    }
+
+    registerKeyHandler(keycode, handler) {
+        document.addEventListener('keydown', function (event) {
+            // console.log(event.keyCode)
+            if (event.keyCode == keycode)
+                handler(event);
+        });
     }
 }
+
+let dialog = new Modal();

@@ -1,6 +1,6 @@
  class Notification {
 
-     constructor() {}
+     constructor() { this.init() }
 
      init() {
 
@@ -17,13 +17,13 @@
 
          let onUndo = this.onUndo.bind(this)
          undoLink.on('click', onUndo)
-         this.registerKeyHandler(undoLink, KEYCODE.ENTER, onUndo);
-         this.registerKeyHandler(undoLink, KEYCODE.SPACE, onUndo);
+        //  this.registerKeyHandler(undoLink, KEYCODE.ENTER, onUndo);
+        //  this.registerKeyHandler(undoLink, KEYCODE.SPACE, onUndo);
 
          let onRestoreAll = this.onRestoreAll.bind(this)
          restoreAllLink.on('click', onRestoreAll)
-         this.registerKeyHandler(restoreAllLink, KEYCODE.ENTER, onRestoreAll);
-         this.registerKeyHandler(restoreAllLink, KEYCODE.SPACE, onRestoreAll);
+        //  this.registerKeyHandler(restoreAllLink, KEYCODE.ENTER, onRestoreAll);
+        //  this.registerKeyHandler(restoreAllLink, KEYCODE.SPACE, onRestoreAll);
      }
 
      showNotification() {
@@ -53,14 +53,6 @@
          chrome.livesone.topSites.clearBlacklistedUrls()
          _main.getTopSites()
      }
-
-     registerKeyHandler(element, keycode, handler) {
-         element.addEventListener('keydown', function(event) {
-             if (event.keyCode == keycode)
-                 handler(event);
-         });
-     }
  }
 
  const notification = new Notification();
- notification.init();

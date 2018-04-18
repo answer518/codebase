@@ -39,7 +39,7 @@ const IDS = {
  * @enum {number}
  * @const
  */
-const KEYCODE = {ENTER: 13, SPACE: 32};
+const KEYCODE = {ENTER: 13, SPACE: 32, ESC: 27};
 
 /**
  * default data set 

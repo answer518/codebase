@@ -54,7 +54,7 @@ let _main = {
                                 // _data.thumbnailUrl = result.data_url;
                                 el.innerHTML = `<img alt="" src="${result.data_url}"/>`;
                                 el.removeClass('loading')
-                                    //
+                                //
                                 storage.setTopsites(_data.url, result.data_url);
                             }
                         });
@@ -86,7 +86,7 @@ let _main = {
                 let i = mv_recos.childNodes.length
                 var grid = new Grid({}, i);
                 grid.onAdd = function() {
-                    let dialog = new Modal();
+                    dialog.show()
                     dialog.onSuccess = function(obj) {
 
                         grid = new Grid(obj, i)
@@ -95,6 +95,17 @@ let _main = {
                         }
                         grid.onUpdate = function(data) {
                             storage.update(i, data);
+                        }
+                        grid.onHandleImage = function(el, _data) {
+                            chrome.livesone.thumb.snap(_data.url, { thumb_width: 154, thumb_height: 128 }, (result) => {
+                                if (result.success && el) {
+                                    el.innerHTML = `<img alt="" src="${result.data_url}"/>`;
+                                    el.removeClass('loading')
+        
+                                    _data.thumbnailUrl = result.data_url;
+                                    storage.update(i, _data);
+                                }
+                            });
                         }
                         mv_recos.replaceChild(grid.dom(), mv_recos.childNodes[i]);
                         storage.add(i, obj);

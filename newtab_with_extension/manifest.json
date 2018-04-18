@@ -4,7 +4,7 @@
     "description": "pretty new tab",
     "version": "1.0",
     "author": "guotingjie@maxthon.net",
-    "default_locale": "_lcoales",
+    "default_locale": "en",
     "permissions": [
         "storage",
         "unlimitedStorage",
