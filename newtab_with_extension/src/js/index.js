@@ -13,7 +13,7 @@ let mv_recos = $(IDS.RECOS),
 
 let _main = {
     getTopSites: function() {
-        let loadedCounter = 1;
+        let loadedCounter = 1, NUMBER_OF_TILES = 8;
 
         let countLoad = () => {
             loadedCounter -= 1;
@@ -25,7 +25,7 @@ let _main = {
 
         let show = () => {
             // Create empty tiles until we have NUMBER_OF_TILES.
-            while (mv_tiles.childNodes.length < 8) {
+            while (mv_tiles.childNodes.length < NUMBER_OF_TILES) {
                 var grid = new Grid({});
                 mv_tiles.append(grid.dom());
             }
@@ -71,7 +71,7 @@ let _main = {
         })
     },
     getRecoSites: function() {
-        let loadedCounter = 1;
+        let loadedCounter = 1, NUMBER_OF_TILES = 4;
         let countLoad = () => {
             loadedCounter -= 1;
             if (loadedCounter <= 0) {
@@ -81,32 +81,12 @@ let _main = {
         }
 
         let show = () => {
-
-            if(mv_recos.childNodes.length < 4) {
+            if(mv_recos.childNodes.length < NUMBER_OF_TILES) {
                 let i = mv_recos.childNodes.length
                 let grid = new Grid({ addButton: true }, i)
                 grid.onAdd = function() {
                     dialog.show()
                     dialog.onSuccess = function(obj) {
-                        grid = new Grid(obj, i)
-                        grid.onDelete = function() {
-                            storage.del(i)
-                        }
-                        grid.onUpdate = function(data) {
-                            storage.update(i, data);
-                        }
-                        grid.onHandleImage = function(el, _data) {
-                            chrome.livesone.thumb.snap(_data.url, { thumb_width: 154, thumb_height: 128 }, (result) => {
-                                if (result.success && el) {
-                                    el.innerHTML = `<img alt="" src="${result.data_url}"/>`;
-                                    el.removeClass('loading')
-        
-                                    _data.thumbnailUrl = result.data_url;
-                                    storage.update(i, _data);
-                                }
-                            });
-                        }
-                        mv_recos.replaceChild(grid.dom(), mv_recos.childNodes[i]);
                         storage.add(i, obj);
                     }
                 }
@@ -119,14 +99,15 @@ let _main = {
                 mv_recos.append(grid.dom());
             }
         }
-        storage.getRecoSites().then((result) => {
 
+        storage.getRecoSites().then((result) => {
             mv_recos.empty()
             result.forEach((item, i) => {
                 var grid = new Grid(item, i);
 
                 grid.onHandleImage = function(el, _data) {
                     chrome.livesone.thumb.snap(_data.url, { thumb_width: 154, thumb_height: 128 }, (result) => {
+                        console.log(result);
                         if (result.success && el) {
                             el.innerHTML = `<img alt="" src="${result.data_url}"/>`;
                             el.removeClass('loading')
@@ -146,13 +127,11 @@ let _main = {
                 }
                 mv_recos.append(grid.dom());
             })
-
             show();
         });
     },
     start: function() {
         let _this = this;
-
         _this.getTopSites()
         _this.getRecoSites()
     }

@@ -77,7 +77,10 @@ class Storage {
 
     onChange() {
         chrome.storage.onChanged.addListener(function callback(){
-            console.log(arguments)
+            let data = arguments[0];
+            if(data['reco_sites']) {
+                _main.getRecoSites()
+            }
         }) 
     }
 }
