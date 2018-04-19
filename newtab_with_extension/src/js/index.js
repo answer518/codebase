@@ -81,14 +81,13 @@ let _main = {
         }
 
         let show = () => {
-            // Create empty tiles until we have NUMBER_OF_TILES.
-            while (mv_recos.childNodes.length < 4) {
+
+            if(mv_recos.childNodes.length < 4) {
                 let i = mv_recos.childNodes.length
-                var grid = new Grid({}, i);
+                let grid = new Grid({ addButton: true }, i)
                 grid.onAdd = function() {
                     dialog.show()
                     dialog.onSuccess = function(obj) {
-
                         grid = new Grid(obj, i)
                         grid.onDelete = function() {
                             storage.del(i)
@@ -111,6 +110,12 @@ let _main = {
                         storage.add(i, obj);
                     }
                 }
+                mv_recos.append(grid.dom());
+            }
+            // Create empty tiles until we have NUMBER_OF_TILES.
+            while (mv_recos.childNodes.length < 4) {
+                let i = mv_recos.childNodes.length
+                let grid = new Grid({}, i)
                 mv_recos.append(grid.dom());
             }
         }

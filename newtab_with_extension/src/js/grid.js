@@ -66,6 +66,11 @@ class Grid {
             link.appendChild(mvx)
         } else {
             link.className = 'mv-empty-tile'
+            if(_data.addButton === true) {
+                let addBtn = document.createElement('span')
+                addBtn.className = 'add'
+                link.appendChild(addBtn)
+            }
         }
 
         let handle = (event) => {
