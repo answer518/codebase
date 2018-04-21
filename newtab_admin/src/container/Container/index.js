@@ -1,3 +1,4 @@
+
 import React from 'react';
 
 class Container extends React.Component {
@@ -9,7 +10,7 @@ class Container extends React.Component {
     render(){
         return (
         	<div>
-        		{this.props.children || '切换'}
+        		{this.props.children || '没有内容，请刷新页面'}
         	</div>
         );
     }

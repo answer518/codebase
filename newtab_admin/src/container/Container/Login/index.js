@@ -1,9 +1,3 @@
-/*
-* @Author: kevin
-* @Date:   2016-12-19 11:20:19
-* @Last Modified by:   kevin
-* @Last Modified time: 2016-12-19 12:14:45
-*/
 
 'use strict';
 
@@ -11,17 +5,19 @@ import React, { PropTypes } from 'react';
 
 import ReactDOM from 'react-dom';
 
-import { Button, Form, Input, notification } from 'antd';
-
-import { loginRequest } from '../../redux/actions/login';
-
 import { connect } from 'react-redux';
+
+import { browserHistory } from 'react-router';
+
+import { Button, Form, Input, notification } from 'antd';
 
 import './login.scss';
 
-import { loginFetch } from './model.js';
+import * as fetch from './model.js';
 
-import { browserHistory } from 'react-router';
+import { loginRequest } from 'ACTIONS/login';
+
+import { withNotify } from 'CONTAINER/with/withNotify';
 
 const createForm = Form.create;
 const FormItem = Form.Item;
@@ -36,33 +32,6 @@ function noop() {
 
 class Login extends React.Component {
 
-    notify(type, message, description) {
-
-        notification.destroy();
-
-        switch (type) {
-            case 'success':
-                notification.success({
-                    message: message,
-                    description: description,
-                });
-                return;
-            case 'error':
-                notification.error({
-                    message: message,
-                    description: description,
-                });
-                return;
-            case 'open':
-            default:
-                notification.open({
-                    message: message,
-                    description: description,
-                });
-        }
-
-    }
-
     onPressEnter(e) {
 
         this.handleSubmit(e)
@@ -73,25 +42,34 @@ class Login extends React.Component {
 
         e.preventDefault();
 
+        const { notify } = this.props;
+
         this.props.form.validateFields((errors, values) => {
             if (!!errors) {
                 return;
             }
 
-            loginFetch({
-                    userName: values.userName,
-                    password: values.password
+            fetch.fetchLogin({
+                userName: values.userName,
+                password: values.password
             })
-            .then(function(res) {
-                if (res.status == 200) {
-                    this.notify('success', '提示', '登陆成功');
-                    localStorage.setItem('userData', JSON.stringify(res.data));
-                    browserHistory.push('/index')
+                .then(res => {
+
+                    if (res.status == 200) {
+
+                        notify('success', '提示', '登陆成功');
+
+                        localStorage.setItem('userData', JSON.stringify(res.data));
+
+                        browserHistory.push('/index')
                         // this.context.router.replace('/index');
-                } else {
-                    this.notify('fail', '提示', '登陆失败');
-                }
-            }.bind(this))
+
+                    }
+                    else {
+                        notify('error', '提示', '登陆失败');
+                    }
+
+                })
 
         });
 
@@ -107,13 +85,13 @@ class Login extends React.Component {
 
         return (
             <div className="login-wrap">
-                <Form layout="horizontal">
+                <Form horizontal>
                     <p className="login-title">联想后台管理系统</p>
                     <FormItem {...formItemLayout} hasFeedback>
 
                         {getFieldDecorator('userName', {
                             rules: [{
-                              required: true, message: '请填写用户名'
+                                required: true, message: '请填写用户名'
                             }],
                         })(
                             <Input
@@ -121,13 +99,14 @@ class Login extends React.Component {
                                 autoComplete="off"
                                 onPressEnter={this.onPressEnter.bind(this)}
                             />
-                        )}
+                            )}
+
                     </FormItem>
                     <FormItem {...formItemLayout} hasFeedback>
 
                         {getFieldDecorator('password', {
                             rules: [{
-                              required: true, whitespace: true, message: '请填写密码'
+                                required: true, whitespace: true, message: '请填写密码'
                             }],
                         })(
                             <Input
@@ -137,10 +116,11 @@ class Login extends React.Component {
                                 onContextMenu={noop} onPaste={noop} onCopy={noop} onCut={noop}
                                 onPressEnter={this.onPressEnter.bind(this)}
                             />
-                        )}
+                            )}
+
                     </FormItem>
                     <FormItem {...formItemLayout}>
-                      <Button type="primary" onClick={this.handleSubmit.bind(this)}>登录</Button>
+                        <Button type="primary" onClick={this.handleSubmit.bind(this)}>登录</Button>
                     </FormItem>
                 </Form>
             </div>
@@ -155,4 +135,4 @@ function mapStateToProps(state) {
     return { login: state.login };
 }
 
-export default connect(mapStateToProps)(createForm()(Login));
+export default connect(mapStateToProps)(createForm()(withNotify(Login)));

@@ -1,16 +1,19 @@
 import React from 'react';
+
 import ReactDOM from 'react-dom';
 
-import Header from '../Header/Header.js';
-import SiderBar from '../SiderBar/SiderBar.js';
+import Header from 'COMPONENTS/Header';
 
-import './app.scss';
+import SiderBar from 'COMPONENTS/SiderBar';
 
-class App extends React.Component {
+import './main.scss';
+
+class Main extends React.Component {
+
     render() {
 
         return (
-            <div className='app'>
+            <div className='main-wrap'>
                 <SiderBar />
                 <div className="content">
                     <Header />
@@ -21,6 +24,7 @@ class App extends React.Component {
             </div>
         );
     }
+
 }
 
-export default App;
+export default Main;

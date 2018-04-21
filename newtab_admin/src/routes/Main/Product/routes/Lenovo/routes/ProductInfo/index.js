@@ -3,7 +3,7 @@ module.exports = {
 
   getComponent(nextState, cb) {
     require.ensure([], (require) => {
-      cb(null, require('COMPONENTS/ProductInfo/ProductInfo').default)
+      cb(null, require('COMPONENTS/Content/Product/Lenovo/ProductInfo').default)
     })
   }
 }

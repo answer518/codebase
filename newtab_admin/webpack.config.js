@@ -18,9 +18,11 @@ module.exports = {
     resolve: {
         extensions: ['', '.js', '.json'],
         alias: {
-              COMPONENTS: path.join(src, 'components'),
-              ROUTES: path.join(src, 'routes'),
-              UTIL: path.join(src, 'util'),
+            COMPONENTS: path.join(src, 'components'),
+            CONTAINER: path.join(src, 'container'),
+            ROUTES: path.join(src, 'routes'),
+            UTIL: path.join(src, 'util'),
+            ACTIONS: path.join(src, 'redux/actions')
         }
     },
     plugins: [

@@ -9,7 +9,7 @@ module.exports = {
     path: '/login',
     getComponent: (nextState, cb) => {
         require.ensure([], (require) => {
-            cb(null, require('COMPONENTS/Login/Login.js').default)
+            cb(null, require('CONTAINER/Container/Login').default)
         });
     }
 }

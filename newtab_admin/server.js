@@ -5,6 +5,7 @@ var devMiddleware = require('webpack-dev-middleware');
 var hotMiddleware = require('webpack-hot-middleware');
 var config = require('./webpack.config');
 
+var _ = require('lodash');
 var bodyParser = require('body-parser')
 var app = express();
 var compiler = webpack(config);
@@ -18,13 +19,11 @@ app.use(devMiddleware(compiler, {
 
 app.use(hotMiddleware(compiler));
 
-
 const login = require('./server/login.js');
 
 app.use(express.static(__dirname))
 
 app.all('*', function (req, res, next) {
-
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "X-Requested-With");
     res.header("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
@@ -37,7 +36,35 @@ app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'src/index.html'));
 });
 
-app.post('/api/login', login.login);
+var mockConfigWrap = require('./mockConfig.js');
+var mockConfig = mockConfigWrap.mockConfig;
+
+for (var i = 0; i < mockConfig.length; i++) {
+    var url = mockConfig[i].url;
+
+    var position = mockConfig[i].position;
+
+    var resData = mockConfig[i].response[position]
+
+    if (mockConfig[i].type == 'post') {
+
+        app.post(url, function (req, res, next) {
+            var data = _.find(mockConfig, function (o) { return o.url == req.route.path; })
+            var position = data.position;
+            res.json(data.response[position]);
+        })
+
+    } else if (mockConfig[i].type == 'get') {
+
+        app.get(url, function (req, res, next) {
+            var data = _.find(mockConfig, function (o) { return o.url == req.route.path; })
+            var position = data.position;
+            res.json(data.response[position]);
+        })
+    }
+}
+
+// app.post('/api/login', login.login);
 
 app.listen(5000, function (err) {
     if (err) {
