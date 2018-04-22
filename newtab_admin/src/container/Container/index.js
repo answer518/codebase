@@ -9,7 +9,7 @@ class Container extends React.Component {
 
     render(){
         return (
-        	<div>
+        	<div className="root-wrap">
         		{this.props.children || '没有内容，请刷新页面'}
         	</div>
         );

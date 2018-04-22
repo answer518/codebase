@@ -2,11 +2,11 @@
 
 ## 说明
 
-这是一个公司内部项目，采用了目前流行的React技术栈，开发的单页应用。主要目的为学习使用，暂时没有上线
+基于公司内部的通用后台管理系统。主要是供自己玩用，没有商业用途
 
 ## 技术栈
 
-* 1. classnames + lodash
-* 2. redux-action + redux-logger
-* 3. react + redux + react-router + Immutable + Fetch
-* 4. webpack + hot-loader
+1. classnames + lodash
+2. redux-action + redux-logger
+3. react + redux + react-router + Immutable + Fetch + ant-design
+4. webpack + hot-loader	+4. webpack + hot-loader

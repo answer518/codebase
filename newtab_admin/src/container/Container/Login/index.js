@@ -84,45 +84,47 @@ class Login extends React.Component {
         };
 
         return (
-            <div className="login-wrap">
-                <Form horizontal>
-                    <p className="login-title">通用后台管理系统</p>
-                    <FormItem {...formItemLayout} hasFeedback>
+            <div className="login-container">
+                <div className="login-wrap">
+                    <Form layout="horizontal">
+                        <p className="login-title">通用后台管理系统</p>
+                        <FormItem {...formItemLayout} hasFeedback>
 
-                        {getFieldDecorator('userName', {
-                            rules: [{
-                                required: true, message: '请填写用户名'
-                            }],
-                        })(
-                            <Input
-                                placeholder='请输入登录账号'
-                                autoComplete="off"
-                                onPressEnter={this.onPressEnter.bind(this)}
-                            />
-                            )}
+                            {getFieldDecorator('userName', {
+                                rules: [{
+                                    required: true, message: '请填写用户名'
+                                }],
+                            })(
+                                <Input
+                                    placeholder='请输入登录账号'
+                                    autoComplete="off"
+                                    onPressEnter={this.onPressEnter.bind(this)}
+                                />
+                                )}
 
-                    </FormItem>
-                    <FormItem {...formItemLayout} hasFeedback>
+                        </FormItem>
+                        <FormItem {...formItemLayout} hasFeedback>
 
-                        {getFieldDecorator('password', {
-                            rules: [{
-                                required: true, whitespace: true, message: '请填写密码'
-                            }],
-                        })(
-                            <Input
-                                placeholder='请输入登录密码'
-                                type='password'
-                                autoComplete="off"
-                                onContextMenu={noop} onPaste={noop} onCopy={noop} onCut={noop}
-                                onPressEnter={this.onPressEnter.bind(this)}
-                            />
-                            )}
+                            {getFieldDecorator('password', {
+                                rules: [{
+                                    required: true, whitespace: true, message: '请填写密码'
+                                }],
+                            })(
+                                <Input
+                                    placeholder='请输入登录密码'
+                                    type='password'
+                                    autoComplete="off"
+                                    onContextMenu={noop} onPaste={noop} onCopy={noop} onCut={noop}
+                                    onPressEnter={this.onPressEnter.bind(this)}
+                                />
+                                )}
 
-                    </FormItem>
-                    <FormItem {...formItemLayout}>
-                        <Button type="primary" onClick={this.handleSubmit.bind(this)}>登录</Button>
-                    </FormItem>
-                </Form>
+                        </FormItem>
+                        <FormItem {...formItemLayout}>
+                            <Button type="primary" onClick={this.handleSubmit.bind(this)}>登录</Button>
+                        </FormItem>
+                    </Form>
+                </div>
             </div>
         );
 
