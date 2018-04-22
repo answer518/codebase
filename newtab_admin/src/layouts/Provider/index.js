@@ -12,8 +12,6 @@ import createLogger from 'redux-logger';
 
 import reducers from '../../redux/reducers/index.js';
 
-import 'antd/dist/antd.css';
-
 import './global.scss';
 
 import { notification } from 'antd';
