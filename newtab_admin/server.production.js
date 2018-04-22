@@ -6,18 +6,8 @@ var hotMiddleware = require('webpack-hot-middleware');
 var config = require('./webpack.config');
 
 var _ = require('lodash');
-var bodyParser = require('body-parser')
-var app = express();
 var compiler = webpack(config);
-
-app.use(bodyParser.urlencoded({ extended: false }))
-
-app.use(devMiddleware(compiler, {
-    publicPath: config.output.publicPath,
-    historyApiFallback: true,
-}));
-
-app.use(hotMiddleware(compiler));
+var app = express();
 
 app.use(express.static(__dirname))
 
@@ -31,7 +21,7 @@ app.all('*', function (req, res, next) {
 })
 
 app.get('*', function (req, res) {
-    res.sendFile(path.join(__dirname, 'src/index.html'));
+    res.sendFile(path.join(__dirname, 'build/index.html'));
 });
 
 var mockConfigWrap = require('./mockConfig.js');
@@ -59,13 +49,10 @@ for (var i = 0; i < mockConfig.length; i++) {
     }
 }
 
-// const login = require('./server/login.js');
-// app.post('/api/login', login.login);
-
-app.listen(5000, function (err) {
+app.listen(3001, function (err) {
     if (err) {
         return console.error(err);
     }
 
-    console.log('Listening at http://localhost:5000/');
+    console.log('Listening at http://localhost:3001/');
 });
