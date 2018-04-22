@@ -23,7 +23,7 @@ module.exports = {
 
     getComponent(nextState, cb) {
         require.ensure([], (require) => {
-            cb(null, require('CONTAINER/Container/Main').default)
+            cb(null, require('LAYOUTS/Container/Main').default)
         })
     }
 

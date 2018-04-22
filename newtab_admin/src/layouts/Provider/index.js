@@ -31,9 +31,9 @@ notification.config({
 const rootRoute = {
     childRoutes: [{
         path: '/',
-        component: require('CONTAINER/Container').default,
+        component: require('LAYOUTS/Container').default,
         indexRoute: {
-            component: require('CONTAINER/Container/Login').default
+            component: require('LAYOUTS/Container/Login').default
         },
         childRoutes: [
             require('ROUTES/Login'),

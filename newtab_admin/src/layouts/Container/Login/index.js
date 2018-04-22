@@ -17,7 +17,7 @@ import * as fetch from './model.js';
 
 import { loginRequest } from 'ACTIONS/login';
 
-import { withNotify } from 'CONTAINER/with/withNotify';
+import { withNotify } from 'WITH/withNotify';
 
 const createForm = Form.create;
 const FormItem = Form.Item;
