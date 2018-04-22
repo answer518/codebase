@@ -86,7 +86,7 @@ class Login extends React.Component {
         return (
             <div className="login-wrap">
                 <Form horizontal>
-                    <p className="login-title">联想后台管理系统</p>
+                    <p className="login-title">通用后台管理系统</p>
                     <FormItem {...formItemLayout} hasFeedback>
 
                         {getFieldDecorator('userName', {

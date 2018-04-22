@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { createSelector } from 'reselect';
 import { connect } from 'react-redux';
 
+import { is } from 'immutable';
 import { notification } from 'antd';
 
 require('./header.scss');
@@ -12,7 +13,11 @@ const contextTypes = {
     router: PropTypes.object.isRequired
 }
 
-class Header extends React.Component {
+class Header extends React.PureComponent {
+
+    constructor(props) {
+        super(props)
+    }
 
     loginOut() {
         localStorage.clear();

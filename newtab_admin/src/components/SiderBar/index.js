@@ -70,7 +70,7 @@ class SiderBar extends React.Component {
 
         return (
             <div className="siderbar">
-                <h1 className="header-title" onClick={this.handleClick.bind(this)}>联想后台管理系统</h1>
+                <h1 className="header-title" onClick={this.handleClick.bind(this)}>通用后台管理系统</h1>
                 <Menu theme='dark' onClick={this.linkTo.bind(this)} style={{ width: 240 }} defaultOpenKeys={['user', 'product', 'product2']} selectedKeys={[this.state.current]} mode="inline">
                     <SubMenu key="user" title={<span><Icon type="mail" /><span>用户管理</span></span>}>
                         <Menu.Item key="user1">用户管理1</Menu.Item>
