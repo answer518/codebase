@@ -1,6 +1,6 @@
 import React from 'react';
 import Header from 'COMPONENTS/header';
-// import Navigation from 'COMPONENTS/navigation';
+import Navigation from 'COMPONENTS/navigation';
 // import Footer from 'COMPONENTS/footer';
 
 class Container extends React.Component {
@@ -13,6 +13,7 @@ class Container extends React.Component {
 		return (
         	<div className="root">
         		<Header />
+				<Navigation />
         	</div>
         );
 	}

@@ -162,7 +162,7 @@ class Header extends Component {
 		const { username, avatar, is_logged } = this.props.globalState.login;
 
 		const { news, listShow, activeItem, languageShow } = this.state;
-		const uid = window.OTC.uid ? `(${window.OTC.uid})` : '';
+		const uid = '';
 		const listHead = classNames({
 			'list-active': listShow
 		});

@@ -1,7 +1,7 @@
 // 登录状态
 const initialState = {
 	username: 'guotingjie',
-    avatar: '',
+    avatar: 'https://avatars0.githubusercontent.com/u/17827860?s=40&v=4',
     is_logged: true
 }
 

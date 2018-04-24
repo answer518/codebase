@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link, browserHistory } from 'react-router';
-import CoinAmountList from 'pages/component/CoinAmountList';
+import CoinAmountList from '../../layouts/common/CoinAmountList';
 import './index.less'; 
 
 class Navigation extends Component {
@@ -52,7 +52,7 @@ class Navigation extends Component {
 
 	renderLinks(){
 		const { menus } = this.props;
-		const path = this.props.location.pathname;
+		const path = '/'//this.props.location.pathname;
 		return menus.map((menu, i) => {
 			const { name, to } = menu;
 			const className = i === 0 && (path === '/' || path === '/app') ? 'active' : '';

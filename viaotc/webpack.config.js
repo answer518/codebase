@@ -36,18 +36,19 @@ module.exports = {
             test: /\.jsx?$/,
             loaders: ['babel-loader'],
             exclude: /node_modules/
-        }, {
+        }, /*{
             test: /\.css$/,
-            loaders: ["style", "css"]
+            loader: "style-loader!css-loader!less"
+        }, */{
+            test: /\.(less|css)$/,
+            loader: "style-loader!css-loader!less"
         }, {
-            test: /\.scss$/,
-            loaders: ["style", "css", "sass"]
+            test: /\.(png|jpg|gif)$/,
+            loader: 'url-loader?limit=8192'
         }, {
-            test: /\.less$/,
-            loaders: ["style", "css", "less"]
-        }, {
-            test: /\.(jpe?g|gif|svg)$/,
-            loader: "url?limit=8192"
+            test: /\.(woff|woff2|ttf|eot|svg|otf)/,
+            loaders: ['url-loader'],
+            exclude: [/node_modules/]
         }]
     }
 }

@@ -6,7 +6,7 @@ import { Router, browserHistory } from 'react-router';
 import createLogger from 'redux-logger';
 import reducers  from '../../redux/reducer/index.js';
 
-import './index.css';
+import './index.less';
 
 const logger = createLogger();
 const store = createStore(
