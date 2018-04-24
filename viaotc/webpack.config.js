@@ -37,18 +37,17 @@ module.exports = {
             loaders: ['babel-loader'],
             exclude: /node_modules/
         }, {
-            test: /\.scss$/,
-            loaders: ["style", "css", "sass"]
-        }, /*{
-            test: /\.less$/,
-            loaders: ["style", "css", "less"]
-        }, */{
             test: /\.css$/,
             loaders: ["style", "css"]
         }, {
-            test: /\.(jpe?g|png|gif|svg)$/,
-            loader: "url",
-            query: { limit: 10240 }
+            test: /\.scss$/,
+            loaders: ["style", "css", "sass"]
+        }, {
+            test: /\.less$/,
+            loaders: ["style", "css", "less"]
+        }, {
+            test: /\.(jpe?g|gif|svg)$/,
+            loader: "url?limit=8192"
         }]
     }
 }

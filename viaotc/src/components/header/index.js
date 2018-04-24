@@ -1,13 +1,13 @@
 import React, { PropTypes, Component } from 'react';
-// import classNames from 'classnames';
+import classNames from 'classnames';
 import { browserHistory } from 'react-router';
 import { isEqual } from 'lodash';
 // import ajax from 'utils/request';
 // import NewsList from 'pages/component/NewsList';
 import { connect } from 'react-redux';
-// import * as globalAction from 'src/js/actions';
+import * as globalAction from '../../redux/actions';
 import { bindActionCreators } from 'redux';
-// import './index.less';
+import './index.less';
 
 const lists = [{
 	name: '资产管理',
@@ -159,7 +159,8 @@ class Header extends Component {
 	} 
 
 	render(){
-		const { username, avatar, is_logged } = this.props.globalState;
+		const { username, avatar, is_logged } = this.props.globalState.login;
+
 		const { news, listShow, activeItem, languageShow } = this.state;
 		const uid = window.OTC.uid ? `(${window.OTC.uid})` : '';
 		const listHead = classNames({
@@ -190,7 +191,7 @@ class Header extends Component {
 								{this.renderLists()}
 							</div>}													
 						</div>}	
-						{is_logged == 1 && <NewsList />}					
+						{/*is_logged == 1 && <NewsList /> */}					
 						{/*is_logged && <div className="operate-block-item notice">消息</div>*/}						
 					</div>					
 				</div>
@@ -204,7 +205,9 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return { actions: bindActionCreators(globalAction, dispatch) }
+  return { 
+  	actions: bindActionCreators(globalAction, dispatch) 
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
