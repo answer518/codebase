@@ -9,4 +9,4 @@
 1. classnames + lodash
 2. redux-action + redux-logger
 3. react + redux + react-router + Immutable + Fetch + ant-design
-4. webpack + hot-loader	+4. webpack + hot-loader
+4. webpack + hot-loader
