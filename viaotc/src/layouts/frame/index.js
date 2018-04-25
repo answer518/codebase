@@ -16,7 +16,7 @@ const store = createStore(
 
 const rootRoute = {
     path: '/',
-    // component: require('LAYOUTS/pages').default,
+    component: require('LAYOUTS/pages').default,
     // indexRoute: {
     //     component: require('LAYOUTS/pages/home').default
     // },

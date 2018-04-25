@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import CoinsInfoArea from '../../common/CoinsInfoArea';
+import LoginForm from '../../common/LoginForm';
 import * as globalAction from '../../../redux/actions';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';

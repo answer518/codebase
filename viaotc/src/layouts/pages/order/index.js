@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavBar,TabBar } from 'antd-mobile';
-const TabPane = Tabs.TabPane;
+// const TabPane = Tabs.TabPane;
 
 import './index.css';
 
