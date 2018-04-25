@@ -15,16 +15,23 @@ const store = createStore(
 );
 
 const rootRoute = {
+    path: '/',
+    // component: require('LAYOUTS/pages').default,
+    // indexRoute: {
+    //     component: require('LAYOUTS/pages/home').default
+    // },
 	childRoutes: [{
-        path: '/',
-        component: require('LAYOUTS/pages').default,
-        indexRoute: {
-            // component: require('LAYOUTS/Container/Login').default
+        path: 'app',
+        indexRoute: { 
+            component: require('LAYOUTS/pages/home').default
         },
-        childRoutes: [
-            // require('ROUTES/Login'),
-            // require('ROUTES/Main')
-        ]
+        childRoutes: []
+    }, {
+        path: 'order',
+        indexRoute: { 
+            component: require('LAYOUTS/pages/order').default
+        },
+        childRoutes: []
     }]
 }
 

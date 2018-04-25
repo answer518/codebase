@@ -1,7 +1,7 @@
 import React from 'react';
 import Header from 'COMPONENTS/header';
 import Navigation from 'COMPONENTS/navigation';
-// import Footer from 'COMPONENTS/footer';
+import Footer from 'COMPONENTS/footer';
 
 class Container extends React.Component {
 
@@ -10,10 +10,15 @@ class Container extends React.Component {
 	}
 
 	render() {
+		const { location } = this.props;
 		return (
         	<div className="root">
         		<Header />
-				<Navigation />
+				<Navigation location={location}/>
+				<div className="main">
+					{this.props.children}
+				</div>
+				<Footer />	
         	</div>
         );
 	}

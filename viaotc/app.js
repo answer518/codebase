@@ -30,6 +30,12 @@ app.all('*', function(req, res, next) {
     next();
 });
 
+app.get('/api/market', function(req, res, next) {
+
+    res.json({"error":0,"msg":"ok","data":[{"base_coin":"CNY","price":"10000","rate":"6.33","coin_type":"BTC"},{"base_coin":"CNY","price":"10000","rate":"6.33","coin_type":"ETH"},{"base_coin":"CNY","price":"10000","rate":"6.33","coin_type":"BCC"},{"base_coin":"CNY","price":"10000","rate":"6.33","coin_type":"ETC"},{"base_coin":"CNY","price":"10000","rate":"6.33","coin_type":"LTC"}]});
+    next();
+});
+
 app.get('*', function(req, res) {
     res.sendFile(path.join(__dirname, 'src/index.html'));
 });

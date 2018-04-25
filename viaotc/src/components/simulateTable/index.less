@@ -1,0 +1,79 @@
+/*table*/ 
+.simulate-table{ 
+	width: 100%; 
+	/*解决display inlin-block 间隙*/
+	.simulate-table-thead, 
+	.simulate-table-tr{
+		font-size: 0; 
+		-webkit-text-size-adjust:none;
+	}
+	.simulate-table-th, 
+	.simulate-table-td{ 
+		float: left;
+		text-align: center; 
+		color: #fff; 
+		font-size: 14px;	
+		padding: 13px 0;
+	} 
+	.simulate-table-th{
+		font-size: 14px;
+		padding: 32px 0;
+	}
+	.simulate-table-tr{ 
+		box-sizing: border-box;
+		.simulate-table-td{
+			background-color: #161e35;
+			padding: 13px 0;
+			position: relative;
+		    height: 80px;
+		    box-sizing: border-box;
+		    line-height: 54px;			
+			&:after{
+				content: '';
+				display: block;
+				position: absolute;
+				top: 27px;
+				right: 0;
+				width: 1px;
+				height: 26px;
+				background-color: #10172d;
+			}
+			&:first-child{
+				border-top-left-radius: 6px; 
+				border-bottom-left-radius: 6px;
+			}
+			&:last-child{
+				border-top-right-radius: 6px; 
+				border-bottom-right-radius: 6px;
+				&:after{
+					display: none;
+				}
+			}
+		}
+		&:nth-child(2n){
+			.simulate-table-td{
+				background-color: #192137;
+			}
+		}
+	} 	
+}   
+.simulate-table-white{
+	.simulate-table-th, 
+	.simulate-table-td{
+		color: #333;
+	}
+	.simulate-table-tr{
+		border: none;
+		.simulate-table-td{
+			background-color: #f8fafc;
+			&:after{
+				background-color: #e7eff5;
+			}		
+		}
+		&:nth-child(2n){
+			.simulate-table-td{
+				background-color: #fff;
+			}
+		}			
+	}
+}

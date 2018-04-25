@@ -1,0 +1,68 @@
+.assert-table{
+  width: 1200px;
+  margin:22px auto;
+  background: #ffffff;
+  min-height: 400px;
+  .ant-table-pagination{
+   text-align: center;
+  	float: none; 	
+  }
+  table caption, table th, table td{
+	height: 60px;
+	text-align: center;
+	border: none;
+  }
+  .ant-table-thead > tr > th{
+	background: #ffffff;
+	color:rgb(102,102,102);
+	border-top:1px solid rgb(231,239,245);
+	font-size: 14px;
+  }
+  .ant-table-tbody tr td{
+	color: rgb(51,51,51);
+	.status_success{
+	  color: #17a26c;
+	}
+	.status_fail{
+	  color: #e80f52;
+	}
+  }
+  .ant-table-tbody tr{
+	&:nth-child(even){
+	  background:rgb(248,250,252);
+	}
+  }
+  .ant-table-title .table-title{
+	padding:0  22px 0 80px ;
+	color: rgb(51,51,51);
+	.left-title{
+	  font-size: 21px;
+	}
+	.right-extral{
+	  a {
+		line-height: 30px;
+		color: rgb(102,102,102);
+		cursor: pointer;
+		display: inline-block;
+	  }
+	}
+  }
+  .table-operation{
+	span, a{
+	  cursor: pointer;
+	  color: #3665ff;
+	  &.table_disabled{
+		cursor: not-allowed;
+		color: #c1c0c0;
+		background: none;
+	  }
+	}
+	.or{
+	  width: 1px ;
+	  height: 10px;
+	  background: rgba(51,51,51,0.3);
+	  display: inline-block;
+	  margin:0 8px;
+	}
+  }
+}

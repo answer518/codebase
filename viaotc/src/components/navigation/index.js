@@ -52,7 +52,7 @@ class Navigation extends Component {
 
 	renderLinks(){
 		const { menus } = this.props;
-		const path = '/'//this.props.location.pathname;
+		const path = this.props.location.pathname;
 		return menus.map((menu, i) => {
 			const { name, to } = menu;
 			const className = i === 0 && (path === '/' || path === '/app') ? 'active' : '';
