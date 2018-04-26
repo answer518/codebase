@@ -7,6 +7,7 @@ import createLogger from 'redux-logger';
 import reducers  from '../../redux/reducer/index.js';
 
 import './index.less';
+import 'antd-mobile/dist/antd-mobile.css';
 
 const logger = createLogger();
 const store = createStore(
@@ -16,7 +17,7 @@ const store = createStore(
 
 const rootRoute = {
     path: '/',
-    component: require('LAYOUTS/pages').default,
+    // component: require('LAYOUTS/pages').default,
     // indexRoute: {
     //     component: require('LAYOUTS/pages/home').default
     // },
