@@ -33,15 +33,12 @@ function noop() {
 class Login extends React.Component {
 
     onPressEnter(e) {
-
         this.handleSubmit(e)
-
     }
 
     handleSubmit(e) {
 
         e.preventDefault();
-
         const { notify } = this.props;
 
         this.props.form.validateFields((errors, values) => {
