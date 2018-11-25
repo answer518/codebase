@@ -1,0 +1,25 @@
+@font-face{
+    font-family: "SinaHomeFont";
+    src:url("fonts/SinaHomeFont.ttf") format("truetype"),url("fonts/SinaHomeFont.woff") format("woff");
+}
+
+.fl {
+    float: left;
+}
+
+[class*=" icon_"], [class^=icon_] {
+    font-family: SinaHomeFont!important;
+    font-style: normal;
+    font-weight: 400;
+    -webkit-font-feature-settings: normal;
+    font-feature-settings: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon_logo_m:before {
+    content: "\E91A";
+}
