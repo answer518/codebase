@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo</title>
+</head>
+
+<body>
+    <script type="text/javascript" src="promise.js"></script>
+    <script type="text/javascript">
+        // const _promise = new Promise(function (resolve, reject) {
+        //     setTimeout(function () {
+        //         resolve('1s')
+        //     }, 1000)
+        // })
+
+        // _promise.then(function (data) {
+        //     console.log(data)
+        // })
+
+        // new Promise(function (resolve, reject) {
+        //     setTimeout(function () {
+        //         reject('error')
+        //     }, 1000)
+        // }).then(function (msg) {
+        //     console.log(msg)
+        // }).catch(function (err) {
+        //     console.error(err)
+        // })
+
+        // let p = new Promise(function (resolve, reject) {
+        //     resolve('success')
+        // })
+
+        // p.then(function(msg) {
+        //     console.log(msg)
+        // }).then(function(msg) {
+        //     console.log(msg)
+        //     return msg + ' test'
+        // }).then(function (msg) {
+        //     console.log(msg)
+        // })
+        
+        // Promise.race([
+        //     new Promise(function(resolve, reject) {
+        //         setTimeout(() => {
+        //             resolve('1s')
+        //         }, 1000)
+        //     }),
+        //     new Promise(function(resolve, reject) {
+        //         setTimeout(() => {
+        //             resolve('2s')
+        //         }, 2000)
+        //     })
+        // ]).then(res => {
+        //     console.log(res)
+        // })
+
+        Promise.all([
+            new Promise(function(resolve, reject) {
+                setTimeout(() => {
+                    resolve('1s')
+                }, 1000)
+            }),
+            new Promise(function(resolve, reject) {
+                setTimeout(() => {
+                    resolve('2s')
+                }, 2000)
+            })
+        ]).then(res => {
+            console.log(res)
+        })
+
+    </script>
+</body>
+
+</html>
